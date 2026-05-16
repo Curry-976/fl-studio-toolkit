@@ -610,7 +610,7 @@ function showArtistPicker(artists, query) {
       <div class="pick-avatar">${img ? `<img src="${img}" alt="">` : '🎤'}</div>
       <div>
         <div class="pick-name">${a.name}</div>
-        <div class="pick-sub">${fmt(a.followers?.total||0)} followers · ${genres}</div>
+        <div class="pick-sub">${(a.followers?.total||0).toLocaleString('fr-FR')} followers · ${genres}</div>
       </div>
     </div>`;
   }).join('');
