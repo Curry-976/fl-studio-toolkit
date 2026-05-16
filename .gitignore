@@ -1,0 +1,8 @@
+# Windows
+Thumbs.db
+Desktop.ini
+*.lnk
+
+# Temp
+*.tmp
+*.bak

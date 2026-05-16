@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mastering Pro — FL Studio Toolkit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#F5F6FA; --surface:#FFFFFF; --sidebar:#161929; --panel:#1E2337;
+      --accent:#FF6B2B; --accent2:#00C8FF; --purple:#9B7FFF;
+      --border:#E8EAF0; --text:#1A1D2E; --muted:#6B7280;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;overflow:hidden;}
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.1);border-radius:4px;}
+    .panel-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);}
+
+    /* ── SIDEBAR ── */
+    .sidebar{width:72px;min-width:72px;height:100vh;background:var(--sidebar);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:4px;z-index:100;}
+    .sidebar-logo{width:40px;height:40px;border-radius:12px;background:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:20px;flex-shrink:0;text-decoration:none;}
+    .nav-sep{width:28px;height:1px;background:rgba(255,255,255,.07);margin:6px 0;}
+    .nav-item{position:relative;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.35);text-decoration:none;transition:background .15s,color .15s;cursor:pointer;}
+    .nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.8);}
+    .nav-item.active{background:rgba(255,107,43,.15);color:var(--accent);}
+    .nav-item::after{content:attr(data-tip);position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:var(--text);color:#fff;font-size:12px;font-weight:500;white-space:nowrap;padding:5px 10px;border-radius:7px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:200;}
+    .nav-item:hover::after{opacity:1;}
+    .sidebar-spacer{flex:1;}
+
+    /* ── LEFT PANEL ── */
+    .master-panel{width:300px;min-width:300px;background:var(--panel);overflow-y:auto;border-right:1px solid rgba(255,255,255,.06);min-height:0;}
+    .panel-header{position:sticky;top:0;z-index:10;padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,.06);background:var(--panel);}
+    .panel-brand{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+    .brand-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent2),var(--purple));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .brand-name{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.3px;}
+    .brand-sub{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;}
+    .vu-meter{display:flex;align-items:flex-end;gap:2px;height:16px;margin-left:auto;}
+    @keyframes vu{0%,100%{transform:scaleY(.2);}50%{transform:scaleY(1);}}
+    .vu-bar{width:3px;border-radius:2px;transform-origin:bottom;animation:vu var(--d) ease-in-out infinite;}
+    .panel-title{font-size:11px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase;}
+    .panel-body{padding:16px 18px 32px;display:flex;flex-direction:column;gap:12px;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+    /* ── DROP ZONE ── */
+    #drop-section{display:flex;flex-direction:column;gap:12px;}
+    .drop-zone{border:1.5px dashed rgba(255,255,255,.15);border-radius:16px;background:rgba(255,255,255,.03);padding:26px 14px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;}
+    .drop-zone:hover,.drop-zone.over{border-color:rgba(0,200,255,.45);background:rgba(0,200,255,.05);}
+    @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+    .drop-icon{animation:float 3s ease-in-out infinite;font-size:28px;margin-bottom:7px;}
+    .drop-label{font-size:13px;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:2px;}
+    .drop-sub{font-size:11px;color:rgba(255,255,255,.28);}
+
+    /* ── FILE SECTION ── */
+    #file-section{display:none;flex-direction:column;gap:11px;}
+    .file-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 11px;display:flex;align-items:center;gap:9px;}
+    .file-icon{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,rgba(0,200,255,.2),rgba(155,127,255,.2));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .file-name{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .file-meta{font-size:10px;color:rgba(255,255,255,.28);}
+    .ok-dot{width:6px;height:6px;border-radius:50%;background:#6EE7A0;animation:pulse 2s ease infinite;margin-left:auto;flex-shrink:0;}
+
+    /* ── WAVEFORM PLAYER ── */
+    .sec-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.28);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+    .live-dot{width:6px;height:6px;border-radius:50%;background:#22C55E;animation:pulse 1.5s ease infinite;}
+    .wave-wrap{position:relative;border-radius:10px;overflow:hidden;background:rgba(0,0,0,.3);cursor:pointer;}
+    #wave-canvas{display:block;width:100%;height:56px;}
+    .wave-time{position:absolute;bottom:4px;right:7px;font-size:9px;font-family:monospace;color:rgba(255,255,255,.4);pointer-events:none;}
+
+    /* mini transport */
+    .transport-row{display:flex;align-items:center;gap:7px;margin-top:7px;}
+    .t-btn{width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .1s;}
+    .t-btn:active{transform:scale(.9);}
+    .t-play{background:linear-gradient(135deg,var(--accent2),var(--purple));}
+    .t-skip{background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);}
+    .t-skip:hover{background:rgba(255,255,255,.14);color:rgba(255,255,255,.9);}
+    .t-mute{background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);font-size:11px;}
+    .t-mute.muted{background:rgba(255,107,43,.15);color:var(--accent);}
+    .t-vol{flex:1;height:3px;accent-color:rgba(255,255,255,.4);cursor:pointer;}
+    .t-vol-icon{font-size:11px;color:rgba(255,255,255,.3);}
+    .vol-wrap{display:flex;align-items:center;gap:5px;flex:1;}
+
+    /* ── LUFS ── */
+    .lufs-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+    .lufs-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);width:24px;flex-shrink:0;}
+    .lufs-track{flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;position:relative;}
+    .lufs-fill{height:100%;border-radius:3px;transition:width .1s;}
+    .lufs-val{font-size:10px;font-weight:700;color:rgba(255,255,255,.45);width:46px;text-align:right;flex-shrink:0;font-family:monospace;}
+
+    /* ── PRESETS ── */
+    .preset-cat-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.2);letter-spacing:.1em;text-transform:uppercase;margin:8px 0 4px;}
+    .preset-cat-label:first-child{margin-top:0;}
+    .preset-row{display:flex;gap:5px;flex-wrap:wrap;}
+    .preset-pill{padding:4px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;}
+    .preset-pill:hover{border-color:rgba(0,200,255,.35);color:var(--accent2);}
+    .preset-pill.active{border-color:var(--accent2);color:var(--accent2);background:rgba(0,200,255,.1);}
+
+    /* ── BUTTONS ── */
+    .export-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--accent2),var(--purple));color:#fff;font-size:13px;font-weight:700;width:100%;transition:opacity .15s,transform .1s;}
+    .export-btn:hover{opacity:.88;}
+    .export-btn:active{transform:scale(.98);}
+    .export-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+    .reset-sm{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border-radius:10px;border:1px solid rgba(255,107,43,.2);background:rgba(255,107,43,.06);color:rgba(255,107,43,.7);font-size:12px;font-weight:600;cursor:pointer;width:100%;transition:background .15s;}
+    .reset-sm:hover{background:rgba(255,107,43,.15);}
+    .export-progress{display:none;flex-direction:column;gap:5px;}
+    .exp-track{height:5px;background:#E8EAF0;border-radius:3px;overflow:hidden;}
+    #exp-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent2),var(--purple));width:0%;transition:width .3s;}
+    .exp-label{font-size:10px;color:var(--muted);text-align:center;}
+
+    /* ── RIGHT PANEL ── */
+    /* Le panneau droit défile en entier ; le topbar reste collé en haut */
+    .chain-panel{flex:1;background:var(--bg);overflow-y:auto;min-height:0;}
+    .chain-topbar{position:sticky;top:0;z-index:20;padding:16px 26px 0;border-bottom:1px solid var(--border);background:var(--surface);}
+    .topbar-row{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;gap:12px;}
+    .page-title{font-size:16px;font-weight:800;letter-spacing:-.4px;}
+    .page-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+    .topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+
+    /* A/B buttons */
+    .ab-wrap{display:flex;border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+    .ab-btn{padding:6px 14px;border:none;cursor:pointer;font-size:12px;font-weight:700;background:transparent;color:var(--muted);transition:background .15s,color .15s;}
+    .ab-btn.active{background:var(--accent2);color:#fff;}
+    .ab-btn:first-child{border-right:1px solid var(--border);}
+
+    /* Bypass toggle */
+    .bypass-wrap{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;}
+    .tog-track{width:34px;height:19px;border-radius:10px;background:var(--accent2);position:relative;transition:background .2s;flex-shrink:0;}
+    .tog-track.off{background:#CBD5E1;}
+    .tog-thumb{position:absolute;top:2.5px;right:2.5px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:right .2s,left .2s;}
+    .tog-track.off .tog-thumb{right:auto;left:2.5px;}
+    .bypass-label{font-size:12px;font-weight:600;color:var(--muted);}
+
+    .chain-body{padding:18px 26px 32px;display:flex;flex-direction:column;gap:13px;}
+
+    /* ── CHAIN CARD ── */
+    .chain-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+    .card-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+    .card-strip{width:3px;height:18px;border-radius:2px;flex-shrink:0;}
+    .card-title{font-size:13px;font-weight:700;flex:1;}
+    .card-sub{font-size:11px;color:var(--muted);}
+    .card-toggle{width:26px;height:15px;border-radius:8px;background:var(--accent2);border:none;cursor:pointer;position:relative;flex-shrink:0;transition:background .2s;}
+    .card-toggle.off{background:#CBD5E1;}
+    .card-toggle::after{content:'';position:absolute;top:1.5px;right:1.5px;width:12px;height:12px;border-radius:50%;background:#fff;transition:right .2s,left .2s;}
+    .card-toggle.off::after{right:auto;left:1.5px;}
+    .card-body{padding:14px 16px;}
+
+    /* ── SPECTRUM CARD ── */
+    #spec-canvas{display:block;width:100%;height:110px;border-radius:10px;background:#0D1020;}
+
+    /* ── EQ ── */
+    #eq-canvas{display:block;width:100%;height:160px;border-radius:10px;background:#0D1020;margin-bottom:14px;cursor:crosshair;}
+    .eq-canvas-wrap{position:relative;}
+    .eq-tooltip{position:absolute;top:8px;right:10px;font-size:10px;font-family:monospace;font-weight:700;color:rgba(255,255,255,.5);pointer-events:none;background:rgba(0,0,0,.4);padding:3px 8px;border-radius:6px;opacity:0;transition:opacity .15s;}
+    .eq-bands{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:2px;}
+    .eq-band{display:flex;flex-direction:column;align-items:center;gap:4px;}
+    .band-dot{width:8px;height:8px;border-radius:50%;}
+    .band-name{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.06em;}
+    .band-gain-val{font-size:11px;font-weight:700;font-family:monospace;min-width:34px;text-align:center;}
+    .band-freq-val{font-size:9px;color:var(--muted);}
+    .vert-slider{writing-mode:vertical-lr;direction:rtl;width:26px;height:72px;cursor:pointer;accent-color:inherit;}
+
+    /* ── COMPRESSOR ── */
+    .gr-wrap{margin-bottom:13px;}
+    .gr-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;}
+    .gr-bars{display:flex;align-items:flex-end;gap:2px;height:20px;background:#F1F5F9;border-radius:6px;overflow:hidden;padding:2px;}
+    .gr-bar-seg{flex:1;border-radius:2px;transition:height .06s;min-height:2px;}
+    .param-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+    .param-row{display:flex;flex-direction:column;gap:3px;}
+    .param-label{font-size:11px;font-weight:600;color:var(--muted);display:flex;justify-content:space-between;align-items:center;}
+    .param-val{font-family:monospace;font-size:11px;font-weight:700;color:var(--text);}
+    .param-slider{width:100%;height:4px;accent-color:var(--accent2);cursor:pointer;}
+
+    /* ── SATURATION ── */
+    .sat-modes{display:flex;gap:7px;margin-bottom:13px;}
+    .sat-mode{flex:1;padding:6px 4px;border-radius:9px;border:1.5px solid var(--border);background:transparent;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .15s;text-align:center;}
+    .sat-mode.active{border-color:var(--accent2);background:rgba(0,200,255,.07);color:var(--accent2);}
+
+    /* ── LIMITER ── */
+    .lim-head-row{display:flex;align-items:center;gap:10px;margin-bottom:13px;}
+    .clip-light{width:10px;height:10px;border-radius:50%;background:#CBD5E1;transition:background .1s,box-shadow .1s;flex-shrink:0;}
+    .clip-light.clip{background:#EF4444;box-shadow:0 0 8px rgba(239,68,68,.6);}
+    .clip-label{font-size:11px;font-weight:600;color:var(--muted);}
+
+    /* ── OUTPUT ── */
+    .out-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+    .out-lbl{font-size:12px;font-weight:600;color:var(--muted);width:80px;flex-shrink:0;}
+    .out-slider{flex:1;height:4px;cursor:pointer;}
+    .out-val{font-size:12px;font-weight:700;font-family:monospace;color:var(--text);width:56px;text-align:right;flex-shrink:0;}
+
+    /* ── KB HINTS ── */
+    .kb-row{display:flex;gap:7px;flex-wrap:wrap;padding:10px 0 0;}
+    .kb-chip{display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.04);border:1px solid var(--border);border-radius:7px;padding:4px 9px;font-size:10px;color:var(--muted);}
+    .kb-chip kbd{background:#F1F5F9;border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-family:monospace;font-size:9px;font-weight:700;color:var(--text);}
+
+    @media(max-width:1100px){.master-panel{width:260px;min-width:260px;}}
+    @media(max-width:800px){.master-panel{display:none;}}
+    @media(max-width:580px){.sidebar{display:none;}}
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar">
+  <a href="index.html" class="sidebar-logo">
+    <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zM9 10l12-3"/></svg>
+  </a>
+  <a href="fl-studio-cheatsheet.html" class="nav-item" data-tip="Raccourcis">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path stroke-linecap="round" d="M7 9h.01M11 9h2m4 0h.01M7 13h4m6 0h.01"/></svg>
+  </a>
+  <a href="fl-studio-tips.html" class="nav-item" data-tip="Tips & Astuces">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 16v-4m0-4h.01"/></svg>
+  </a>
+  <a href="beatscan.html" class="nav-item" data-tip="BeatScan">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2z"/></svg>
+  </a>
+  <a href="mastering.html" class="nav-item active" data-tip="Mastering Pro">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+  </a>
+  <a href="songstats.html" class="nav-item" data-tip="Songstats">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+  </a>
+  <div class="nav-sep"></div>
+  <div class="sidebar-spacer"></div>
+  <div class="nav-item" data-tip="Paramètres">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </div>
+</nav>
+
+<!-- ── LEFT PANEL ── -->
+<aside class="master-panel">
+  <div class="panel-header">
+    <div class="panel-brand">
+      <div class="brand-icon">
+        <svg width="17" height="17" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">Mastering Pro</div>
+        <div class="brand-sub">Web Audio API</div>
+      </div>
+      <div class="vu-meter">
+        <div class="vu-bar" style="--d:.4s;background:#00C8FF;height:16px;"></div>
+        <div class="vu-bar" style="--d:.55s;background:#00C8FF;height:16px;animation-delay:.1s;"></div>
+        <div class="vu-bar" style="--d:.35s;background:#9B7FFF;height:16px;animation-delay:.2s;"></div>
+        <div class="vu-bar" style="--d:.6s;background:#9B7FFF;height:16px;animation-delay:.05s;"></div>
+        <div class="vu-bar" style="--d:.45s;background:#FF6B2B;height:16px;animation-delay:.15s;"></div>
+      </div>
+    </div>
+    <div class="panel-title" id="panel-title-lbl">Chargement</div>
+  </div>
+
+  <div class="panel-body">
+
+    <!-- DROP -->
+    <div id="drop-section">
+      <div class="drop-zone" id="drop-zone"
+           onclick="document.getElementById('file-input').click()"
+           ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+        <div class="drop-icon">🎛️</div>
+        <div class="drop-label">Dépose ton audio ici</div>
+        <div class="drop-sub">MP3 · WAV · OGG · FLAC · AAC</div>
+      </div>
+      <input id="file-input" type="file" accept="audio/*" style="display:none" onchange="onFileSelect(event)"/>
+      <div class="sec-label">Presets</div>
+      <div id="preset-block-drop"></div>
+    </div>
+
+    <!-- FILE LOADED -->
+    <div id="file-section">
+      <!-- File info -->
+      <div class="file-card">
+        <div class="file-icon">
+          <svg width="12" height="12" fill="none" stroke="rgba(0,200,255,.9)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2z"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div id="p-filename" class="file-name"></div>
+          <div id="p-meta" class="file-meta"></div>
+        </div>
+        <div class="ok-dot"></div>
+      </div>
+
+      <!-- Waveform player -->
+      <div>
+        <div class="sec-label">Lecture</div>
+        <div class="wave-wrap" id="wave-wrap">
+          <canvas id="wave-canvas"></canvas>
+          <div class="wave-time" id="wave-time">0:00 / 0:00</div>
+        </div>
+        <div class="transport-row">
+          <button class="t-btn t-skip" title="-5s" onclick="skipBy(-5)">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6l6 6-6 6V6zm6 0v12l6-6-6-6z" opacity=".5"/><path d="M6 6l6 6-6 6V6z"/></svg>
+          </button>
+          <button class="t-btn t-play" id="t-play" onclick="togglePlay()">
+            <svg id="t-icon-play"  width="12" height="12" viewBox="0 0 24 24" fill="white" style="margin-left:1px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <svg id="t-icon-pause" width="12" height="12" viewBox="0 0 24 24" fill="white" style="display:none;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+          </button>
+          <button class="t-btn t-skip" title="+5s" onclick="skipBy(5)">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M18 6l-6 6 6 6V6zM12 6v12L6 12l6-6z" opacity=".5"/><path d="M18 6l-6 6 6 6V6z"/></svg>
+          </button>
+          <div class="vol-wrap">
+            <span class="t-vol-icon" id="vol-icon" onclick="toggleMute()" style="cursor:pointer;">🔊</span>
+            <input type="range" class="t-vol" id="vol-slider" min="0" max="1" step="0.01" value="0.9" oninput="updateVolume()">
+          </div>
+        </div>
+      </div>
+
+      <!-- LUFS -->
+      <div>
+        <div class="sec-label">Loudness (LUFS)</div>
+        <div class="lufs-row">
+          <div class="lufs-lbl">IN</div>
+          <div class="lufs-track"><div class="lufs-fill" id="lufs-in-fill" style="background:#6B7280;width:0%;"></div></div>
+          <div class="lufs-val" id="lufs-in-val">— LUFS</div>
+        </div>
+        <div class="lufs-row">
+          <div class="lufs-lbl">OUT</div>
+          <div class="lufs-track"><div class="lufs-fill" id="lufs-out-fill" style="background:var(--accent2);width:0%;"></div></div>
+          <div class="lufs-val" id="lufs-out-val">— LUFS</div>
+        </div>
+      </div>
+
+      <!-- Presets -->
+      <div>
+        <div class="sec-label">Presets</div>
+        <div id="preset-block-file"></div>
+      </div>
+
+      <!-- Export -->
+      <div class="export-progress" id="export-progress">
+        <div class="exp-track"><div id="exp-fill"></div></div>
+        <div class="exp-label" id="exp-label">Rendu…</div>
+      </div>
+      <button class="export-btn" id="export-btn" onclick="exportWAV()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exporter WAV masterisé
+      </button>
+      <button class="reset-sm" onclick="resetAll()">
+        <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        Nouveau fichier
+      </button>
+
+      <div class="kb-row">
+        <div class="kb-chip"><kbd>Espace</kbd> Play/Pause</div>
+        <div class="kb-chip"><kbd>B</kbd> Bypass</div>
+        <div class="kb-chip"><kbd>M</kbd> Mute</div>
+        <div class="kb-chip"><kbd>←</kbd><kbd>→</kbd> ±5s</div>
+      </div>
+    </div>
+
+  </div>
+</aside>
+
+<!-- ── RIGHT PANEL ── -->
+<div class="chain-panel">
+  <div class="chain-topbar">
+    <div class="topbar-row">
+      <div>
+        <div class="page-title">Mastering Chain</div>
+        <div class="page-sub">Chaîne de traitement audio en temps réel</div>
+      </div>
+      <div class="topbar-right">
+        <!-- A/B Comparison -->
+        <div class="ab-wrap">
+          <button class="ab-btn active" id="ab-a" onclick="switchAB('A')">A</button>
+          <button class="ab-btn"        id="ab-b" onclick="switchAB('B')">B</button>
+        </div>
+        <!-- Bypass -->
+        <div class="bypass-wrap" onclick="toggleBypass()">
+          <div class="tog-track" id="bypass-track"><div class="tog-thumb"></div></div>
+          <div class="bypass-label" id="bypass-label">Actif</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chain-body">
+
+    <!-- SPECTRUM ANALYZER -->
+    <div class="chain-card">
+      <div class="card-head">
+        <div class="card-strip" style="background:linear-gradient(180deg,#22C55E,#00C8FF);"></div>
+        <div>
+          <div class="card-title">Analyseur de spectre</div>
+          <div class="card-sub" id="spec-sub">Spectre log · Peak hold</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <canvas id="spec-canvas"></canvas>
+      </div>
+    </div>
+
+    <!-- EQ -->
+    <div class="chain-card">
+      <div class="card-head">
+        <div class="card-strip" style="background:linear-gradient(180deg,#00C8FF,#9B7FFF);"></div>
+        <div>
+          <div class="card-title">Égaliseur 5 bandes</div>
+          <div class="card-sub">Glisse les points pour ajuster • Clic droit = reset</div>
+        </div>
+        <button class="card-toggle" id="eq-toggle" onclick="toggleNode(event,'eq')"></button>
+      </div>
+      <div class="card-body">
+        <div class="eq-canvas-wrap">
+          <canvas id="eq-canvas"></canvas>
+          <div class="eq-tooltip" id="eq-tooltip"></div>
+        </div>
+        <div class="eq-bands" id="eq-bands"></div>
+      </div>
+    </div>
+
+    <!-- COMPRESSOR -->
+    <div class="chain-card">
+      <div class="card-head">
+        <div class="card-strip" style="background:linear-gradient(180deg,#22C55E,#EAB308);"></div>
+        <div>
+          <div class="card-title">Compresseur</div>
+          <div class="card-sub" id="comp-summary">Seuil −24 dB · Ratio 4:1</div>
+        </div>
+        <button class="card-toggle" id="comp-toggle" onclick="toggleNode(event,'comp')"></button>
+      </div>
+      <div class="card-body">
+        <div class="gr-wrap">
+          <div class="gr-head">
+            <span>Réduction de gain</span>
+            <span id="gr-val" style="font-family:monospace;font-size:12px;color:var(--text);font-weight:700;">0.0 dB</span>
+          </div>
+          <div class="gr-bars" id="gr-bars"></div>
+        </div>
+        <div class="param-grid">
+          <div class="param-row">
+            <div class="param-label">Seuil<span class="param-val" id="thresh-val">−24 dB</span></div>
+            <input type="range" class="param-slider" id="thresh" min="-60" max="0" step="1" value="-24" oninput="updateComp()">
+          </div>
+          <div class="param-row">
+            <div class="param-label">Ratio<span class="param-val" id="ratio-val">4:1</span></div>
+            <input type="range" class="param-slider" id="ratio" min="1" max="20" step="0.5" value="4" oninput="updateComp()">
+          </div>
+          <div class="param-row">
+            <div class="param-label">Attaque<span class="param-val" id="attack-val">3 ms</span></div>
+            <input type="range" class="param-slider" id="attack" min="0.0001" max="1" step="0.0001" value="0.003" oninput="updateComp()">
+          </div>
+          <div class="param-row">
+            <div class="param-label">Release<span class="param-val" id="release-val">250 ms</span></div>
+            <input type="range" class="param-slider" id="release" min="0.01" max="1" step="0.001" value="0.25" oninput="updateComp()">
+          </div>
+          <div class="param-row">
+            <div class="param-label">Knee<span class="param-val" id="knee-val">6 dB</span></div>
+            <input type="range" class="param-slider" id="knee" min="0" max="40" step="1" value="6" oninput="updateComp()">
+          </div>
+          <div class="param-row">
+            <div class="param-label">Makeup<span class="param-val" id="makeup-val">+2 dB</span></div>
+            <input type="range" class="param-slider" id="makeup" min="-6" max="12" step="0.5" value="2" oninput="updateComp()" style="accent-color:#F97316;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SATURATION -->
+    <div class="chain-card">
+      <div class="card-head">
+        <div class="card-strip" style="background:linear-gradient(180deg,#F97316,#EF4444);"></div>
+        <div>
+          <div class="card-title">Saturation</div>
+          <div class="card-sub">Harmoniques analogiques · WaveShaper</div>
+        </div>
+        <button class="card-toggle" id="sat-toggle" onclick="toggleNode(event,'sat')"></button>
+      </div>
+      <div class="card-body">
+        <div class="sat-modes">
+          <div class="sat-mode active" onclick="setSatMode('soft',this)">🎛 Soft</div>
+          <div class="sat-mode" onclick="setSatMode('warm',this)">🔥 Warm</div>
+          <div class="sat-mode" onclick="setSatMode('hard',this)">⚡ Hard</div>
+        </div>
+        <div class="param-row">
+          <div class="param-label">Drive<span class="param-val" id="drive-val">10%</span></div>
+          <input type="range" class="param-slider" id="drive" min="0" max="100" step="1" value="10" oninput="updateSat()" style="accent-color:#F97316;">
+        </div>
+      </div>
+    </div>
+
+    <!-- LIMITER -->
+    <div class="chain-card">
+      <div class="card-head">
+        <div class="card-strip" style="background:linear-gradient(180deg,#EF4444,#9B7FFF);"></div>
+        <div>
+          <div class="card-title">Limiteur de sortie</div>
+          <div class="card-sub" id="lim-summary">Plafond −1.0 dBFS · Ratio 20:1</div>
+        </div>
+        <button class="card-toggle" id="lim-toggle" onclick="toggleNode(event,'lim')"></button>
+      </div>
+      <div class="card-body">
+        <div class="lim-head-row">
+          <div class="clip-light" id="clip-light"></div>
+          <div class="clip-label" id="clip-label">Pas d'écrêtage</div>
+        </div>
+        <div class="param-row" style="margin-bottom:12px;">
+          <div class="param-label">Plafond (Ceiling)<span class="param-val" id="ceil-val">−1.0 dBFS</span></div>
+          <input type="range" class="param-slider" id="ceiling" min="-6" max="0" step="0.1" value="-1" oninput="updateLim()" style="accent-color:#EF4444;">
+        </div>
+        <div class="param-row">
+          <div class="param-label">Release<span class="param-val" id="lim-release-val">100 ms</span></div>
+          <input type="range" class="param-slider" id="lim-release" min="0.01" max="0.5" step="0.01" value="0.1" oninput="updateLim()" style="accent-color:#EF4444;">
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="chain-card">
+      <div class="card-head">
+        <div class="card-strip" style="background:linear-gradient(180deg,#6EE7A0,#00C8FF);"></div>
+        <div>
+          <div class="card-title">Gain de sortie</div>
+          <div class="card-sub">Volume final après toute la chaîne</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="out-row">
+          <div class="out-lbl">Input gain</div>
+          <input type="range" class="out-slider" id="in-gain" min="-12" max="12" step="0.5" value="0" oninput="updateInGain()" style="accent-color:var(--purple);">
+          <div class="out-val" id="in-gain-val">0.0 dB</div>
+        </div>
+        <div class="out-row">
+          <div class="out-lbl">Output gain</div>
+          <input type="range" class="out-slider" id="out-gain" min="-12" max="6" step="0.5" value="0" oninput="updateOutput()" style="accent-color:#00C8FF;">
+          <div class="out-val" id="out-gain-val">0.0 dB</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  BAND CONFIG
+// ═══════════════════════════════════════════════════
+const BANDS = [
+  { type:'lowshelf',  freq:80,    gain:0, Q:.7,  name:'SUB',  color:'#6366F1' },
+  { type:'peaking',   freq:250,   gain:0, Q:1.0, name:'LOW',  color:'#22C55E' },
+  { type:'peaking',   freq:1000,  gain:0, Q:1.0, name:'MID',  color:'#EAB308' },
+  { type:'peaking',   freq:4000,  gain:0, Q:1.5, name:'HI-M', color:'#F97316' },
+  { type:'highshelf', freq:12000, gain:0, Q:.7,  name:'AIR',  color:'#00C8FF' },
+];
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let actx = null, masterBuf = null, masterSrc = null;
+let analyserIn = null, analyserOut = null;
+let inputGainNode = null, outGainNode = null, makeupNode = null, monitorGainNode = null;
+let eqNodes = [], compNode = null, satNode = null, limNode = null;
+let isBypassed = false, isPlaying = false, isMuted = false;
+let playStart = 0, playOffset = 0;
+let rafSpec = null, rafGR = null, rafPlay = null;
+let satMode = 'soft';
+let nodeEnabled = { eq:true, comp:true, sat:true, lim:true };
+let currentFile = null;
+let isDraggingSeek = false;
+let waveformPeaks = null;
+// EQ drag
+let eqDragBand = -1, eqHoverBand = -1;
+let eqDragStartY = 0, eqDragStartGain = 0;
+// A/B
+let abSlots = { A: null, B: null };
+let abCurrent = 'A';
+// Spectrum peak hold
+let specPeaks = null;
+const PEAK_DECAY = 0.992;
+// GR bars
+const GR_SEGS = 24;
+let grBarEls = [];
+// Clip hold
+let clipHoldTimer = null;
+
+// ═══════════════════════════════════════════════════
+//  BUILD CHAIN — connected once, source swapped only
+// ═══════════════════════════════════════════════════
+function buildChain() {
+  inputGainNode = actx.createGain(); inputGainNode.gain.value = dbToLin(0);
+  eqNodes = BANDS.map(b => {
+    const f = actx.createBiquadFilter();
+    f.type = b.type; f.frequency.value = b.freq;
+    f.gain.value = b.gain; f.Q.value = b.Q; return f;
+  });
+  compNode    = actx.createDynamicsCompressor();
+  satNode     = actx.createWaveShaper(); satNode.oversample = '4x';
+  limNode     = actx.createDynamicsCompressor();
+  limNode.ratio.value = 20; limNode.attack.value = 0.001; limNode.knee.value = 0;
+  makeupNode  = actx.createGain();
+  outGainNode = actx.createGain();
+  analyserIn  = actx.createAnalyser(); analyserIn.fftSize  = 2048;
+  analyserOut = actx.createAnalyser(); analyserOut.fftSize = 2048;
+
+  // src → inputGain → analyserIn → eq[0..4] → comp → sat → lim → makeup → outGain → analyserOut → dest
+  inputGainNode.connect(analyserIn);
+  analyserIn.connect(eqNodes[0]);
+  for (let i = 0; i < 4; i++) eqNodes[i].connect(eqNodes[i+1]);
+  eqNodes[4].connect(compNode);
+  compNode.connect(satNode);
+  satNode.connect(limNode);
+  limNode.connect(makeupNode);
+  makeupNode.connect(outGainNode);
+  outGainNode.connect(analyserOut);
+  monitorGainNode = actx.createGain();
+  monitorGainNode.gain.value = parseFloat(document.getElementById('vol-slider').value);
+  analyserOut.connect(monitorGainNode);
+  monitorGainNode.connect(actx.destination);
+
+  // Init params from UI
+  updateInGain(); updateComp(); updateSat(); updateLim(); updateOutput();
+}
+
+// ═══════════════════════════════════════════════════
+//  DROP / FILE LOAD
+// ═══════════════════════════════════════════════════
+function onDragOver(e)   { e.preventDefault(); document.getElementById('drop-zone').classList.add('over'); }
+function onDragLeave()   { document.getElementById('drop-zone').classList.remove('over'); }
+function onDrop(e)       { e.preventDefault(); onDragLeave(); const f=e.dataTransfer.files[0]; if(f&&f.type.startsWith('audio/')) loadFile(f); }
+function onFileSelect(e) { const f=e.target.files[0]; if(f) loadFile(f); }
+
+function loadFile(file) {
+  currentFile = file;
+  setPanelTitle('Décodage…');
+  stopAndClean();
+  teardownChain();
+
+  if (!actx) actx = new (window.AudioContext||window.webkitAudioContext)();
+  if (actx.state === 'suspended') actx.resume();
+  buildChain();
+
+  file.arrayBuffer()
+    .then(ab => actx.decodeAudioData(ab))
+    .then(buf => {
+      masterBuf = buf;
+      waveformPeaks = buildWaveformPeaks(buf);
+      specPeaks = new Float32Array(analyserOut.frequencyBinCount);
+
+      document.getElementById('drop-section').style.display  = 'none';
+      document.getElementById('file-section').style.display  = 'flex';
+      document.getElementById('p-filename').textContent = file.name;
+      const ext = file.name.split('.').pop().toUpperCase();
+      document.getElementById('p-meta').textContent =
+        `${ext} · ${(file.size/1048576).toFixed(1)} MB · ${fmtTime(buf.duration)} · ${(buf.sampleRate/1000).toFixed(1)} kHz`;
+      document.getElementById('wave-time').textContent = '0:00 / ' + fmtTime(buf.duration);
+      setPanelTitle('Analyseur');
+      initWaveCanvas();
+      drawWaveform(0);
+      initSpecCanvas();
+      buildGRBars();
+      startMeters();
+      drawEQCurve();
+    })
+    .catch(err => showToast('Erreur : ' + err.message));
+}
+
+function teardownChain() {
+  [analyserIn, inputGainNode, ...eqNodes, compNode, satNode, limNode, makeupNode, outGainNode, analyserOut, monitorGainNode]
+    .filter(Boolean).forEach(n => { try { n.disconnect(); } catch(_){} });
+  eqNodes = []; monitorGainNode = null;
+}
+
+// ═══════════════════════════════════════════════════
+//  WAVEFORM
+// ═══════════════════════════════════════════════════
+function buildWaveformPeaks(buf) {
+  const ch0  = buf.getChannelData(0);
+  const nCh  = buf.numberOfChannels;
+  const ch1  = nCh > 1 ? buf.getChannelData(1) : ch0;
+  const N    = 280;
+  const step = Math.floor(buf.length / N);
+  const peaks = new Float32Array(N);
+  for (let i = 0; i < N; i++) {
+    let mx = 0;
+    for (let j = 0; j < step; j++) {
+      const idx = i * step + j;
+      mx = Math.max(mx, Math.abs(ch0[idx] || 0), Math.abs(ch1[idx] || 0));
+    }
+    peaks[i] = mx;
+  }
+  return peaks;
+}
+
+function initWaveCanvas() {
+  const canvas = document.getElementById('wave-canvas');
+  const dpr    = window.devicePixelRatio || 1;
+  const W      = canvas.parentElement.clientWidth;
+  canvas.width = W * dpr; canvas.height = 56 * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = '56px';
+}
+
+function drawWaveform(pct) {
+  const canvas = document.getElementById('wave-canvas');
+  if (!canvas || !waveformPeaks) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W   = canvas.width / dpr, H = 56;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save(); ctx.scale(dpr, dpr);
+  ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(0, 0, W, H);
+
+  const n   = waveformPeaks.length;
+  const bw  = W / n;
+  const mid = H / 2;
+  const splitX = pct * W;
+
+  const gradPlayed = ctx.createLinearGradient(0, 0, splitX, 0);
+  gradPlayed.addColorStop(0,   'rgba(0,200,255,.85)');
+  gradPlayed.addColorStop(0.5, 'rgba(155,127,255,.85)');
+  gradPlayed.addColorStop(1,   'rgba(0,200,255,.85)');
+
+  for (let i = 0; i < n; i++) {
+    const x  = i * bw;
+    const bh = Math.max(2, waveformPeaks[i] * (H - 4));
+    ctx.fillStyle = x < splitX ? gradPlayed : 'rgba(255,255,255,.12)';
+    ctx.fillRect(x + 0.5, mid - bh/2, Math.max(1, bw - 1), bh);
+  }
+
+  // Playhead
+  if (pct > 0 && pct < 1) {
+    ctx.fillStyle = 'rgba(255,255,255,.7)';
+    ctx.fillRect(splitX - 0.5, 0, 1.5, H);
+  }
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════
+//  PLAYBACK
+// ═══════════════════════════════════════════════════
+function connectAndPlay(offset) {
+  if (masterSrc) { try { masterSrc.disconnect(); } catch(_){} try { masterSrc.stop(); } catch(_){} masterSrc=null; }
+  if (!actx || !masterBuf) return;
+  offset = Math.max(0, Math.min(offset, masterBuf.duration - 0.05));
+  masterSrc = actx.createBufferSource();
+  masterSrc.buffer = masterBuf;
+  masterSrc.connect(inputGainNode);
+  masterSrc.start(0, offset);
+  playStart = actx.currentTime - offset;
+  isPlaying = true;
+  updatePlayUI(true);
+  masterSrc.onended = () => {
+    if (!isPlaying) return;
+    isPlaying = false; playOffset = 0;
+    updatePlayUI(false); drawWaveform(0);
+    document.getElementById('wave-time').textContent = '0:00 / ' + fmtTime(masterBuf.duration);
+  };
+  cancelAnimationFrame(rafPlay);
+  rafPlay = requestAnimationFrame(tickPlayhead);
+}
+
+function togglePlay() {
+  if (!masterBuf) return;
+  if (actx.state === 'suspended') actx.resume();
+  if (isPlaying) {
+    playOffset = Math.max(0, actx.currentTime - playStart);
+    if (masterSrc) { try{masterSrc.disconnect();masterSrc.stop();}catch(_){} masterSrc=null; }
+    isPlaying = false;
+    cancelAnimationFrame(rafPlay);
+    updatePlayUI(false);
+  } else {
+    connectAndPlay(playOffset);
+  }
+}
+
+function skipBy(sec) {
+  if (!masterBuf) return;
+  const was = isPlaying;
+  // When playing: current position = elapsed since playStart. When paused: use stored playOffset.
+  const curPos = isPlaying ? Math.max(0, actx.currentTime - playStart) : playOffset;
+  if (was) { if(masterSrc){try{masterSrc.disconnect();masterSrc.stop();}catch(_){}} masterSrc=null; isPlaying=false; }
+  playOffset = Math.max(0, Math.min(curPos + sec, masterBuf.duration - 0.1));
+  if (was) connectAndPlay(playOffset);
+  else { drawWaveform(playOffset / masterBuf.duration); updateTimeDisplay(playOffset); }
+}
+
+function seekTo(pct) {
+  if (!masterBuf) return;
+  playOffset = pct * masterBuf.duration;
+  drawWaveform(pct); updateTimeDisplay(playOffset);
+  if (isPlaying) { cancelAnimationFrame(rafPlay); connectAndPlay(playOffset); }
+}
+
+function tickPlayhead() {
+  if (!isPlaying || !masterBuf) return;
+  const elapsed = actx.currentTime - playStart;
+  const pct = Math.min(elapsed / masterBuf.duration, 1);
+  drawWaveform(pct);
+  updateTimeDisplay(Math.min(elapsed, masterBuf.duration));
+  if (pct < 1) rafPlay = requestAnimationFrame(tickPlayhead);
+}
+
+function updateTimeDisplay(cur) {
+  if (!masterBuf) return;
+  document.getElementById('wave-time').textContent = fmtTime(cur) + ' / ' + fmtTime(masterBuf.duration);
+}
+
+function updatePlayUI(playing) {
+  document.getElementById('t-icon-play').style.display  = playing ? 'none' : '';
+  document.getElementById('t-icon-pause').style.display = playing ? ''     : 'none';
+}
+
+function toggleMute() {
+  isMuted = !isMuted;
+  if (monitorGainNode) {
+    const v = isMuted ? 0 : parseFloat(document.getElementById('vol-slider').value);
+    monitorGainNode.gain.setTargetAtTime(v, actx.currentTime, 0.02);
+  }
+  document.getElementById('vol-icon').textContent = isMuted ? '🔇' : '🔊';
+  document.getElementById('vol-icon').style.color = isMuted ? 'rgba(255,107,43,.8)' : '';
+}
+
+function updateVolume() {
+  const v = parseFloat(document.getElementById('vol-slider').value);
+  if (isMuted) { isMuted = false; document.getElementById('vol-icon').textContent = '🔊'; document.getElementById('vol-icon').style.color = ''; }
+  // Monitor gain only — does NOT affect the exported signal (which goes through outGainNode)
+  if (monitorGainNode) monitorGainNode.gain.setTargetAtTime(v, actx ? actx.currentTime : 0, 0.01);
+}
+
+// ═══════════════════════════════════════════════════
+//  PARAMETER UPDATES
+// ═══════════════════════════════════════════════════
+function updateInGain() {
+  const g = parseFloat(document.getElementById('in-gain').value);
+  if (inputGainNode && !isBypassed) inputGainNode.gain.value = dbToLin(g);
+  document.getElementById('in-gain-val').textContent = (g >= 0 ? '+' : '') + g.toFixed(1) + ' dB';
+}
+
+function updateComp() {
+  if (!compNode) return;
+  const th = parseFloat(document.getElementById('thresh').value);
+  const ra = parseFloat(document.getElementById('ratio').value);
+  const at = parseFloat(document.getElementById('attack').value);
+  const re = parseFloat(document.getElementById('release').value);
+  const kn = parseFloat(document.getElementById('knee').value);
+  const mk = parseFloat(document.getElementById('makeup').value);
+  if (!isBypassed && nodeEnabled.comp) {
+    compNode.threshold.value = th; compNode.ratio.value = ra;
+    compNode.attack.value = at; compNode.release.value = re; compNode.knee.value = kn;
+  }
+  if (makeupNode && !isBypassed) makeupNode.gain.value = dbToLin(mk);
+  document.getElementById('thresh-val').textContent  = th + ' dB';
+  document.getElementById('ratio-val').textContent   = ra + ':1';
+  document.getElementById('attack-val').textContent  = Math.round(at * 1000) + ' ms';
+  document.getElementById('release-val').textContent = Math.round(re * 1000) + ' ms';
+  document.getElementById('knee-val').textContent    = kn + ' dB';
+  document.getElementById('makeup-val').textContent  = (mk>=0?'+':'') + mk + ' dB';
+  document.getElementById('comp-summary').textContent = `Seuil ${th} dB · Ratio ${ra}:1`;
+}
+
+function updateSat() {
+  if (!satNode) return;
+  const drive = parseFloat(document.getElementById('drive').value) / 100;
+  document.getElementById('drive-val').textContent = Math.round(drive * 100) + '%';
+  if (!isBypassed && nodeEnabled.sat) satNode.curve = makeSatCurve(drive, satMode);
+}
+
+function setSatMode(mode, el) {
+  satMode = mode;
+  document.querySelectorAll('.sat-mode').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  updateSat();
+}
+
+function updateLim() {
+  if (!limNode) return;
+  const ceil = parseFloat(document.getElementById('ceiling').value);
+  const rel  = parseFloat(document.getElementById('lim-release').value);
+  if (!isBypassed && nodeEnabled.lim) { limNode.threshold.value = ceil; limNode.release.value = rel; }
+  document.getElementById('ceil-val').textContent        = ceil.toFixed(1) + ' dBFS';
+  document.getElementById('lim-release-val').textContent = Math.round(rel * 1000) + ' ms';
+  document.getElementById('lim-summary').textContent     = `Plafond ${ceil.toFixed(1)} dBFS · Ratio 20:1`;
+}
+
+function updateOutput() {
+  if (!outGainNode) return;
+  const g = parseFloat(document.getElementById('out-gain').value);
+  if (!isBypassed) outGainNode.gain.value = dbToLin(g);
+  document.getElementById('out-gain-val').textContent = (g>=0?'+':'') + g.toFixed(1) + ' dB';
+}
+
+function makeSatCurve(drive, mode) {
+  const n = 512, c = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const x = (i*2/(n-1)) - 1;
+    if (drive === 0) { c[i] = x; continue; }
+    if (mode === 'soft') { const k=drive*8; c[i]=(1+k)*x/(1+k*Math.abs(x)); }
+    else if (mode === 'warm') { const k=drive*6; c[i]=x>0?(1+k)*x/(1+k*x):(1+k*0.7)*x/(1+k*0.7*Math.abs(x)); }
+    else { const t=Math.max(0.01,1-drive*0.7); c[i]=Math.max(-1,Math.min(1,x/t))*t*(1+drive*0.3); }
+  }
+  return c;
+}
+
+function dbToLin(db) { return Math.pow(10, db/20); }
+
+// ═══════════════════════════════════════════════════
+//  EQ BAND UI + DRAGGABLE CANVAS
+// ═══════════════════════════════════════════════════
+function buildEQBands() {
+  const c = document.getElementById('eq-bands');
+  c.innerHTML = '';
+  BANDS.forEach((b, i) => {
+    const d = document.createElement('div');
+    d.className = 'eq-band';
+    d.innerHTML = `
+      <div class="band-dot" style="background:${b.color};"></div>
+      <div class="band-name">${b.name}</div>
+      <div class="band-gain-val" id="egv${i}" style="color:#6B7280;">0.0</div>
+      <input type="range" class="vert-slider" id="eg${i}" min="-12" max="12" step="0.5" value="0"
+             oninput="updateEQBand(${i})" style="accent-color:${b.color};">
+      <div class="band-freq-val">${b.freq<1000?b.freq+'Hz':(b.freq/1000)+'kHz'}</div>`;
+    c.appendChild(d);
+  });
+}
+
+function updateEQBand(i) {
+  const gain = parseFloat(document.getElementById('eg'+i).value);
+  BANDS[i].gain = gain;
+  if (eqNodes[i] && nodeEnabled.eq && !isBypassed) eqNodes[i].gain.value = gain;
+  const el = document.getElementById('egv'+i);
+  el.textContent = (gain>=0?'+':'') + gain.toFixed(1);
+  el.style.color = gain===0 ? '#6B7280' : BANDS[i].color;
+  drawEQCurve();
+}
+
+function initEQDrag() {
+  const canvas = document.getElementById('eq-canvas');
+  const tooltip = document.getElementById('eq-tooltip');
+
+  function getBandAt(e) {
+    const r   = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const W   = canvas.width / dpr, H = 160;
+    const mx  = (e.clientX - r.left) * (canvas.width / r.width) / dpr;
+    const my  = (e.clientY - r.top)  * (canvas.height / r.height) / dpr;
+    const mid = H / 2;
+    let best = -1, bestDist = 16;
+    BANDS.forEach((b, i) => {
+      const bx = freqToX(b.freq, W);
+      const by = mid - (b.gain / 14) * (H / 2);
+      const d  = Math.sqrt((mx-bx)**2 + (my-by)**2);
+      if (d < bestDist) { bestDist = d; best = i; }
+    });
+    return best;
+  }
+
+  canvas.addEventListener('mousedown', e => {
+    if (e.button === 2) return; // right click handled separately
+    const i = getBandAt(e);
+    if (i < 0) return;
+    eqDragBand = i;
+    eqDragStartY    = e.clientY;
+    eqDragStartGain = BANDS[i].gain;
+    canvas.style.cursor = 'ns-resize';
+    e.preventDefault();
+  });
+
+  canvas.addEventListener('contextmenu', e => {
+    e.preventDefault();
+    const i = getBandAt(e);
+    if (i < 0) return;
+    BANDS[i].gain = 0;
+    document.getElementById('eg'+i).value = 0;
+    updateEQBand(i);
+  });
+
+  canvas.addEventListener('mousemove', e => {
+    if (eqDragBand >= 0) {
+      const dy = e.clientY - eqDragStartY;
+      const newGain = Math.max(-12, Math.min(12, eqDragStartGain - dy * 0.15));
+      BANDS[eqDragBand].gain = parseFloat(newGain.toFixed(1));
+      document.getElementById('eg'+eqDragBand).value = BANDS[eqDragBand].gain;
+      updateEQBand(eqDragBand);
+      tooltip.style.opacity = '1';
+      tooltip.textContent = `${BANDS[eqDragBand].name}  ${BANDS[eqDragBand].freq<1000?BANDS[eqDragBand].freq+'Hz':(BANDS[eqDragBand].freq/1000)+'kHz'}  ${BANDS[eqDragBand].gain>=0?'+':''}${BANDS[eqDragBand].gain.toFixed(1)} dB`;
+    } else {
+      const i = getBandAt(e);
+      eqHoverBand = i;
+      if (i >= 0) {
+        canvas.style.cursor = 'ns-resize';
+        tooltip.style.opacity = '1';
+        tooltip.textContent = `${BANDS[i].name} · ${BANDS[i].freq<1000?BANDS[i].freq+'Hz':(BANDS[i].freq/1000)+'kHz'} · ${BANDS[i].gain>=0?'+':''}${BANDS[i].gain.toFixed(1)} dB`;
+      } else {
+        canvas.style.cursor = 'crosshair';
+        tooltip.style.opacity = '0';
+      }
+    }
+    drawEQCurve();
+  });
+
+  document.addEventListener('mouseup', () => {
+    eqDragBand = -1;
+    canvas.style.cursor = 'crosshair';
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    eqHoverBand = -1;
+    tooltip.style.opacity = '0';
+    drawEQCurve();
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  EQ CURVE DRAW
+// ═══════════════════════════════════════════════════
+function drawEQCurve() {
+  const canvas = document.getElementById('eq-canvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W   = Math.max(200, canvas.parentElement.clientWidth - 0);
+  const H   = 160;
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  canvas.style.width = W+'px'; canvas.style.height = H+'px';
+  const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+  const mid = H/2, dbRange = 14;
+
+  ctx.fillStyle = '#0D1020'; ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,.05)'; ctx.lineWidth = 1;
+  [50,100,200,500,1000,2000,5000,10000,20000].forEach(f => {
+    const x = freqToX(f,W); ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+  });
+  [-12,-6,0,6,12].forEach(g => {
+    const y = mid - (g/dbRange)*(H/2);
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+    ctx.fillStyle = g===0?'rgba(255,255,255,.3)':'rgba(255,255,255,.18)'; ctx.font='10px Inter';
+    ctx.fillText((g>0?'+':'')+g, 4, y-3);
+  });
+  ctx.strokeStyle='rgba(255,255,255,.2)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,mid); ctx.lineTo(W,mid); ctx.stroke();
+
+  // Freq labels
+  ctx.fillStyle='rgba(255,255,255,.2)'; ctx.font='9px Inter';
+  [[100,'100Hz'],[500,'500Hz'],[1000,'1kHz'],[5000,'5kHz'],[10000,'10kHz']].forEach(([f,lbl])=>{
+    ctx.fillText(lbl, freqToX(f,W)+2, H-4);
+  });
+
+  // EQ response
+  const nPts = W;
+  const freqArr = new Float32Array(nPts);
+  for (let i=0;i<nPts;i++) freqArr[i] = 20*Math.pow(1000,i/(nPts-1));
+  const mag = new Float32Array(nPts).fill(1);
+  const ph  = new Float32Array(nPts);
+  if (eqNodes.length) {
+    eqNodes.forEach(node => {
+      const m2 = new Float32Array(nPts);
+      node.getFrequencyResponse(freqArr, m2, ph);
+      for (let i=0;i<nPts;i++) mag[i] *= m2[i];
+    });
+  }
+
+  // Fill
+  ctx.beginPath();
+  for (let i=0;i<nPts;i++) {
+    const db = 20*Math.log10(Math.max(mag[i],1e-6));
+    const y  = mid - (db/dbRange)*(H/2);
+    i===0 ? ctx.moveTo(i,y) : ctx.lineTo(i,y);
+  }
+  ctx.lineTo(W,mid); ctx.lineTo(0,mid); ctx.closePath();
+  const grd = ctx.createLinearGradient(0,0,0,H);
+  grd.addColorStop(0,'rgba(0,200,255,.2)'); grd.addColorStop(1,'rgba(0,200,255,.0)');
+  ctx.fillStyle=grd; ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  for (let i=0;i<nPts;i++) {
+    const db = 20*Math.log10(Math.max(mag[i],1e-6));
+    const y  = mid-(db/dbRange)*(H/2);
+    i===0?ctx.moveTo(i,y):ctx.lineTo(i,y);
+  }
+  ctx.strokeStyle='rgba(0,200,255,.9)'; ctx.lineWidth=1.8; ctx.stroke();
+
+  // Band dots
+  BANDS.forEach((b,i) => {
+    const x  = freqToX(b.freq, W);
+    const y  = mid - (b.gain/dbRange)*(H/2);
+    const isHov = (i===eqHoverBand || i===eqDragBand);
+    // Vertical line from center to dot
+    ctx.strokeStyle = b.color + '44'; ctx.lineWidth = 1;
+    ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(x,mid); ctx.lineTo(x,y); ctx.stroke();
+    ctx.setLineDash([]);
+    // Dot
+    ctx.beginPath(); ctx.arc(x, y, isHov ? 7 : 5, 0, Math.PI*2);
+    ctx.fillStyle = b.color; ctx.fill();
+    ctx.strokeStyle = isHov ? '#fff' : 'rgba(255,255,255,.5)';
+    ctx.lineWidth = isHov ? 2 : 1.5;
+    ctx.stroke();
+    // Label on hover
+    if (isHov) {
+      ctx.fillStyle='rgba(0,0,0,.6)'; ctx.strokeStyle='rgba(255,255,255,.15)';
+      ctx.lineWidth=1;
+      const lbl = b.freq<1000?b.freq+'Hz':(b.freq/1000)+'kHz';
+      const lx = Math.max(4, Math.min(W-44, x-18));
+      const ly = y < 24 ? y+18 : y-18;
+      ctx.beginPath(); ctx.roundRect(lx-4, ly-11, 48, 15, 4);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle=b.color; ctx.font='bold 9px Inter';
+      ctx.fillText(lbl, lx, ly);
+    }
+  });
+}
+
+function freqToX(f,W) { return Math.log10(f/20)/Math.log10(20000/20)*W; }
+
+// ═══════════════════════════════════════════════════
+//  SPECTRUM — log scale + peak hold
+// ═══════════════════════════════════════════════════
+function initSpecCanvas() {
+  const canvas = document.getElementById('spec-canvas');
+  const dpr = window.devicePixelRatio||1;
+  const W   = canvas.parentElement.clientWidth;
+  canvas.width=W*dpr; canvas.height=110*dpr;
+  canvas.style.width=W+'px'; canvas.style.height='110px';
+  if (specPeaks) specPeaks = new Float32Array(analyserOut.frequencyBinCount);
+}
+
+function startMeters() {
+  cancelAnimationFrame(rafSpec); cancelAnimationFrame(rafGR);
+
+  (function drawSpec() {
+    rafSpec = requestAnimationFrame(drawSpec);
+    if (!analyserOut) return;
+    const canvas = document.getElementById('spec-canvas');
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio||1;
+    const W   = canvas.width/dpr, H=110;
+    const ctx = canvas.getContext('2d');
+    ctx.save(); ctx.scale(dpr,dpr);
+    ctx.fillStyle='rgba(13,16,32,.6)'; ctx.fillRect(0,0,W,H);
+
+    const bufLen = analyserOut.frequencyBinCount;
+    const data   = new Uint8Array(bufLen);
+    analyserOut.getByteFrequencyData(data);
+    const sr = actx ? actx.sampleRate : 44100;
+
+    // Log-scale bars
+    for (let px=0; px<W; px++) {
+      const freq  = 20 * Math.pow(20000/20, px/W);
+      const bin   = Math.min(bufLen-1, Math.round(freq/(sr/2)*bufLen));
+      const val   = data[bin]/255;
+      const bh    = val * (H-4);
+      const t     = px/W;
+      const r = Math.round(t*80+20), g2=Math.round(180-t*80), b=Math.round(255-t*200);
+      ctx.fillStyle = `rgba(${r},${g2},${b},.85)`;
+      ctx.fillRect(px, H-bh, 1, bh);
+
+      // Peak hold
+      if (specPeaks) {
+        if (val > specPeaks[bin]) specPeaks[bin] = val;
+        else specPeaks[bin] *= PEAK_DECAY;
+        const ph = specPeaks[bin]*(H-4);
+        if (specPeaks[bin] > 0.02) {
+          ctx.fillStyle = `rgba(${r},${g2},${b},.95)`;
+          ctx.fillRect(px, H-ph-1, 1, 1);
+        }
+      }
+    }
+
+    // Grid lines + freq labels
+    ctx.strokeStyle='rgba(255,255,255,.06)'; ctx.lineWidth=1;
+    [100,500,1000,5000,10000].forEach(f => {
+      const x = Math.log10(f/20)/Math.log10(20000/20)*W;
+      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.2)'; ctx.font='8px Inter';
+      ctx.fillText(f>=1000?f/1000+'k':f, x+2, H-3);
+    });
+
+    // dB scale on right edge — analyser default range: −100 to −30 dB
+    // pct: (dBLevel − minDb) / (maxDb − minDb), where min=−100, max=−30
+    ctx.fillStyle='rgba(255,255,255,.18)'; ctx.font='7px Inter'; ctx.textAlign='right';
+    [[-30,'−30'],[-60,'−60'],[-80,'−80']].forEach(([db,lbl])=>{
+      const pct=(db-(-100))/70; // (db+100)/70
+      const y=H-pct*(H-4);
+      ctx.beginPath(); ctx.strokeStyle='rgba(255,255,255,.06)'; ctx.lineWidth=1;
+      ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.2)';
+      ctx.fillText(lbl, W-2, y-2);
+    });
+    ctx.textAlign='left';
+    ctx.restore();
+
+    // LUFS
+    if (analyserIn && analyserOut) {
+      const lIn  = getLUFS(analyserIn), lOut = getLUFS(analyserOut);
+      const pIn  = Math.max(0,(lIn+60)/60*100), pOut=Math.max(0,(lOut+60)/60*100);
+      document.getElementById('lufs-in-fill').style.width  = pIn+'%';
+      document.getElementById('lufs-out-fill').style.width = pOut+'%';
+      document.getElementById('lufs-in-val').textContent   = lIn.toFixed(1)+' L';
+      document.getElementById('lufs-out-val').textContent  = lOut.toFixed(1)+' L';
+    }
+  })();
+
+  (function drawGR() {
+    rafGR = requestAnimationFrame(drawGR);
+    if (!compNode || !limNode) return;
+    const gr = Math.abs(compNode.reduction);
+    document.getElementById('gr-val').textContent = gr.toFixed(1)+' dB';
+    const pct = Math.min(gr/24, 1);
+    grBarEls.forEach((el, i) => {
+      const threshold = i / GR_SEGS;
+      if (pct > threshold) {
+        const t = threshold;
+        const r = Math.round(34+t*200), g2=Math.round(197-t*170), b=Math.round(94-t*94);
+        el.style.background = `rgb(${r},${g2},${b})`;
+        el.style.height = '100%';
+      } else {
+        el.style.background = '#E2E8F0';
+        el.style.height = '30%';
+      }
+    });
+
+    // Clip light
+    const limGR = Math.abs(limNode.reduction);
+    if (limGR > 0.5) {
+      document.getElementById('clip-light').classList.add('clip');
+      document.getElementById('clip-label').textContent = `Écrêtage −${limGR.toFixed(1)} dB`;
+      clearTimeout(clipHoldTimer);
+      clipHoldTimer = setTimeout(() => {
+        document.getElementById('clip-light').classList.remove('clip');
+        document.getElementById('clip-label').textContent = 'Pas d\'écrêtage';
+      }, 600);
+    }
+  })();
+}
+
+function buildGRBars() {
+  const container = document.getElementById('gr-bars');
+  container.innerHTML = '';
+  grBarEls = [];
+  for (let i = 0; i < GR_SEGS; i++) {
+    const el = document.createElement('div');
+    el.className = 'gr-bar-seg';
+    el.style.cssText = 'background:#E2E8F0;height:30%;transition:background .05s,height .05s;';
+    container.appendChild(el);
+    grBarEls.push(el);
+  }
+}
+
+function getLUFS(an) {
+  const data = new Float32Array(an.fftSize);
+  an.getFloatTimeDomainData(data);
+  let s=0; for (let i=0;i<data.length;i++) s+=data[i]*data[i];
+  const rms=Math.sqrt(s/data.length);
+  return rms>0 ? Math.max(-60,20*Math.log10(rms)-0.691) : -60;
+}
+
+// ═══════════════════════════════════════════════════
+//  BYPASS + NODE TOGGLES
+// ═══════════════════════════════════════════════════
+function toggleBypass() {
+  isBypassed = !isBypassed;
+  document.getElementById('bypass-track').classList.toggle('off', isBypassed);
+  document.getElementById('bypass-label').textContent = isBypassed ? 'Bypass' : 'Actif';
+  applyAllNodes();
+}
+
+function applyAllNodes() {
+  if (eqNodes.length)
+    eqNodes.forEach((n,i)=>{ n.gain.value=(!isBypassed&&nodeEnabled.eq)?BANDS[i].gain:0; });
+  if (compNode) {
+    compNode.threshold.value=(!isBypassed&&nodeEnabled.comp)?parseFloat(document.getElementById('thresh').value):0;
+    compNode.ratio.value    =(!isBypassed&&nodeEnabled.comp)?parseFloat(document.getElementById('ratio').value):1;
+  }
+  if (makeupNode)   makeupNode.gain.value   = isBypassed?1:dbToLin(parseFloat(document.getElementById('makeup').value));
+  if (satNode)      { const d=parseFloat(document.getElementById('drive').value)/100; satNode.curve=(!isBypassed&&nodeEnabled.sat)?makeSatCurve(d,satMode):null; }
+  if (limNode) {
+    limNode.threshold.value=(!isBypassed&&nodeEnabled.lim)?parseFloat(document.getElementById('ceiling').value):0;
+    limNode.ratio.value    =(!isBypassed&&nodeEnabled.lim)?20:1;
+  }
+  if (outGainNode)    outGainNode.gain.value   = isBypassed ? 1 : dbToLin(parseFloat(document.getElementById('out-gain').value));
+  if (inputGainNode)  inputGainNode.gain.value = isBypassed ? 1 : dbToLin(parseFloat(document.getElementById('in-gain').value));
+  if (monitorGainNode) monitorGainNode.gain.value = isMuted ? 0 : parseFloat(document.getElementById('vol-slider').value);
+}
+
+function toggleNode(e, id) {
+  e.stopPropagation();
+  nodeEnabled[id] = !nodeEnabled[id];
+  document.getElementById(id+'-toggle').classList.toggle('off', !nodeEnabled[id]);
+  const on = nodeEnabled[id];
+  if (id==='eq')   eqNodes.forEach((n,i)=>{ n.gain.value=on?BANDS[i].gain:0; });
+  if (id==='comp'&&compNode) {
+    compNode.threshold.value=on?parseFloat(document.getElementById('thresh').value):0;
+    compNode.ratio.value    =on?parseFloat(document.getElementById('ratio').value):1;
+    if (makeupNode) makeupNode.gain.value=on?dbToLin(parseFloat(document.getElementById('makeup').value)):1;
+  }
+  if (id==='sat'&&satNode) { const d=parseFloat(document.getElementById('drive').value)/100; satNode.curve=on?makeSatCurve(d,satMode):null; }
+  if (id==='lim'&&limNode) { limNode.threshold.value=on?parseFloat(document.getElementById('ceiling').value):0; limNode.ratio.value=on?20:1; }
+}
+
+// ═══════════════════════════════════════════════════
+//  A/B COMPARISON
+// ═══════════════════════════════════════════════════
+function captureSnapshot() {
+  return {
+    eq:      BANDS.map(b => b.gain),
+    thresh:  parseFloat(document.getElementById('thresh').value),
+    ratio:   parseFloat(document.getElementById('ratio').value),
+    attack:  parseFloat(document.getElementById('attack').value),
+    release: parseFloat(document.getElementById('release').value),
+    knee:    parseFloat(document.getElementById('knee').value),
+    makeup:  parseFloat(document.getElementById('makeup').value),
+    drive:   parseFloat(document.getElementById('drive').value),
+    satMode: satMode,
+    ceil:    parseFloat(document.getElementById('ceiling').value),
+    limRel:  parseFloat(document.getElementById('lim-release').value),
+    inGain:  parseFloat(document.getElementById('in-gain').value),
+    outGain: parseFloat(document.getElementById('out-gain').value),
+    nodeEnabled: {...nodeEnabled},
+  };
+}
+
+function applySnapshot(snap) {
+  snap.eq.forEach((g,i)=>{
+    BANDS[i].gain=g;
+    const sl=document.getElementById('eg'+i); if(sl) sl.value=g;
+    const vl=document.getElementById('egv'+i); if(vl){vl.textContent=(g>=0?'+':'')+g.toFixed(1);vl.style.color=g===0?'#6B7280':BANDS[i].color;}
+    if(eqNodes[i]&&!isBypassed) eqNodes[i].gain.value=g;
+  });
+  document.getElementById('thresh').value  = snap.thresh;
+  document.getElementById('ratio').value   = snap.ratio;
+  document.getElementById('attack').value  = snap.attack;
+  document.getElementById('release').value = snap.release;
+  document.getElementById('knee').value    = snap.knee;
+  document.getElementById('makeup').value  = snap.makeup;
+  document.getElementById('drive').value   = snap.drive;
+  document.getElementById('ceiling').value = snap.ceil;
+  document.getElementById('lim-release').value = snap.limRel;
+  document.getElementById('in-gain').value  = snap.inGain;
+  document.getElementById('out-gain').value = snap.outGain;
+  satMode = snap.satMode;
+  document.querySelectorAll('.sat-mode').forEach(m=>m.classList.toggle('active',m.textContent.toLowerCase().includes(snap.satMode)));
+  Object.assign(nodeEnabled, snap.nodeEnabled);
+  ['eq','comp','sat','lim'].forEach(id=>document.getElementById(id+'-toggle').classList.toggle('off',!nodeEnabled[id]));
+  updateComp(); updateSat(); updateLim(); updateOutput(); updateInGain();
+  drawEQCurve();
+}
+
+function switchAB(slot) {
+  // Save current state to the active slot
+  abSlots[abCurrent] = captureSnapshot();
+  // Switch
+  abCurrent = slot;
+  document.getElementById('ab-a').classList.toggle('active', slot==='A');
+  document.getElementById('ab-b').classList.toggle('active', slot==='B');
+  // Load target slot (or flat if first time)
+  if (abSlots[slot]) applySnapshot(abSlots[slot]);
+  else applyPreset('clear');
+  showToast(`Slot ${slot} chargé`);
+}
+
+// ═══════════════════════════════════════════════════
+//  PRESETS
+// ═══════════════════════════════════════════════════
+// ── PRESET DEFINITIONS ───────────────────────────────
+// eq: [SUB 80Hz, LOW 250Hz, MID 1kHz, HI-M 4kHz, AIR 12kHz]
+const PRESETS = {
+  // Utilitaires
+  balanced:  { eq:[0,1,-1,2,1.5],  thresh:-24,ratio:4,  attack:0.003,release:0.25, knee:6,  makeup:2, drive:10,satMode:'soft',ceil:-1.0, outGain:0   },
+  clear:     { eq:[0,0,0,0,0],     thresh:0,  ratio:1,  attack:0.003,release:0.25, knee:6,  makeup:0, drive:0, satMode:'soft',ceil:-0.1, outGain:0   },
+  loud:      { eq:[2,2,1,2,3],     thresh:-30,ratio:8,  attack:0.001,release:0.1,  knee:2,  makeup:5, drive:20,satMode:'hard',ceil:-0.3, outGain:2   },
+  radio:     { eq:[1,1,0,2,3],     thresh:-32,ratio:10, attack:0.001,release:0.08, knee:2,  makeup:6, drive:22,satMode:'warm',ceil:-0.1, outGain:2   },
+  // Hip-Hop / Urban
+  hiphop:    { eq:[3,1,0,1,2],     thresh:-26,ratio:4,  attack:0.002,release:0.2,  knee:6,  makeup:2, drive:15,satMode:'warm',ceil:-0.8, outGain:0.5 },
+  trap:      { eq:[3,2,-1,0,2],    thresh:-28,ratio:6,  attack:0.001,release:0.15, knee:4,  makeup:3, drive:25,satMode:'warm',ceil:-0.5, outGain:1   },
+  drill:     { eq:[4,3,-2,-2,0],   thresh:-28,ratio:6,  attack:0.005,release:0.2,  knee:4,  makeup:3, drive:22,satMode:'hard',ceil:-0.5, outGain:1   },
+  phonk:     { eq:[4,2,-1,-3,-2],  thresh:-26,ratio:7,  attack:0.002,release:0.15, knee:3,  makeup:4, drive:55,satMode:'hard',ceil:-0.5, outGain:0.5 },
+  rnb:       { eq:[3,2,-1,1,2],    thresh:-22,ratio:3,  attack:0.008,release:0.35, knee:8,  makeup:2, drive:18,satMode:'warm',ceil:-1.0, outGain:0   },
+  // Pop / Rock / Électro
+  pop:       { eq:[1,0,0,2,3],     thresh:-26,ratio:4,  attack:0.002,release:0.2,  knee:5,  makeup:3, drive:12,satMode:'soft',ceil:-0.5, outGain:1   },
+  rock:      { eq:[2,-1,2,3,1],    thresh:-24,ratio:5,  attack:0.001,release:0.15, knee:3,  makeup:3, drive:30,satMode:'hard',ceil:-0.8, outGain:1   },
+  edm:       { eq:[4,0,-2,1,5],    thresh:-30,ratio:8,  attack:0.001,release:0.1,  knee:2,  makeup:4, drive:15,satMode:'soft',ceil:-0.3, outGain:2   },
+  afrobeat:  { eq:[2,1,0,2,3],     thresh:-24,ratio:4,  attack:0.003,release:0.25, knee:6,  makeup:2, drive:18,satMode:'warm',ceil:-0.8, outGain:0.5 },
+  // Styles organiques
+  lofi:      { eq:[2,1,0,-3,-6],   thresh:-20,ratio:3,  attack:0.01, release:0.4,  knee:8,  makeup:1, drive:45,satMode:'warm',ceil:-3.0, outGain:-1  },
+  jazz:      { eq:[1,0,0,0,1],     thresh:-14,ratio:2,  attack:0.015,release:0.5,  knee:12, makeup:1, drive:5, satMode:'soft',ceil:-2.0, outGain:-1  },
+  classical: { eq:[0,0,0,0,0],     thresh:-6, ratio:1.5,attack:0.05, release:1.0,  knee:20, makeup:0, drive:0, satMode:'soft',ceil:-3.0, outGain:-2  },
+  // Voix / Podcast
+  podcast:   { eq:[-3,0,2,3,-1],   thresh:-18,ratio:3,  attack:0.005,release:0.3,  knee:8,  makeup:2, drive:5, satMode:'soft',ceil:-1.5, outGain:0   },
+};
+
+// ── PRESET CATEGORIES (pour l'affichage) ─────────────
+const PRESET_CATS = [
+  { label: 'Utilitaires',        ids: ['balanced','clear','loud','radio'] },
+  { label: 'Hip-Hop · Urban',    ids: ['hiphop','trap','drill','phonk','rnb'] },
+  { label: 'Pop · Rock · Électro', ids: ['pop','rock','edm','afrobeat'] },
+  { label: 'Organique · Voix',   ids: ['lofi','jazz','classical','podcast'] },
+];
+
+const PRESET_LABELS = {
+  balanced:'Balanced', clear:'Clear', loud:'Loud', radio:'Radio',
+  hiphop:'Hip-Hop', trap:'Trap', drill:'Drill', phonk:'Phonk', rnb:'R&B',
+  pop:'Pop', rock:'Rock', edm:'EDM', afrobeat:'Afrobeat',
+  lofi:'Lo-Fi', jazz:'Jazz', classical:'Classical', podcast:'Podcast',
+};
+
+function buildPresetBlocks() {
+  ['preset-block-drop','preset-block-file'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = '';
+    PRESET_CATS.forEach(cat => {
+      const lbl = document.createElement('div');
+      lbl.className = 'preset-cat-label';
+      lbl.textContent = cat.label;
+      el.appendChild(lbl);
+      const row = document.createElement('div');
+      row.className = 'preset-row';
+      cat.ids.forEach(pid => {
+        const pill = document.createElement('div');
+        pill.className = 'preset-pill' + (pid === 'balanced' ? ' active' : '');
+        pill.dataset.preset = pid;
+        pill.textContent = PRESET_LABELS[pid];
+        pill.onclick = () => applyPreset(pid);
+        row.appendChild(pill);
+      });
+      el.appendChild(row);
+    });
+  });
+}
+
+function applyPreset(name) {
+  document.querySelectorAll('.preset-pill').forEach(p=>p.classList.toggle('active',p.dataset.preset===name));
+  const p = PRESETS[name]; if (!p) return;
+  p.eq.forEach((g,i)=>{
+    BANDS[i].gain=g;
+    const sl=document.getElementById('eg'+i); if(sl) sl.value=g;
+    const vl=document.getElementById('egv'+i); if(vl){vl.textContent=(g>=0?'+':'')+g.toFixed(1);vl.style.color=g===0?'#6B7280':BANDS[i].color;}
+    if(eqNodes[i]&&!isBypassed) eqNodes[i].gain.value=g;
+  });
+  document.getElementById('thresh').value  = p.thresh;
+  document.getElementById('ratio').value   = p.ratio;
+  document.getElementById('attack').value  = p.attack;
+  document.getElementById('release').value = p.release;
+  document.getElementById('knee').value    = p.knee;
+  document.getElementById('makeup').value  = p.makeup;
+  document.getElementById('drive').value   = p.drive;
+  document.getElementById('ceiling').value = p.ceil;
+  document.getElementById('lim-release').value = 0.1;
+  document.getElementById('out-gain').value = p.outGain;
+  satMode = p.satMode;
+  document.querySelectorAll('.sat-mode').forEach(m=>m.classList.toggle('active',m.textContent.toLowerCase().includes(p.satMode)));
+  updateComp(); updateSat(); updateLim(); updateOutput(); drawEQCurve();
+}
+
+// ═══════════════════════════════════════════════════
+//  EXPORT WAV
+// ═══════════════════════════════════════════════════
+async function exportWAV() {
+  if (!masterBuf) return;
+  const btn=document.getElementById('export-btn'), prog=document.getElementById('export-progress');
+  btn.disabled=true; prog.style.display='flex';
+  setExp(5,'Construction…');
+  try {
+    const {sampleRate:sr,numberOfChannels:nCh,length:len}=masterBuf;
+    const off = new OfflineAudioContext(nCh,len,sr);
+
+    const offIn  = off.createGain(); offIn.gain.value=dbToLin(parseFloat(document.getElementById('in-gain').value));
+    const offEQ  = BANDS.map((b,i)=>{const f=off.createBiquadFilter();f.type=b.type;f.frequency.value=b.freq;f.gain.value=(nodeEnabled.eq&&!isBypassed)?BANDS[i].gain:0;f.Q.value=b.Q;return f;});
+    const offCmp = off.createDynamicsCompressor();
+    if (nodeEnabled.comp&&!isBypassed){offCmp.threshold.value=parseFloat(document.getElementById('thresh').value);offCmp.ratio.value=parseFloat(document.getElementById('ratio').value);offCmp.attack.value=parseFloat(document.getElementById('attack').value);offCmp.release.value=parseFloat(document.getElementById('release').value);offCmp.knee.value=parseFloat(document.getElementById('knee').value);}
+    else{offCmp.ratio.value=1;offCmp.threshold.value=0;}
+    const offSat = off.createWaveShaper(); offSat.oversample='4x';
+    const drive=parseFloat(document.getElementById('drive').value)/100;
+    offSat.curve=(nodeEnabled.sat&&!isBypassed&&drive>0)?makeSatCurve(drive,satMode):null;
+    const offLim = off.createDynamicsCompressor();
+    if (nodeEnabled.lim&&!isBypassed){offLim.threshold.value=parseFloat(document.getElementById('ceiling').value);offLim.ratio.value=20;offLim.attack.value=0.001;offLim.release.value=parseFloat(document.getElementById('lim-release').value);offLim.knee.value=0;}
+    else{offLim.ratio.value=1;offLim.threshold.value=0;}
+    const offMk  = off.createGain(); offMk.gain.value=isBypassed?1:dbToLin(parseFloat(document.getElementById('makeup').value));
+    const offOut = off.createGain(); offOut.gain.value=isBypassed?1:dbToLin(parseFloat(document.getElementById('out-gain').value));
+    const offSrc = off.createBufferSource(); offSrc.buffer=masterBuf;
+
+    offSrc.connect(offIn); offIn.connect(offEQ[0]);
+    for(let i=0;i<4;i++) offEQ[i].connect(offEQ[i+1]);
+    offEQ[4].connect(offCmp); offCmp.connect(offSat); offSat.connect(offLim);
+    offLim.connect(offMk); offMk.connect(offOut); offOut.connect(off.destination);
+    offSrc.start(0);
+
+    setExp(30,'Rendu…');
+    const rendered = await off.startRendering();
+    setExp(78,'Encodage WAV 16-bit…');
+    const wav = bufToWAV(rendered);
+    setExp(100,'Téléchargement…');
+    const url = URL.createObjectURL(new Blob([wav],{type:'audio/wav'}));
+    const a   = document.createElement('a');
+    a.href=url; a.download='mastered_'+(currentFile?currentFile.name.replace(/\.[^.]+$/,''):'audio')+'.wav';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    setTimeout(()=>{prog.style.display='none';btn.disabled=false;showToast('✅ Export WAV terminé !');},900);
+  } catch(err){prog.style.display='none';btn.disabled=false;showToast('Erreur : '+err.message);}
+}
+
+function setExp(pct,lbl){document.getElementById('exp-fill').style.width=pct+'%';document.getElementById('exp-label').textContent=lbl;}
+
+function bufToWAV(buffer){
+  const nCh=buffer.numberOfChannels,len=buffer.length,sr=buffer.sampleRate;
+  const ab=new ArrayBuffer(44+len*nCh*2),v=new DataView(ab);
+  const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+  ws(0,'RIFF');v.setUint32(4,36+len*nCh*2,true);ws(8,'WAVE');
+  ws(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);
+  v.setUint16(22,nCh,true);v.setUint32(24,sr,true);
+  v.setUint32(28,sr*nCh*2,true);v.setUint16(32,nCh*2,true);v.setUint16(34,16,true);
+  ws(36,'data');v.setUint32(40,len*nCh*2,true);
+  let off=44;
+  for(let i=0;i<len;i++) for(let ch=0;ch<nCh;ch++){
+    const s=Math.max(-1,Math.min(1,buffer.getChannelData(ch)[i]));
+    v.setInt16(off,s<0?s*0x8000:s*0x7FFF,true);off+=2;
+  }
+  return ab;
+}
+
+// ═══════════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════════
+function stopAndClean(){
+  if(isPlaying&&masterSrc){try{masterSrc.disconnect();masterSrc.stop();}catch(_){}}
+  isPlaying=false;playOffset=0;masterSrc=null;
+  cancelAnimationFrame(rafSpec);cancelAnimationFrame(rafGR);cancelAnimationFrame(rafPlay);
+  updatePlayUI(false);
+}
+
+function resetAll(){
+  stopAndClean();masterBuf=null;waveformPeaks=null;
+  document.getElementById('drop-section').style.display='flex';
+  document.getElementById('file-section').style.display='none';
+  document.getElementById('file-input').value='';
+  setPanelTitle('Chargement');
+  document.getElementById('lufs-in-fill').style.width='0%';
+  document.getElementById('lufs-out-fill').style.width='0%';
+  document.getElementById('lufs-in-val').textContent='— LUFS';
+  document.getElementById('lufs-out-val').textContent='— LUFS';
+}
+
+function setPanelTitle(t){document.getElementById('panel-title-lbl').textContent=t;}
+function fmtTime(s){s=Math.max(0,s||0);return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');}
+
+function showToast(msg){
+  const t=document.createElement('div');t.textContent=msg;
+  t.style.cssText='position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1A1D2E;color:#fff;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.35);pointer-events:none;transition:opacity .3s;';
+  document.body.appendChild(t);setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},2500);
+}
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  buildPresetBlocks();
+  buildEQBands();
+  buildGRBars();
+  drawEQCurve();
+  applyPreset('balanced');
+  initEQDrag();
+  window.addEventListener('resize', () => { drawEQCurve(); if(waveformPeaks){initWaveCanvas();drawWaveform(isPlaying&&masterBuf?((actx.currentTime-playStart)/masterBuf.duration):0);} });
+
+  // Wave canvas seek/drag
+  const waveWrap = document.getElementById('wave-wrap');
+  function handleWaveSeek(e) {
+    if (!masterBuf) return;
+    const r   = waveWrap.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX-r.left)/r.width));
+    seekTo(pct);
+  }
+  waveWrap.addEventListener('mousedown', e => { if (!masterBuf) return; isDraggingSeek=true; handleWaveSeek(e); });
+  document.addEventListener('mousemove', e => { if (isDraggingSeek) handleWaveSeek(e); });
+  document.addEventListener('mouseup',   () => { isDraggingSeek=false; });
+
+  // A/B: init slot A with balanced
+  abSlots['A'] = captureSnapshot();
+
+  // Full-page drop
+  document.body.addEventListener('dragover', e=>{if([...e.dataTransfer.types].includes('Files'))e.preventDefault();});
+  document.body.addEventListener('drop', e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('audio/'))loadFile(f);});
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.target.tagName==='INPUT') return;
+  if (e.code==='Space') { e.preventDefault(); togglePlay(); }
+  if (e.code==='KeyB')  { e.preventDefault(); toggleBypass(); }
+  if (e.code==='KeyM')  { e.preventDefault(); toggleMute(); }
+  if (e.code==='ArrowLeft')  { e.preventDefault(); skipBy(-5); }
+  if (e.code==='ArrowRight') { e.preventDefault(); skipBy(5); }
+});
+</script>
+</body>
+</html>

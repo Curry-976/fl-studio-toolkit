@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FL Studio — Conseils Beatmaker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F5F6FA;
+      --surface: #FFFFFF;
+      --sidebar: #161929;
+      --panel: #1E2337;
+      --accent: #FF6B2B;
+      --text: #111827;
+      --text2: #6B7280;
+      --text-muted: #9CA3AF;
+      --border: #E5E7EB;
+      --shadow: 0 2px 16px rgba(0,0,0,.07);
+      --shadow-md: 0 6px 32px rgba(0,0,0,.10);
+      --radius: 16px;
+      --sidebar-w: 72px;
+      /* category colors */
+      --orange: #FF6B35; --green: #84CC16; --purple: #8B7FFF;
+      --cyan: #0EA5E9; --yellow: #F59E0B; --pink: #EC4899;
+    }
+
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    .layout { display:flex; min-height:100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width:var(--sidebar-w); background:var(--sidebar);
+      position:fixed; left:0; top:0; bottom:0;
+      display:flex; flex-direction:column; align-items:center;
+      padding:20px 0; z-index:200; gap:6px;
+    }
+    .sidebar-logo {
+      width:40px; height:40px; border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),#cc4400);
+      display:flex; align-items:center; justify-content:center;
+      font-weight:800; font-size:14px; color:#fff;
+      margin-bottom:24px; box-shadow:0 4px 16px rgba(255,107,43,.4); flex-shrink:0;
+    }
+    .sidebar-nav { display:flex; flex-direction:column; gap:4px; flex:1; }
+    .sb-item {
+      width:44px; height:44px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      color:rgba(255,255,255,.3); text-decoration:none;
+      transition:all .2s; position:relative;
+    }
+    .sb-item:hover { background:rgba(255,255,255,.08); color:rgba(255,255,255,.7); }
+    .sb-item.active { background:rgba(255,107,43,.15); color:var(--accent); }
+    .sb-item svg { width:20px; height:20px; }
+    .sb-item::after {
+      content:attr(data-tip); position:absolute;
+      left:calc(100% + 14px); background:#111827; color:#fff;
+      font-size:12px; font-weight:500; white-space:nowrap;
+      padding:6px 10px; border-radius:8px; pointer-events:none;
+      opacity:0; transition:opacity .15s; z-index:300;
+    }
+    .sb-item:hover::after { opacity:1; }
+    .sidebar-bottom { margin-top:auto; display:flex; flex-direction:column; gap:4px; }
+
+    /* ── Main ── */
+    .main { margin-left:var(--sidebar-w); flex:1; padding:28px 28px 60px; }
+
+    /* ── Header ── */
+    .page-header { margin-bottom:24px; }
+    .page-title { font-size:24px; font-weight:800; letter-spacing:-.5px; }
+    .page-title em { color:var(--accent); font-style:normal; }
+    .page-sub { font-size:14px; color:var(--text2); margin-top:4px; }
+
+    /* ── Filter bar ── */
+    .filter-bar {
+      display:flex; align-items:center; gap:10px;
+      margin-bottom:24px; flex-wrap:wrap;
+    }
+    .search-wrap { position:relative; flex:1; max-width:340px; }
+    .search-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--text-muted); pointer-events:none; }
+    .search-input {
+      width:100%; height:40px; padding:0 38px 0 38px;
+      border-radius:12px; border:1.5px solid var(--border);
+      background:var(--surface); font-size:13px; font-family:'Inter',sans-serif;
+      color:var(--text); outline:none;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .search-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(255,107,43,.1); }
+    .search-clear { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text-muted); padding:4px; display:none; }
+    .pills { display:flex; flex-wrap:wrap; gap:6px; }
+    .pill {
+      padding:6px 14px; border-radius:20px; font-size:12.5px; font-weight:600;
+      border:1.5px solid var(--border); background:var(--surface);
+      color:var(--text2); cursor:pointer; transition:all .2s; white-space:nowrap;
+    }
+    .pill:hover { border-color:var(--accent); color:var(--accent); }
+    .pill.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .count-badge { display:none; font-size:12px; font-weight:600; color:var(--accent); background:rgba(255,107,43,.08); border:1px solid rgba(255,107,43,.15); padding:4px 10px; border-radius:20px; white-space:nowrap; }
+
+    /* ── Cards grid ── */
+    .cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+
+    /* ── Tip card ── */
+    .tip-card {
+      background:var(--surface); border-radius:var(--radius);
+      box-shadow:var(--shadow); overflow:hidden;
+      border:1.5px solid var(--border); transition:box-shadow .2s, transform .2s;
+      display:flex; flex-direction:column;
+    }
+    .tip-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+    .tip-card.featured { grid-column:1/-1; }
+
+    /* Colored top strip */
+    .card-strip { height:4px; width:100%; }
+
+    /* Card head */
+    .card-head { padding:16px 16px 12px; border-bottom:1px solid var(--border); }
+    .card-head-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .icon-badge {
+      width:36px; height:36px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px; flex-shrink:0;
+    }
+    .card-title { font-size:14px; font-weight:700; color:var(--text); }
+    .level {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:11px; font-weight:600; padding:3px 8px; border-radius:20px;
+    }
+    .level-dot { width:5px; height:5px; border-radius:50%; }
+    .level-debutant { background:rgba(132,204,22,.1); color:#4D7C0F; }
+    .level-debutant .level-dot { background:#84CC16; }
+    .level-intermediaire { background:rgba(245,158,11,.1); color:#92400E; }
+    .level-intermediaire .level-dot { background:#F59E0B; }
+    .level-avance { background:rgba(236,72,153,.1); color:#9D174D; }
+    .level-avance .level-dot { background:#EC4899; }
+
+    /* SVG illustration block */
+    .vis-block {
+      background:#1E2337; margin:0;
+      padding:10px 12px; border-bottom:1px solid var(--border);
+      overflow:hidden;
+    }
+    .vis-block svg { display:block; }
+
+    /* YouTube button */
+    .yt-btn {
+      display:inline-flex; align-items:center; gap:6px;
+      margin:10px 16px 0;
+      padding:6px 12px; border-radius:8px;
+      background:rgba(255,0,0,.06); border:1px solid rgba(255,0,0,.15);
+      color:#DC2626; font-size:12px; font-weight:600;
+      text-decoration:none; transition:all .2s; width:fit-content;
+    }
+    .yt-btn:hover { background:rgba(255,0,0,.1); border-color:rgba(255,0,0,.3); }
+
+    /* Tip items */
+    .tips-body { padding:12px 16px 16px; flex:1; }
+    .tip-item { display:flex; gap:10px; margin-bottom:10px; }
+    .tip-item:last-child { margin-bottom:0; }
+    .tip-num {
+      width:22px; height:22px; border-radius:6px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:11px; font-weight:700; flex-shrink:0; margin-top:1px;
+    }
+    .tip-text { font-size:13px; color:var(--text2); line-height:1.6; }
+    .tip-text strong { color:var(--text); font-weight:600; }
+
+    /* Pro tip */
+    .pro-tip {
+      display:flex; gap:10px; align-items:flex-start;
+      margin:12px 16px 0;
+      padding:10px 12px; border-radius:10px;
+      background:rgba(255,107,43,.05); border:1px solid rgba(255,107,43,.15);
+      font-size:12.5px; color:var(--text2); line-height:1.55;
+    }
+    .pro-tip-icon { color:var(--accent); flex-shrink:0; margin-top:1px; width:14px; height:14px; }
+    .pro-tip strong { color:var(--accent); }
+
+    /* Featured card inner grid */
+    .featured-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:16px; }
+    .featured-cell {
+      background:var(--bg); border:1.5px solid var(--border);
+      border-radius:12px; padding:14px;
+    }
+    .featured-cell .emoji { font-size:22px; margin-bottom:8px; }
+    .featured-cell .fc-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px; }
+    .featured-cell .fc-text { font-size:12px; color:var(--text2); line-height:1.6; }
+
+    /* Empty state */
+    .empty-state { display:none; flex-direction:column; align-items:center; justify-content:center; padding:60px; gap:10px; color:var(--text-muted); }
+
+    /* Footer */
+    .footer { margin-top:32px; text-align:center; font-size:12px; color:var(--text-muted); padding-top:16px; border-top:1px solid var(--border); }
+
+    /* Category label chip */
+    .cat-chip {
+      font-size:10.5px; font-weight:700; padding:2px 8px;
+      border-radius:20px; text-transform:uppercase; letter-spacing:.04em;
+    }
+
+    @media(max-width:1100px){ .cards-grid { grid-template-columns:1fr 1fr; } .featured-grid { grid-template-columns:1fr 1fr; } }
+    @media(max-width:700px){ .cards-grid { grid-template-columns:1fr; } .main { padding:16px 12px 40px; } .sidebar { display:none; } .main { margin-left:0; } .featured-grid { grid-template-columns:1fr 1fr; } }
+    @media(max-width:480px){ .featured-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <a href="index.html" class="sidebar-logo" style="text-decoration:none;font-size:13px;font-weight:900;color:#fff;">FL</a>
+  <nav class="sidebar-nav">
+    <a href="fl-studio-cheatsheet.html" class="sb-item" data-tip="Raccourcis Clavier">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2.5" stroke-width="1.8"/><path stroke-linecap="round" d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M10 14h4M18 14h.01"/></svg>
+    </a>
+    <a href="fl-studio-tips.html" class="sb-item active" data-tip="Conseils Beatmaker">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+    </a>
+    <a href="beatscan.html" class="sb-item" data-tip="BeatScan Analyzer">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+    </a>
+    <a href="mastering.html" class="sb-item" data-tip="Mastering Pro">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18M6 8v8M18 6v12M3 12h3M18 12h3"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>
+    </a>
+    <a href="songstats.html" class="nav-item" data-tip="Songstats">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sb-item" data-tip="FL Studio 21 · Windows">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <div class="page-header">
+    <div class="page-title"><em>Conseils</em> Beatmaker</div>
+    <div class="page-sub">50+ astuces pour progresser rapidement sur FL Studio</div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input id="search" type="text" class="search-input" placeholder="Rechercher un conseil…" autocomplete="off" spellcheck="false"/>
+      <button id="clear-btn" class="search-clear" onclick="clearSearch()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="pills">
+      <button class="pill active" data-cat="all" onclick="filter(this)">Tout</button>
+      <button class="pill" data-cat="workflow" onclick="filter(this)">Workflow</button>
+      <button class="pill" data-cat="drums" onclick="filter(this)">Drums</button>
+      <button class="pill" data-cat="melody" onclick="filter(this)">Mélodie</button>
+      <button class="pill" data-cat="mixing" onclick="filter(this)">Mixage</button>
+      <button class="pill" data-cat="production" onclick="filter(this)">Production</button>
+      <button class="pill" data-cat="sound" onclick="filter(this)">Sound Design</button>
+    </div>
+    <span id="count-badge" class="count-badge"></span>
+  </div>
+
+  <div id="empty" class="empty-state">
+    <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <p style="font-weight:600;">Aucun conseil trouvé</p>
+    <p style="font-size:13px;">Essayez un autre terme</p>
+  </div>
+
+  <div id="grid" class="cards-grid">
+
+    <!-- ══ WORKFLOW ══ -->
+    <div class="tip-card" data-cat="workflow" data-search="workflow sauvegarder version historique projet organisation fichiers backup">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--orange),#FF9966);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(255,107,53,.1);">💾</div>
+          <div>
+            <div class="card-title">Sauvegarde &amp; Versions</div>
+            <span class="level level-debutant"><span class="level-dot"></span>Débutant</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="10" y="12" width="56" height="60" rx="4" fill="rgba(255,107,53,.12)" stroke="rgba(255,107,53,.35)" stroke-width="1.2"/>
+          <rect x="18" y="6"  width="56" height="60" rx="4" fill="rgba(255,107,53,.15)" stroke="rgba(255,107,53,.4)"  stroke-width="1.2"/>
+          <rect x="26" y="0"  width="56" height="60" rx="4" fill="rgba(255,107,53,.2)"  stroke="rgba(255,107,53,.5)"  stroke-width="1.2"/>
+          <text x="54" y="22" fill="rgba(255,107,53,.7)"  font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">beat_v1.flp</text>
+          <text x="54" y="33" fill="rgba(255,107,53,.5)"  font-size="6" font-family="Inter,sans-serif" text-anchor="middle">12 Ko</text>
+          <text x="62" y="28" fill="rgba(255,107,53,.75)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">beat_v2.flp</text>
+          <text x="62" y="39" fill="rgba(255,107,53,.55)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle">18 Ko</text>
+          <text x="70" y="34" fill="rgba(255,107,53,.9)"  font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">beat_v3.flp</text>
+          <text x="70" y="45" fill="rgba(255,107,53,.6)"  font-size="6" font-family="Inter,sans-serif" text-anchor="middle">24 Ko</text>
+          <rect x="108" y="20" width="60" height="20" rx="4" fill="rgba(255,107,53,.15)" stroke="rgba(255,107,53,.35)" stroke-width="1"/>
+          <text x="138" y="33" fill="rgba(255,107,53,.8)" font-size="8" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">Ctrl+Shift+S</text>
+          <line x1="96" y1="30" x2="108" y2="30" stroke="rgba(255,107,53,.3)" stroke-width="1.2"/>
+          <polygon points="105,27 111,30 105,33" fill="rgba(255,107,53,.4)"/>
+          <rect x="180" y="12" width="112" height="56" rx="5" fill="rgba(0,0,0,.25)" stroke="rgba(255,107,53,.15)" stroke-width="1"/>
+          <text x="236" y="25" fill="rgba(255,107,53,.45)" font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">HISTORIQUE</text>
+          <rect x="186" y="28" width="100" height="8" rx="2" fill="rgba(255,107,53,.08)" stroke="rgba(255,107,53,.15)" stroke-width=".8"/>
+          <text x="236" y="35" fill="rgba(255,107,53,.4)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle">beat_v3 — 14:32</text>
+          <rect x="186" y="38" width="100" height="8" rx="2" fill="rgba(255,107,53,.06)" stroke="rgba(255,107,53,.1)" stroke-width=".8"/>
+          <text x="236" y="45" fill="rgba(255,107,53,.3)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle">beat_v2 — 13:10</text>
+          <rect x="186" y="48" width="100" height="8" rx="2" fill="rgba(255,107,53,.04)"/>
+          <text x="236" y="55" fill="rgba(255,107,53,.25)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle">beat_v1 — 12:05</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+save+version+workflow+backup+project" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">1</div><p class="tip-text"><strong>Ctrl+Shift+S à chaque session</strong> : crée une nouvelle version numérotée (v1, v2, v3). Revenir en arrière devient trivial si tu détestes les changements.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">2</div><p class="tip-text"><strong>Dossier projet par beat</strong> : utilise "Save with audio data" pour garder tous les samples dans un seul dossier transportable.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">3</div><p class="tip-text"><strong>Active l'autosave</strong> : Options → File → Auto save. Règle sur toutes les 5–10 minutes. Les coupures de courant n'ont plus de prise sur toi.</p></div>
+      </div>
+    </div>
+
+    <div class="tip-card" data-cat="workflow" data-search="workflow habitudes pomodoro sessions créativité routine quotidienne discipline">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--orange),#FF9966);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(255,107,53,.1);">⏰</div>
+          <div>
+            <div class="card-title">Sessions &amp; Habitudes</div>
+            <span class="level level-debutant"><span class="level-dot"></span>Débutant</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <circle cx="50" cy="40" r="32" fill="rgba(255,107,53,.06)" stroke="rgba(255,107,53,.25)" stroke-width="1.5"/>
+          <circle cx="50" cy="40" r="32" fill="none" stroke="rgba(255,107,53,.6)" stroke-width="3" stroke-dasharray="134 67" stroke-dashoffset="0" transform="rotate(-90 50 40)"/>
+          <text x="50" y="37" fill="rgba(255,107,53,.8)" font-size="11" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">25</text>
+          <text x="50" y="48" fill="rgba(255,107,53,.45)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle">min</text>
+          <text x="50" y="78" fill="rgba(255,107,53,.4)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle">FOCUS</text>
+          <rect x="102" y="8" width="18" height="14" rx="3" fill="rgba(255,107,53,.55)" stroke="rgba(255,107,53,.7)" stroke-width="1"/>
+          <rect x="122" y="8" width="18" height="14" rx="3" fill="rgba(255,107,53,.55)" stroke="rgba(255,107,53,.7)" stroke-width="1"/>
+          <rect x="142" y="8" width="18" height="14" rx="3" fill="rgba(255,107,53,.55)" stroke="rgba(255,107,53,.7)" stroke-width="1"/>
+          <rect x="162" y="8" width="18" height="14" rx="3" fill="rgba(255,107,53,.2)"  stroke="rgba(255,107,53,.35)" stroke-width="1"/>
+          <rect x="182" y="8" width="18" height="14" rx="3" fill="rgba(255,107,53,.2)"  stroke="rgba(255,107,53,.35)" stroke-width="1"/>
+          <text x="111" y="18" fill="#fff" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">L</text>
+          <text x="131" y="18" fill="#fff" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">M</text>
+          <text x="151" y="18" fill="#fff" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">M</text>
+          <text x="171" y="18" fill="rgba(255,107,53,.5)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">J</text>
+          <text x="191" y="18" fill="rgba(255,107,53,.5)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">V</text>
+          <rect x="102" y="28" width="98" height="8" rx="2" fill="rgba(255,107,53,.08)" stroke="rgba(255,107,53,.15)" stroke-width=".8"/>
+          <rect x="102" y="28" width="60" height="8" rx="2" fill="rgba(255,107,53,.35)"/>
+          <text x="152" y="38" fill="rgba(255,107,53,.5)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle">Progression — 3 beats/sem</text>
+          <text x="102" y="52" fill="rgba(255,107,53,.35)" font-size="6.5" font-family="Inter,sans-serif" font-weight="600">RÈGLES</text>
+          <text x="102" y="62" fill="rgba(255,107,53,.28)" font-size="6" font-family="Inter,sans-serif">▸ Un beat par jour min.</text>
+          <text x="102" y="71" fill="rgba(255,107,53,.28)" font-size="6" font-family="Inter,sans-serif">▸ Finir avant de polir</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+workflow+tips+productivity+beatmaker+habits" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">1</div><p class="tip-text"><strong>Sessions de 25 min (Pomodoro)</strong> : concentre-toi sur un seul élément (le kick, la mélodie, le mixage). Évite le perfectionnisme en boucle.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">2</div><p class="tip-text"><strong>Un beat par jour</strong> même de mauvaise qualité. La quantité crée la qualité. Après 30 jours, tu auras forcément des gems.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">3</div><p class="tip-text"><strong>Commence toujours par le kick</strong>. Il ancre tout le reste. Une fois que ton groove de base sonne bien, le reste suit naturellement.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Crée un template FL Studio avec ton mixer déjà configuré (bus drums, bus mélodies, master chain). Tu gagnes 10 minutes à chaque session.</span>
+      </div>
+    </div>
+
+    <div class="tip-card" data-cat="workflow" data-search="workflow arrangement structure sections verse chorus hook intro outro bridge">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--orange),#FF9966);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(255,107,53,.1);">🗂️</div>
+          <div>
+            <div class="card-title">Structure &amp; Arrangement</div>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="6"   y="20" width="32" height="42" rx="3" fill="rgba(100,200,100,.2)"  stroke="rgba(100,200,100,.4)"  stroke-width="1"/>
+          <rect x="40"  y="20" width="50" height="42" rx="3" fill="rgba(255,150,50,.2)"   stroke="rgba(255,150,50,.4)"   stroke-width="1"/>
+          <rect x="92"  y="20" width="60" height="42" rx="3" fill="rgba(150,100,255,.2)"  stroke="rgba(150,100,255,.4)"  stroke-width="1"/>
+          <rect x="154" y="20" width="50" height="42" rx="3" fill="rgba(255,150,50,.2)"   stroke="rgba(255,150,50,.4)"   stroke-width="1"/>
+          <rect x="206" y="20" width="60" height="42" rx="3" fill="rgba(150,100,255,.2)"  stroke="rgba(150,100,255,.4)"  stroke-width="1"/>
+          <rect x="268" y="20" width="26" height="42" rx="3" fill="rgba(100,200,100,.15)" stroke="rgba(100,200,100,.3)"  stroke-width="1"/>
+          <text x="22"  y="44" fill="rgba(100,200,100,.8)"  font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">INTRO</text>
+          <text x="65"  y="44" fill="rgba(255,150,50,.8)"   font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">VERSE</text>
+          <text x="122" y="44" fill="rgba(150,100,255,.8)"  font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">HOOK</text>
+          <text x="179" y="44" fill="rgba(255,150,50,.8)"   font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">VERSE</text>
+          <text x="236" y="44" fill="rgba(150,100,255,.8)"  font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">HOOK</text>
+          <text x="281" y="44" fill="rgba(100,200,100,.7)"  font-size="6"   font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">OUT</text>
+          <text x="22"  y="54" fill="rgba(100,200,100,.45)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">4 bars</text>
+          <text x="65"  y="54" fill="rgba(255,150,50,.45)"  font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">8 bars</text>
+          <text x="122" y="54" fill="rgba(150,100,255,.45)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">8 bars</text>
+          <text x="179" y="54" fill="rgba(255,150,50,.45)"  font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">8 bars</text>
+          <text x="236" y="54" fill="rgba(150,100,255,.45)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">8 bars</text>
+          <text x="281" y="54" fill="rgba(100,200,100,.35)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">4 bars</text>
+          <line x1="6" y1="14" x2="294" y2="14" stroke="rgba(255,255,255,.08)" stroke-width=".8"/>
+          <rect x="6" y="10" width="288" height="4" rx="1" fill="rgba(255,255,255,.06)"/>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+arrangement+structure+beat+intro+verse+hook+tutorial" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">1</div><p class="tip-text"><strong>Structure de base</strong> : Intro (4 bars) → Verse (8) → Hook (8) → Verse (8) → Hook (8) → Outro (4). Simple, mais ça marche à chaque fois.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">2</div><p class="tip-text"><strong>Transitions</strong> : ajoute un crash de cymbale, un riser ou un drum fill sur le dernier temps avant chaque nouvelle section. Ça signale le changement.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">3</div><p class="tip-text"><strong>Écriture en couleurs</strong> : code chaque type de section par couleur dans la Playlist (vert=intro, orange=verse, violet=hook). La lisibilité s'améliore énormément.</p></div>
+      </div>
+    </div>
+
+    <!-- ══ DRUMS ══ -->
+    <div class="tip-card" data-cat="drums" data-search="drums kick snare hat step sequencer batterie groove pattern programmation">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--green),#65A30D);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(132,204,22,.1);">🥁</div>
+          <div>
+            <div class="card-title">Programmation de Drums</div>
+            <span class="level level-debutant"><span class="level-dot"></span>Débutant</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="292" height="72" rx="4" fill="rgba(0,0,0,.35)" stroke="rgba(132,204,22,.12)" stroke-width="1"/>
+          <text x="10" y="16" fill="rgba(132,204,22,.5)" font-size="6.5" font-family="Inter,sans-serif" font-weight="700">STEP SEQUENCER</text>
+          <text x="8"  y="30" fill="rgba(255,255,255,.3)" font-size="6" font-family="Inter,sans-serif">KICK</text>
+          <text x="8"  y="49" fill="rgba(255,255,255,.3)" font-size="6" font-family="Inter,sans-serif">SNR</text>
+          <text x="8"  y="67" fill="rgba(255,255,255,.3)" font-size="6" font-family="Inter,sans-serif">HAT</text>
+          <g transform="translate(28,20)">
+            <rect x="0"   y="0" width="14" height="14" rx="2" fill="rgba(132,204,22,.8)" stroke="rgba(132,204,22,.4)" stroke-width=".8"/>
+            <rect x="16"  y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="32"  y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="48"  y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="64"  y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="80"  y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="96"  y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="112" y="0" width="14" height="14" rx="2" fill="rgba(132,204,22,.5)" stroke="rgba(132,204,22,.3)" stroke-width=".8"/>
+            <rect x="128" y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="144" y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="160" y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="176" y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="192" y="0" width="14" height="14" rx="2" fill="rgba(132,204,22,.8)" stroke="rgba(132,204,22,.4)" stroke-width=".8"/>
+            <rect x="208" y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="224" y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="240" y="0" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="0"   y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="16"  y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="32"  y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="48"  y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="64"  y="19" width="14" height="14" rx="2" fill="rgba(0,200,255,.55)" stroke="rgba(0,200,255,.3)" stroke-width=".8"/>
+            <rect x="80"  y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="96"  y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="112" y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="128" y="19" width="14" height="14" rx="2" fill="rgba(0,200,255,.55)" stroke="rgba(0,200,255,.3)" stroke-width=".8"/>
+            <rect x="144" y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="160" y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="176" y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="192" y="19" width="14" height="14" rx="2" fill="rgba(0,200,255,.55)" stroke="rgba(0,200,255,.3)" stroke-width=".8"/>
+            <rect x="208" y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="224" y="19" width="14" height="14" rx="2" fill="rgba(0,200,255,.3)" stroke="rgba(0,200,255,.2)" stroke-width=".8"/>
+            <rect x="240" y="19" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="0"   y="38" width="14" height="14" rx="2" fill="rgba(255,212,71,.6)" stroke="rgba(255,212,71,.3)" stroke-width=".8"/>
+            <rect x="16"  y="38" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="32"  y="38" width="14" height="14" rx="2" fill="rgba(255,212,71,.6)" stroke="rgba(255,212,71,.3)" stroke-width=".8"/>
+            <rect x="48"  y="38" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="64"  y="38" width="14" height="14" rx="2" fill="rgba(255,212,71,.6)" stroke="rgba(255,212,71,.3)" stroke-width=".8"/>
+            <rect x="80"  y="38" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="96"  y="38" width="14" height="14" rx="2" fill="rgba(255,212,71,.6)" stroke="rgba(255,212,71,.3)" stroke-width=".8"/>
+            <rect x="112" y="38" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="128" y="38" width="14" height="14" rx="2" fill="rgba(255,212,71,.6)" stroke="rgba(255,212,71,.3)" stroke-width=".8"/>
+            <rect x="144" y="38" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="160" y="38" width="14" height="14" rx="2" fill="rgba(255,212,71,.6)" stroke="rgba(255,212,71,.3)" stroke-width=".8"/>
+            <rect x="176" y="38" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="192" y="38" width="14" height="14" rx="2" fill="rgba(255,212,71,.6)" stroke="rgba(255,212,71,.3)" stroke-width=".8"/>
+            <rect x="208" y="38" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+            <rect x="224" y="38" width="14" height="14" rx="2" fill="rgba(255,212,71,.4)" stroke="rgba(255,212,71,.2)" stroke-width=".8"/>
+            <rect x="240" y="38" width="14" height="14" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+          </g>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+step+sequencer+drums+programming+tutorial+beatmaker" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">1</div><p class="tip-text"><strong>Kick sur les temps 1 et 3</strong> (ou 1 uniquement en trap). Snare sur le 3 en hip-hop, sur le 2 et 4 en boom bap. Hats en 1/8 ou 1/16 pour l'énergie.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">2</div><p class="tip-text"><strong>Vélocités variables</strong> : varie les vélocités des hats (forte/faible/forte…). Un pattern 100% identique sonne robote. La variation crée le groove.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">3</div><p class="tip-text"><strong>Layer tes kicks</strong> : un kick pour le punch (transient court) + un pour le sub (longue queue sinewave). Merge-les dans le Mixer sur un même bus.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Utilise le <strong>Groove quantize</strong> dans le Piano Roll (clic droit → Quantize → Groove) pour importer le groove d'un sample existant sur tes drums. C'est le secret des drums "humains".</span>
+      </div>
+    </div>
+
+    <!-- 808 -->
+    <div class="tip-card" data-cat="drums" data-search="808 sub basse portamento slide sidechain compresseur kick trap">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--green),#65A30D);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(132,204,22,.1);">💥</div>
+          <div>
+            <div class="card-title">808 &amp; Sub Bass</div>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="180" height="72" rx="4" fill="rgba(0,0,0,.35)" stroke="rgba(132,204,22,.12)" stroke-width="1"/>
+          <text x="10" y="16" fill="rgba(132,204,22,.5)" font-size="6.5" font-family="Inter,sans-serif" font-weight="700">PIANO ROLL — 808</text>
+          <rect x="10" y="22" width="80" height="10" rx="2" fill="rgba(132,204,22,.5)" stroke="rgba(132,204,22,.6)" stroke-width=".8"/>
+          <rect x="92" y="30" width="88" height="10" rx="2" fill="rgba(132,204,22,.5)" stroke="rgba(132,204,22,.6)" stroke-width=".8"/>
+          <path d="M90 27 Q91 27 92 30" fill="none" stroke="rgba(132,204,22,.6)" stroke-width="1.5" stroke-linecap="round"/>
+          <text x="14" y="31" fill="rgba(0,0,0,.6)" font-size="5.5" font-family="Inter,sans-serif" font-weight="600">C3</text>
+          <text x="96" y="39" fill="rgba(0,0,0,.6)" font-size="5.5" font-family="Inter,sans-serif" font-weight="600">A2</text>
+          <text x="50" y="49" fill="rgba(132,204,22,.4)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle">portamento slide</text>
+          <rect x="196" y="4" width="100" height="72" rx="4" fill="rgba(0,0,0,.35)" stroke="rgba(132,204,22,.08)" stroke-width="1"/>
+          <text x="246" y="16" fill="rgba(132,204,22,.45)" font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">SIDECHAIN</text>
+          <rect x="202" y="22" width="88" height="12" rx="2" fill="rgba(132,204,22,.1)" stroke="rgba(132,204,22,.2)" stroke-width=".8"/>
+          <text x="246" y="31" fill="rgba(132,204,22,.55)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">KICK → 808 compressor</text>
+          <path d="M202 44 Q210 44 215 48 Q220 52 224 44 Q228 36 233 44 Q237 52 242 44 Q246 36 251 44 Q255 52 260 44 Q264 36 269 44 Q273 52 278 44 Q282 36 286 40 Q288 52 290 44" fill="none" stroke="rgba(132,204,22,.55)" stroke-width="1.5"/>
+          <text x="246" y="65" fill="rgba(132,204,22,.35)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Volume 808 pump</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+808+sub+bass+slide+portamento+sidechain+tutorial" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">1</div><p class="tip-text"><strong>Slides portamento</strong> : dans le Piano Roll, connecte deux notes 808 avec un slide (clic droit → slide). La basse glisse entre les notes comme un vrai 808.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">2</div><p class="tip-text"><strong>Sidechain kick → 808</strong> : envoie le signal du kick vers le compresseur sur la piste 808. La basse "pompe" en rythme avec le kick. Réglage : attack 0ms, release 80ms.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">3</div><p class="tip-text"><strong>Saturate le 808</strong> avec Fruity Blood Overdrive (Drive à 30%). Cela crée des harmoniques hautes qui permettent d'entendre le 808 même sur des petites enceintes.</p></div>
+      </div>
+    </div>
+
+    <!-- ══ MÉLODIE ══ -->
+    <div class="tip-card" data-cat="melody" data-search="mélodie piano roll gamme accords harmonies notes clé tonalité musique">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--purple),#6366F1);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(139,127,255,.1);">🎹</div>
+          <div>
+            <div class="card-title">Mélodie &amp; Gammes</div>
+            <span class="level level-debutant"><span class="level-dot"></span>Débutant</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="145" height="72" rx="3" fill="rgba(0,0,0,.3)" stroke="rgba(139,127,255,.15)" stroke-width="1"/>
+          <text x="10" y="15" fill="rgba(139,127,255,.5)" font-size="6" font-family="Inter,sans-serif" font-weight="700">PIANO ROLL — La mineur</text>
+          <g transform="translate(8,18)">
+            <rect x="0"  y="0" width="9"  height="32" rx="1" fill="rgba(139,127,255,.6)" stroke="rgba(139,127,255,.4)" stroke-width=".8"/>
+            <rect x="10" y="0" width="6"  height="20" rx="1" fill="rgba(255,255,255,.08)"/>
+            <rect x="17" y="0" width="9"  height="32" rx="1" fill="rgba(255,255,255,.08)"/>
+            <rect x="27" y="0" width="6"  height="20" rx="1" fill="rgba(139,127,255,.5)" stroke="rgba(139,127,255,.3)" stroke-width=".8"/>
+            <rect x="34" y="0" width="9"  height="32" rx="1" fill="rgba(255,255,255,.08)"/>
+            <rect x="44" y="0" width="9"  height="32" rx="1" fill="rgba(139,127,255,.6)" stroke="rgba(139,127,255,.4)" stroke-width=".8"/>
+            <rect x="54" y="0" width="6"  height="20" rx="1" fill="rgba(255,255,255,.08)"/>
+            <rect x="61" y="0" width="9"  height="32" rx="1" fill="rgba(255,255,255,.08)"/>
+            <rect x="71" y="0" width="6"  height="20" rx="1" fill="rgba(139,127,255,.5)" stroke="rgba(139,127,255,.3)" stroke-width=".8"/>
+            <rect x="78" y="0" width="9"  height="32" rx="1" fill="rgba(139,127,255,.6)" stroke="rgba(139,127,255,.4)" stroke-width=".8"/>
+            <rect x="88" y="0" width="6"  height="20" rx="1" fill="rgba(255,255,255,.08)"/>
+            <rect x="95" y="0" width="9"  height="32" rx="1" fill="rgba(255,255,255,.08)"/>
+            <rect x="105" y="0" width="6" height="20" rx="1" fill="rgba(139,127,255,.5)" stroke="rgba(139,127,255,.3)" stroke-width=".8"/>
+            <rect x="112" y="0" width="9" height="32" rx="1" fill="rgba(139,127,255,.6)" stroke="rgba(139,127,255,.4)" stroke-width=".8"/>
+            <rect x="122" y="0" width="6" height="20" rx="1" fill="rgba(255,255,255,.08)"/>
+            <rect x="129" y="0" width="9" height="32" rx="1" fill="rgba(255,255,255,.08)"/>
+          </g>
+          <rect x="160" y="38" width="30" height="8" rx="2" fill="rgba(139,127,255,.55)" stroke="rgba(139,127,255,.35)" stroke-width=".8"/>
+          <rect x="196" y="30" width="22" height="8" rx="2" fill="rgba(139,127,255,.45)" stroke="rgba(139,127,255,.3)" stroke-width=".8"/>
+          <rect x="224" y="38" width="36" height="8" rx="2" fill="rgba(139,127,255,.55)" stroke="rgba(139,127,255,.35)" stroke-width=".8"/>
+          <rect x="266" y="22" width="28" height="8" rx="2" fill="rgba(139,127,255,.4)" stroke="rgba(139,127,255,.3)" stroke-width=".8"/>
+          <text x="160" y="58" fill="rgba(139,127,255,.4)" font-size="6" font-family="Inter,sans-serif">A</text>
+          <text x="196" y="50" fill="rgba(139,127,255,.4)" font-size="6" font-family="Inter,sans-serif">C</text>
+          <text x="224" y="58" fill="rgba(139,127,255,.4)" font-size="6" font-family="Inter,sans-serif">E</text>
+          <text x="266" y="42" fill="rgba(139,127,255,.4)" font-size="6" font-family="Inter,sans-serif">G</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+piano+roll+melody+scales+tutorial+beatmaker" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">1</div><p class="tip-text"><strong>Scale highlighting</strong> dans le Piano Roll : clic droit sur une touche du piano → sélectionne ta gamme. Les notes de la gamme s'illuminent. Tu ne peux plus jouer de fausse note.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">2</div><p class="tip-text"><strong>Gammes de base</strong> : La mineur (Am) pour le trap mélancolique, Ré mineur (Dm) pour le drill sombre, Sol majeur pour l'afrobeats. Commence avec ces 3.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">3</div><p class="tip-text"><strong>Accords en 3 notes max</strong> : superpose les 1ère, 3ème et 5ème notes de ta gamme. Simple, mais ça crée une harmonie immédiatement agréable.</p></div>
+      </div>
+    </div>
+
+    <!-- ══ MIXAGE ══ -->
+    <div class="tip-card" data-cat="mixing" data-search="mixage EQ equalizer fréquences coupure filtre grave aigu medium bus routing">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--cyan),#0369A1);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(14,165,233,.1);">🎛️</div>
+          <div>
+            <div class="card-title">EQ &amp; Fréquences</div>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="292" height="72" rx="4" fill="rgba(0,0,0,.35)" stroke="rgba(0,200,255,.08)" stroke-width="1"/>
+          <line x1="4" y1="37" x2="296" y2="37" stroke="rgba(255,255,255,.06)" stroke-width=".8"/>
+          <line x1="4" y1="22" x2="296" y2="22" stroke="rgba(255,255,255,.04)" stroke-width=".6" stroke-dasharray="4,4"/>
+          <line x1="4" y1="52" x2="296" y2="52" stroke="rgba(255,255,255,.04)" stroke-width=".6" stroke-dasharray="4,4"/>
+          <text x="6"   y="22" fill="rgba(255,255,255,.2)" font-size="6" font-family="Inter,sans-serif">+6dB</text>
+          <text x="8"   y="37" fill="rgba(255,255,255,.2)" font-size="6" font-family="Inter,sans-serif">0</text>
+          <text x="4"   y="52" fill="rgba(255,255,255,.2)" font-size="6" font-family="Inter,sans-serif">-6dB</text>
+          <text x="24"  y="76" fill="rgba(255,255,255,.15)" font-size="5.5" font-family="Inter,sans-serif">20Hz</text>
+          <text x="100" y="76" fill="rgba(255,255,255,.15)" font-size="5.5" font-family="Inter,sans-serif">200Hz</text>
+          <text x="175" y="76" fill="rgba(255,255,255,.15)" font-size="5.5" font-family="Inter,sans-serif">2kHz</text>
+          <text x="252" y="76" fill="rgba(255,255,255,.15)" font-size="5.5" font-family="Inter,sans-serif">20kHz</text>
+          <path d="M32 64 Q50 64 65 58 Q75 52 82 35 Q100 35 120 35 Q130 35 140 42 Q150 50 155 35 Q165 20 180 25 Q195 30 220 32 Q240 33 260 28 Q275 24 292 26" fill="none" stroke="rgba(0,200,255,.7)" stroke-width="2" stroke-linecap="round"/>
+          <text x="34" y="56" fill="rgba(0,200,255,.5)" font-size="5.5" font-family="Inter,sans-serif">HPF</text>
+          <text x="34" y="63" fill="rgba(0,200,255,.35)" font-size="5" font-family="Inter,sans-serif">80Hz</text>
+          <text x="136" y="56" fill="rgba(0,200,255,.45)" font-size="5.5" font-family="Inter,sans-serif">-3dB</text>
+          <text x="133" y="63" fill="rgba(0,200,255,.3)" font-size="5" font-family="Inter,sans-serif">400Hz</text>
+          <text x="162" y="12" fill="rgba(0,200,255,.55)" font-size="5.5" font-family="Inter,sans-serif">+2dB 2kHz</text>
+          <circle cx="72"  cy="52" r="3" fill="rgba(0,200,255,.8)" stroke="rgba(0,0,0,.5)" stroke-width="1"/>
+          <circle cx="150" cy="46" r="3" fill="rgba(0,200,255,.8)" stroke="rgba(0,0,0,.5)" stroke-width="1"/>
+          <circle cx="170" cy="23" r="3" fill="rgba(0,200,255,.8)" stroke="rgba(0,0,0,.5)" stroke-width="1"/>
+          <circle cx="258" cy="28" r="3" fill="rgba(0,200,255,.8)" stroke="rgba(0,0,0,.5)" stroke-width="1"/>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+EQ+parametric+mixing+high+pass+filter+tutorial" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(14,165,233,.1);color:#0369A1;">1</div><p class="tip-text"><strong>High-pass sur tout sauf kick et 808</strong> : coupe sous 80–120Hz sur mélodies, pads, voix. Nettoie les basses et donne de l'espace au sub.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(14,165,233,.1);color:#0369A1;">2</div><p class="tip-text"><strong>Sculpte avec les oreilles, pas les yeux.</strong> Cache le spectre de l'EQ, travaille uniquement à l'oreille quelques minutes, puis vérifie visuellement.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(14,165,233,.1);color:#0369A1;">3</div><p class="tip-text"><strong>Groupe tes drums dans un bus</strong> : crée une piste Mixer "Drums Bus", route tous tes canaux drums vers elle. Compresse et EQ l'ensemble en une seule fois.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Utilise <strong>Fruity Peak Controller</strong> sur ton sidechain. Branche-le sur le kick, assigne-le au volume du 808 dans le Mixer. Plus précis qu'un compresseur classique.</span>
+      </div>
+    </div>
+
+    <!-- ══ PRODUCTION ══ -->
+    <div class="tip-card" data-cat="production" data-search="production automation mouvement vie dynamique variation LFO filter">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--yellow),#D97706);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(245,158,11,.1);">🎬</div>
+          <div>
+            <div class="card-title">Donner de la Vie</div>
+            <span class="level level-avance"><span class="level-dot"></span>Avancé</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="6" y="6" width="288" height="48" rx="3" fill="rgba(0,0,0,.3)" stroke="rgba(245,158,11,.1)" stroke-width="1"/>
+          <text x="10" y="16" fill="rgba(245,158,11,.4)" font-size="6" font-family="Inter,sans-serif">Automation — Filtre Fréquence</text>
+          <path d="M10 46 Q40 46 60 44 Q80 42 100 38 Q120 32 140 24 Q155 18 160 16 Q162 16 164 16 L164 44 Q180 44 200 44 Q230 43 260 43 Q275 43 290 43" fill="rgba(245,158,11,.06)" stroke="rgba(245,158,11,.65)" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="10"  cy="46" r="3.5" fill="rgba(245,158,11,.9)"/>
+          <circle cx="160" cy="16" r="3.5" fill="rgba(245,158,11,.9)"/>
+          <circle cx="164" cy="44" r="3.5" fill="rgba(245,158,11,.9)"/>
+          <line x1="162" y1="6" x2="162" y2="54" stroke="rgba(255,107,53,.5)" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="166" y="12" fill="rgba(255,107,53,.6)" font-size="6" font-family="Inter,sans-serif">DROP</text>
+          <text x="60"  y="35" fill="rgba(245,158,11,.4)" font-size="6" font-family="Inter,sans-serif">tension ↑</text>
+          <text x="190" y="38" fill="rgba(255,107,53,.4)" font-size="6" font-family="Inter,sans-serif">release</text>
+          <rect x="6" y="58" width="288" height="16" rx="3" fill="rgba(0,0,0,.2)" stroke="rgba(245,158,11,.06)" stroke-width="1"/>
+          <text x="10" y="68" fill="rgba(245,158,11,.3)" font-size="6" font-family="Inter,sans-serif">LFO Hat Volume</text>
+          <path d="M80 66 Q90 60 100 66 Q110 72 120 66 Q130 60 140 66 Q150 72 160 66 Q170 60 180 66 Q190 72 200 66 Q210 60 220 66 Q230 72 240 66 Q250 60 260 66 Q270 72 280 66" fill="none" stroke="rgba(245,158,11,.4)" stroke-width="1"/>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+automation+clip+filter+LFO+tutorial+beatmaker" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(245,158,11,.1);color:#92400E;">1</div><p class="tip-text"><strong>Automatise tout ce qui peut l'être :</strong> volume, filtre, reverb send, pitch… Clic droit sur n'importe quel knob → "Create automation clip".</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(245,158,11,.1);color:#92400E;">2</div><p class="tip-text"><strong>LFO sur le volume des hats</strong> avec Parametric Controller : variation lente et subtile (0.1–0.5Hz) donne l'impression de jouer live.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(245,158,11,.1);color:#92400E;">3</div><p class="tip-text"><strong>Filtre automatisé avant le drop</strong> : ferme un filtre passe-bas sur 4 bars, puis ouvre-le à 100% sur le temps 1 du drop. Tension → Release.</p></div>
+      </div>
+    </div>
+
+    <!-- ══ SOUND DESIGN ══ -->
+    <div class="tip-card" data-cat="sound" data-search="sound design layer synthèse saturation ADSR enveloppe empilement texture">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--pink),#BE185D);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(236,72,153,.1);">🔮</div>
+          <div>
+            <div class="card-title">Sound Design Essentiel</div>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <text x="6" y="16" fill="rgba(236,72,153,.5)" font-size="6" font-family="Inter,sans-serif" font-weight="600">BODY (mid)</text>
+          <path d="M60 14 Q70 6 80 14 Q90 22 100 14 Q110 6 120 14 Q130 22 140 14 Q150 6 160 14 Q170 22 180 14 Q190 6 200 14 Q210 22 220 14" fill="none" stroke="rgba(236,72,153,.55)" stroke-width="1.8"/>
+          <text x="225" y="15" fill="rgba(255,255,255,.3)" font-size="12" font-family="sans-serif">+</text>
+          <text x="6" y="36" fill="rgba(236,72,153,.4)" font-size="6" font-family="Inter,sans-serif" font-weight="600">CLICK (transient)</text>
+          <path d="M60 34 L65 20 L68 42 L72 34 Q90 34 110 34 Q130 34 150 34 Q170 34 190 34 Q210 34 220 34" fill="none" stroke="rgba(236,72,153,.4)" stroke-width="1.5"/>
+          <text x="225" y="35" fill="rgba(255,255,255,.3)" font-size="12" font-family="sans-serif">+</text>
+          <text x="6" y="56" fill="rgba(236,72,153,.3)" font-size="6" font-family="Inter,sans-serif" font-weight="600">AIR (haut)</text>
+          <path d="M60 52 Q63 48 66 52 Q69 56 72 52 Q75 48 78 52 Q81 56 84 52 Q87 48 90 52 Q93 56 96 52 Q99 48 102 52 Q105 56 108 52 Q111 48 114 52 Q117 56 120 52 Q123 48 126 52 Q129 56 132 52 Q135 48 138 52 Q141 56 144 52 Q147 48 150 52 Q153 56 156 52 Q159 48 162 52 Q165 56 168 52 Q171 48 174 52 Q177 56 180 52 Q183 48 186 52 Q189 56 192 52 Q195 48 198 52 Q201 56 204 52 Q207 48 210 52 Q213 56 216 52 Q219 48 220 52" fill="none" stroke="rgba(236,72,153,.3)" stroke-width="1.2"/>
+          <text x="225" y="55" fill="rgba(255,255,255,.3)" font-size="12" font-family="sans-serif">=</text>
+          <text x="6" y="75" fill="rgba(236,72,153,.6)" font-size="6" font-family="Inter,sans-serif" font-weight="600">RÉSULTAT</text>
+          <path d="M60 68 L65 56 L68 76 L72 65 Q80 60 90 65 Q100 70 110 65 Q115 62 120 65 Q130 68 140 65 Q150 62 160 65 Q170 68 180 65 Q190 62 200 65 Q210 68 220 66" fill="none" stroke="rgba(236,72,153,.75)" stroke-width="2"/>
+          <rect x="232" y="8" width="62" height="64" rx="3" fill="rgba(0,0,0,.2)" stroke="rgba(236,72,153,.12)" stroke-width="1"/>
+          <text x="263" y="18" fill="rgba(236,72,153,.45)" font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">ADSR</text>
+          <path d="M238 62 L245 22 Q249 22 253 36 L268 36 Q274 36 278 48 L288 62" fill="none" stroke="rgba(236,72,153,.55)" stroke-width="1.5" stroke-linecap="round"/>
+          <text x="240" y="70" fill="rgba(236,72,153,.3)" font-size="5.5" font-family="Inter,sans-serif">A</text>
+          <text x="250" y="70" fill="rgba(236,72,153,.3)" font-size="5.5" font-family="Inter,sans-serif">D</text>
+          <text x="260" y="70" fill="rgba(236,72,153,.3)" font-size="5.5" font-family="Inter,sans-serif">S</text>
+          <text x="278" y="70" fill="rgba(236,72,153,.3)" font-size="5.5" font-family="Inter,sans-serif">R</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+sound+design+layering+saturation+ADSR+tutorial" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#9D174D;">1</div><p class="tip-text"><strong>Layer 2–3 sons</strong> : un son avec du corps (mid), un avec du transient (click), un avec de l'air (haut). Groupe-les sur un bus commun.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#9D174D;">2</div><p class="tip-text"><strong>Saturation = chaleur.</strong> Ajoute Fruity Blood Overdrive en légère distorsion sur tes pads. Cela leur donne une présence analogique.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#9D174D;">3</div><p class="tip-text"><strong>Enveloppe ADSR rapide.</strong> Pour tout son percussif : Attack à 0, Decay court, Sustain à 0. Tu contrôles exactement le punch et la durée.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span><strong>Pitch-shift un vocal chop à ±12 semitones</strong> dans le Channel Rack pour créer des textures de fond qui enrichissent l'atmosphère sans surcharger les mid.</span>
+      </div>
+    </div>
+
+    <!-- ══ FEATURED ══ -->
+    <div class="tip-card featured" data-cat="production" data-search="mindset état esprit progression beatmaker conseil motivation routine">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--accent),var(--purple),var(--cyan));"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(255,107,43,.1);">🚀</div>
+          <div>
+            <div class="card-title">L'État d'Esprit du Beatmaker</div>
+            <span class="level level-debutant"><span class="level-dot"></span>Pour tout le monde</span>
+          </div>
+        </div>
+      </div>
+      <div class="featured-grid">
+        <div class="featured-cell">
+          <div class="emoji">🎯</div>
+          <div class="fc-title">Finis tes beats</div>
+          <div class="fc-text">Un beat à 80% terminé posté vaut mille idées non finies. Le monde ne peut pas entendre ce qui reste dans ton ordinateur.</div>
+        </div>
+        <div class="featured-cell">
+          <div class="emoji">👂</div>
+          <div class="fc-title">Écoute activement</div>
+          <div class="fc-text">Quand tu écoutes de la musique, isole mentalement kick, snare, basse, mélodie. Analyse ce qui te fait bouger la tête.</div>
+        </div>
+        <div class="featured-cell">
+          <div class="emoji">📈</div>
+          <div class="fc-title">Un beat par jour</div>
+          <div class="fc-text">Même un beat médiocre par jour. Après 30 jours tu auras des gems et tes 10 000 heures progresseront plus vite.</div>
+        </div>
+        <div class="featured-cell">
+          <div class="emoji">🔄</div>
+          <div class="fc-title">Demande du feedback</div>
+          <div class="fc-text">Partage tes beats à des gens qui ne te ménageront pas. Un retour honnête accélère la progression ×5 par rapport à travailler seul.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+
+  <div class="footer">FL Studio 21+ &middot; Image-Line &middot; Windows &middot; <a href="fl-studio-cheatsheet.html" style="color:var(--accent);text-decoration:none;">→ Raccourcis Clavier</a></div>
+</main>
+</div>
+
+<script>
+  const cards = document.querySelectorAll('.tip-card');
+  const emptyEl = document.getElementById('empty');
+  const gridEl  = document.getElementById('grid');
+  const badge   = document.getElementById('count-badge');
+  const searchEl = document.getElementById('search');
+  const clearBtn = document.getElementById('clear-btn');
+  let activeCat = 'all';
+
+  function filter(btn) {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat = btn.dataset.cat;
+    apply();
+  }
+
+  searchEl.addEventListener('input', () => {
+    clearBtn.style.display = searchEl.value ? 'block' : 'none';
+    apply();
+  });
+
+  function clearSearch() {
+    searchEl.value = '';
+    clearBtn.style.display = 'none';
+    apply();
+    searchEl.focus();
+  }
+
+  function apply() {
+    const q = searchEl.value.toLowerCase().trim();
+    let count = 0;
+    cards.forEach(card => {
+      const catOk   = activeCat === 'all' || card.dataset.cat === activeCat;
+      const text    = (card.dataset.search + ' ' + card.textContent).toLowerCase();
+      const searchOk = !q || text.includes(q);
+      const visible  = catOk && searchOk;
+      card.style.display = visible ? '' : 'none';
+      if (visible) count++;
+    });
+    emptyEl.style.display = count === 0 ? 'flex' : 'none';
+    gridEl.style.display  = count === 0 ? 'none' : '';
+    if (q) {
+      badge.style.display = 'inline-block';
+      badge.textContent = count + (count > 1 ? ' conseils' : ' conseil');
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== searchEl) {
+      e.preventDefault(); searchEl.focus(); searchEl.select();
+    }
+    if (e.key === 'Escape') { clearSearch(); searchEl.blur(); }
+  });
+</script>
+</body>
+</html>
