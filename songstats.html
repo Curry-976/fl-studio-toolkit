@@ -448,13 +448,39 @@ async function handlePKCECallback(code) {
   if (d.access_token) {
     _spToken  = d.access_token;
     _spExpiry = Date.now() + (d.expires_in - 60) * 1000;
-    localStorage.setItem('sp_token',  _spToken);
-    localStorage.setItem('sp_expiry', _spExpiry);
+    localStorage.setItem('sp_token',   _spToken);
+    localStorage.setItem('sp_expiry',  _spExpiry);
+    if (d.refresh_token) localStorage.setItem('sp_refresh', d.refresh_token);
     sessionStorage.removeItem('sp_verifier');
     window.history.replaceState({}, '', window.location.pathname);
     updateSpotifyBadge();
     showToast('✅ Spotify connecté !');
   }
+}
+
+async function spRefresh() {
+  const rt = localStorage.getItem('sp_refresh');
+  if (!rt) return false;
+  try {
+    const body = new URLSearchParams({
+      grant_type: 'refresh_token', refresh_token: rt, client_id: SP_CLIENT_ID,
+    });
+    const res = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+    });
+    const d = await res.json();
+    if (d.access_token) {
+      _spToken  = d.access_token;
+      _spExpiry = Date.now() + (d.expires_in - 60) * 1000;
+      localStorage.setItem('sp_token',  _spToken);
+      localStorage.setItem('sp_expiry', _spExpiry);
+      if (d.refresh_token) localStorage.setItem('sp_refresh', d.refresh_token);
+      updateSpotifyBadge();
+      return true;
+    }
+  } catch {}
+  return false;
 }
 
 function spClear() {
@@ -477,7 +503,10 @@ function updateSpotifyBadge() {
 }
 
 async function spotifySearch(query, type = 'artist', limit = 6) {
-  if (!spIsConnected()) throw new Error('__no_token__');
+  if (!spIsConnected()) {
+    const refreshed = await spRefresh();
+    if (!refreshed) throw new Error('__no_token__');
+  }
   const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=${type}&limit=${limit}`;
   const res = await fetchTimeout(url, { headers: { 'Authorization': `Bearer ${_spToken}` } }, 8000);
   const d   = await res.json();
