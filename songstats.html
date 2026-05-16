@@ -592,15 +592,13 @@ async function searchArtist(query) {
     return;
   }
   // Enrichir avec les vrais followers via /artists?ids= (un seul appel batch)
-  try {
-    const ids = artists.map(a => a.id).join(',');
-    const enriched = await fetchTimeout(
-      `https://api.spotify.com/v1/artists?ids=${ids}`,
-      { headers: { 'Authorization': `Bearer ${_spToken}` } }, 6000
-    );
-    const ed = await enriched.json();
-    if (ed.artists) artists = ed.artists.filter(Boolean);
-  } catch {}
+  const ids = artists.map(a => a.id).join(',');
+  const enriched = await fetchTimeout(
+    `https://api.spotify.com/v1/artists?ids=${ids}`,
+    { headers: { 'Authorization': `Bearer ${_spToken}` } }, 8000
+  );
+  const ed = await enriched.json();
+  if (ed.artists) artists = ed.artists.filter(Boolean);
   showArtistPicker(artists, query);
 }
 
