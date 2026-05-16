@@ -3,490 +3,875 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FL Studio Toolkit — Accueil</title>
+  <title>FL Studio Toolkit</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --sidebar:#161929; --panel:#1E2337; --card:#252B42;
-      --bg:#0D1020; --surface:#1A2035;
-      --accent:#FF6B2B; --accent2:#00C8FF; --purple:#9B7FFF;
-      --green:#22C55E; --yellow:#EAB308;
-      --text:#fff; --muted:rgba(255,255,255,.4);
+    /* ── RESET ── */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    :root{
+      --bg:#0C0F1E;
+      --surface:#141829;
+      --card:#1A2035;
+      --card2:#1E2540;
+      --sidebar:#0E1120;
       --border:rgba(255,255,255,.07);
+      --border2:rgba(255,255,255,.12);
+      --accent:#FF6B2B;
+      --cyan:#00C8FF;
+      --purple:#9B7FFF;
+      --green:#22C55E;
+      --yellow:#F59E0B;
+      --text:#FFFFFF;
+      --muted:rgba(255,255,255,.4);
+      --muted2:rgba(255,255,255,.22);
+      --sidebar-w:72px;
+      --topbar-h:60px;
     }
-    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-    html { scroll-behavior:smooth; }
-    body {
-      font-family:'Inter',sans-serif; background:var(--bg); color:var(--text);
-      min-height:100vh; display:flex; overflow-x:hidden;
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      overflow-x:hidden;
     }
-    ::-webkit-scrollbar { width:4px; }
-    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.1); border-radius:4px; }
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:4px;}
 
-    /* ── SIDEBAR ── */
-    .sidebar {
-      width:72px; min-width:72px; background:var(--sidebar);
-      display:flex; flex-direction:column; align-items:center;
-      padding:16px 0; gap:4px; z-index:100; position:fixed; top:0; left:0; bottom:0;
+    /* ════════════════════════════════════════
+       SIDEBAR  (desktop)
+    ════════════════════════════════════════ */
+    .sidebar{
+      position:fixed;top:0;left:0;bottom:0;
+      width:var(--sidebar-w);
+      background:var(--sidebar);
+      border-right:1px solid var(--border);
+      display:flex;flex-direction:column;align-items:center;
+      padding:20px 0 16px;gap:4px;z-index:200;
+      transition:transform .3s ease;
     }
-    .sidebar-logo {
-      width:40px; height:40px; border-radius:12px; background:var(--accent);
-      display:flex; align-items:center; justify-content:center; margin-bottom:20px; flex-shrink:0;
-      text-decoration:none;
+    .sidebar-logo{
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg,var(--accent),#e05520);
+      display:flex;align-items:center;justify-content:center;
+      margin-bottom:24px;flex-shrink:0;text-decoration:none;
+      box-shadow:0 4px 16px rgba(255,107,43,.25);
+      transition:transform .2s,box-shadow .2s;
     }
-    .nav-sep { width:28px; height:1px; background:rgba(255,255,255,.07); margin:6px 0; }
-    .nav-item {
-      position:relative; width:44px; height:44px; border-radius:12px;
-      display:flex; align-items:center; justify-content:center;
-      color:rgba(255,255,255,.35); text-decoration:none;
-      transition:background .15s, color .15s; cursor:pointer;
-    }
-    .nav-item:hover  { background:rgba(255,255,255,.07); color:rgba(255,255,255,.8); }
-    .nav-item.active { background:rgba(255,107,43,.15); color:var(--accent); }
-    .nav-item::after {
-      content:attr(data-tip); position:absolute; left:calc(100% + 10px); top:50%;
-      transform:translateY(-50%); background:#1A1D2E; color:#fff;
-      font-size:12px; font-weight:500; white-space:nowrap;
-      padding:5px 10px; border-radius:7px; pointer-events:none; opacity:0;
-      transition:opacity .15s; z-index:200;
-    }
-    .nav-item:hover::after { opacity:1; }
-    .sidebar-spacer { flex:1; }
+    .sidebar-logo:hover{transform:scale(1.06);box-shadow:0 6px 24px rgba(255,107,43,.35);}
 
-    /* ── MAIN ── */
-    .main { margin-left:72px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
+    .nav-sep{width:28px;height:1px;background:var(--border);margin:6px 0;}
+    .sidebar-spacer{flex:1;}
 
-    /* ── HERO ── */
-    .hero {
-      position:relative; padding:70px 60px 56px;
-      background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,200,255,.12) 0%, transparent 70%),
-                 radial-gradient(ellipse 50% 40% at 80% 50%,  rgba(155,127,255,.08) 0%, transparent 60%),
-                 var(--bg);
+    .nav-item{
+      position:relative;width:44px;height:44px;border-radius:13px;
+      display:flex;align-items:center;justify-content:center;
+      color:rgba(255,255,255,.28);text-decoration:none;
+      transition:background .15s,color .15s,transform .15s;
+      cursor:pointer;
+    }
+    .nav-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);transform:scale(1.05);}
+    .nav-item.active{background:rgba(255,107,43,.14);color:var(--accent);}
+    /* Tooltip */
+    .nav-item::after{
+      content:attr(data-tip);
+      position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);
+      background:#1A1D2E;color:#fff;font-size:11.5px;font-weight:500;
+      white-space:nowrap;padding:5px 11px;border-radius:8px;
+      border:1px solid var(--border2);
+      pointer-events:none;opacity:0;transition:opacity .15s;z-index:300;
+    }
+    .nav-item:hover::after{opacity:1;}
+
+    /* ════════════════════════════════════════
+       MOBILE TOPBAR
+    ════════════════════════════════════════ */
+    .topbar{
+      display:none;
+      position:fixed;top:0;left:0;right:0;height:var(--topbar-h);
+      background:rgba(12,15,30,.92);backdrop-filter:blur(20px);
       border-bottom:1px solid var(--border);
+      align-items:center;justify-content:space-between;
+      padding:0 20px;z-index:200;
+    }
+    .topbar-logo{
+      display:flex;align-items:center;gap:10px;text-decoration:none;
+    }
+    .topbar-logo-icon{
+      width:36px;height:36px;border-radius:11px;
+      background:linear-gradient(135deg,var(--accent),#e05520);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 3px 12px rgba(255,107,43,.3);
+    }
+    .topbar-logo-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px;}
+
+    .hamburger{
+      width:40px;height:40px;border-radius:11px;
+      background:rgba(255,255,255,.06);border:1px solid var(--border2);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:5px;cursor:pointer;transition:background .15s;
+    }
+    .hamburger:hover{background:rgba(255,255,255,.1);}
+    .hamburger span{
+      display:block;width:18px;height:1.5px;
+      background:rgba(255,255,255,.7);border-radius:2px;
+      transition:transform .25s,opacity .25s;
+    }
+    .hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+    /* ════════════════════════════════════════
+       MOBILE DRAWER
+    ════════════════════════════════════════ */
+    .drawer-backdrop{
+      display:none;position:fixed;inset:0;
+      background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+      z-index:190;opacity:0;transition:opacity .3s;
+    }
+    .drawer-backdrop.open{opacity:1;}
+
+    .drawer{
+      position:fixed;top:0;left:0;bottom:0;width:260px;
+      background:var(--sidebar);border-right:1px solid var(--border2);
+      z-index:195;transform:translateX(-100%);
+      transition:transform .3s cubic-bezier(.4,0,.2,1);
+      display:flex;flex-direction:column;padding:80px 16px 24px;
+      gap:4px;
+    }
+    .drawer.open{transform:translateX(0);}
+
+    .drawer-item{
+      display:flex;align-items:center;gap:12px;
+      padding:11px 14px;border-radius:12px;
+      color:rgba(255,255,255,.45);text-decoration:none;
+      font-size:14px;font-weight:500;
+      transition:background .15s,color .15s;
+    }
+    .drawer-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85);}
+    .drawer-item.active{background:rgba(255,107,43,.12);color:var(--accent);}
+    .drawer-item svg{flex-shrink:0;opacity:.7;}
+    .drawer-item.active svg{opacity:1;}
+
+    /* ════════════════════════════════════════
+       MAIN CONTENT
+    ════════════════════════════════════════ */
+    .main{
+      margin-left:var(--sidebar-w);
+      min-height:100vh;
+      display:flex;flex-direction:column;
+    }
+
+    /* ════════════════════════════════════════
+       HERO
+    ════════════════════════════════════════ */
+    .hero{
+      position:relative;
+      padding:72px 56px 64px;
       overflow:hidden;
+      border-bottom:1px solid var(--border);
     }
-    .hero-noise {
-      position:absolute; inset:0; pointer-events:none; opacity:.025;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size:200px;
-    }
-    .hero-badge {
-      display:inline-flex; align-items:center; gap:7px;
-      background:rgba(0,200,255,.08); border:1px solid rgba(0,200,255,.2);
-      border-radius:100px; padding:5px 14px; font-size:12px; font-weight:600;
-      color:var(--accent2); margin-bottom:22px;
-    }
-    .badge-dot { width:6px; height:6px; border-radius:50%; background:var(--accent2); animation:pulse 2s ease infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.3;} }
-
-    .hero-title {
-      font-size:clamp(36px,5vw,62px); font-weight:900; letter-spacing:-.04em;
-      line-height:1.05; margin-bottom:18px;
-    }
-    .hero-title span {
-      background:linear-gradient(135deg,var(--accent2),var(--purple));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-      background-clip:text;
-    }
-    .hero-sub {
-      font-size:16px; color:var(--muted); max-width:520px; line-height:1.65;
-      margin-bottom:36px; font-weight:400;
-    }
-    .hero-cta {
-      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
-    }
-    .btn-primary {
-      display:inline-flex; align-items:center; gap:8px;
-      padding:12px 24px; border-radius:12px; border:none; cursor:pointer;
-      background:linear-gradient(135deg,var(--accent2),var(--purple));
-      color:#fff; font-size:14px; font-weight:700; text-decoration:none;
-      transition:opacity .15s, transform .12s;
-    }
-    .btn-primary:hover { opacity:.88; transform:translateY(-1px); }
-    .btn-primary:active { transform:translateY(0); }
-    .btn-ghost {
-      display:inline-flex; align-items:center; gap:8px;
-      padding:12px 24px; border-radius:12px; border:1px solid var(--border);
-      background:rgba(255,255,255,.04); color:rgba(255,255,255,.65);
-      font-size:14px; font-weight:600; text-decoration:none;
-      transition:background .15s, border-color .15s, transform .12s;
-    }
-    .btn-ghost:hover { background:rgba(255,255,255,.09); border-color:rgba(255,255,255,.15); transform:translateY(-1px); }
-
-    /* Wave decoration */
-    .hero-wave {
-      position:absolute; right:-40px; top:50%; transform:translateY(-50%);
-      opacity:.06; pointer-events:none;
+    .hero-bg{
+      position:absolute;inset:0;pointer-events:none;
+      background:
+        radial-gradient(ellipse 70% 70% at 100% 50%, rgba(155,127,255,.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 0% 80%,  rgba(0,200,255,.06)  0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 80% 10%, rgba(255,107,43,.05)  0%, transparent 50%);
     }
 
-    /* ── STATS ROW ── */
-    .stats-row {
-      display:flex; gap:0; border-bottom:1px solid var(--border);
+    /* Floating 3D sphere (CSS) */
+    .hero-sphere{
+      position:absolute;right:6%;top:50%;transform:translateY(-50%);
+      width:320px;height:320px;border-radius:50%;
+      background:
+        radial-gradient(circle at 35% 35%,
+          rgba(255,255,255,.18) 0%,
+          rgba(155,127,255,.12) 30%,
+          rgba(0,200,255,.08)   60%,
+          transparent 80%),
+        radial-gradient(circle at 65% 65%,
+          rgba(0,0,0,.6) 0%,
+          rgba(0,0,0,.9) 100%);
+      box-shadow:
+        inset 0 0 80px rgba(155,127,255,.15),
+        inset 0 0 40px rgba(0,200,255,.1),
+        0 0 80px rgba(155,127,255,.12),
+        0 0 160px rgba(0,200,255,.06);
+      pointer-events:none;
+      animation:sphere-float 6s ease-in-out infinite;
+    }
+    .hero-sphere::before{
+      content:'';position:absolute;
+      width:38%;height:22%;border-radius:50%;
+      background:rgba(255,255,255,.14);
+      top:18%;left:22%;
+      filter:blur(8px);
+      transform:rotate(-30deg);
+    }
+    @keyframes sphere-float{
+      0%,100%{transform:translateY(-50%) translateY(0px);}
+      50%{transform:translateY(-50%) translateY(-18px);}
+    }
+
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(0,200,255,.07);border:1px solid rgba(0,200,255,.18);
+      border-radius:100px;padding:5px 14px;
+      font-size:11.5px;font-weight:600;color:var(--cyan);
+      margin-bottom:24px;
+      animation:badge-in .5s ease both;
+    }
+    @keyframes badge-in{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+    .badge-pulse{
+      width:6px;height:6px;border-radius:50%;
+      background:var(--cyan);
+      animation:pulse 2s ease infinite;
+    }
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.8);}}
+
+    .hero-title{
+      font-size:clamp(38px,5.5vw,68px);
+      font-weight:900;letter-spacing:-.04em;line-height:1.04;
+      margin-bottom:20px;max-width:600px;
+      animation:hero-in .6s .1s ease both;
+    }
+    .hero-title .grad{
+      background:linear-gradient(135deg,var(--cyan) 0%,var(--purple) 60%,var(--accent) 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    @keyframes hero-in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+    .hero-sub{
+      font-size:15.5px;color:var(--muted);max-width:480px;
+      line-height:1.7;margin-bottom:38px;font-weight:400;
+      animation:hero-in .6s .2s ease both;
+    }
+
+    .hero-actions{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+      animation:hero-in .6s .3s ease both;
+    }
+    .btn-primary{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:13px 26px;border-radius:13px;border:none;cursor:pointer;
+      background:linear-gradient(135deg,var(--cyan),var(--purple));
+      color:#fff;font-size:13.5px;font-weight:700;
+      text-decoration:none;letter-spacing:-.1px;
+      box-shadow:0 4px 20px rgba(0,200,255,.2);
+      transition:opacity .15s,transform .15s,box-shadow .15s;
+    }
+    .btn-primary:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,200,255,.3);}
+    .btn-ghost{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:12px 24px;border-radius:13px;
+      border:1px solid var(--border2);
+      background:rgba(255,255,255,.04);
+      color:rgba(255,255,255,.6);font-size:13.5px;font-weight:600;
+      text-decoration:none;
+      transition:background .15s,border-color .15s,transform .15s,color .15s;
+    }
+    .btn-ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);transform:translateY(-2px);color:#fff;}
+
+    /* ════════════════════════════════════════
+       STATS BAR
+    ════════════════════════════════════════ */
+    .stats-bar{
+      display:grid;grid-template-columns:repeat(4,1fr);
+      border-bottom:1px solid var(--border);
       background:var(--surface);
     }
-    .stat-item {
-      flex:1; padding:20px 28px; border-right:1px solid var(--border);
-      display:flex; align-items:center; gap:14px;
+    .stat-cell{
+      display:flex;align-items:center;gap:14px;
+      padding:22px 28px;
+      border-right:1px solid var(--border);
+      transition:background .2s;
     }
-    .stat-item:last-child { border-right:none; }
-    .stat-icon {
-      width:36px; height:36px; border-radius:10px; flex-shrink:0;
-      display:flex; align-items:center; justify-content:center;
+    .stat-cell:last-child{border-right:none;}
+    .stat-cell:hover{background:rgba(255,255,255,.02);}
+    .stat-icon-wrap{
+      width:40px;height:40px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
     }
-    .stat-num { font-size:22px; font-weight:800; line-height:1; margin-bottom:2px; }
-    .stat-lbl { font-size:11px; color:var(--muted); font-weight:500; }
+    .stat-number{
+      font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1;
+      margin-bottom:3px;
+    }
+    .stat-label{font-size:11px;color:var(--muted);font-weight:500;}
 
-    /* ── SECTION ── */
-    .section { padding:40px 60px; }
-    .section-head { display:flex; align-items:baseline; gap:14px; margin-bottom:24px; }
-    .section-title { font-size:20px; font-weight:800; letter-spacing:-.3px; }
-    .section-sub { font-size:13px; color:var(--muted); }
-
-    /* ── TOOL CARDS ── */
-    .tools-grid {
-      display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px;
+    /* ════════════════════════════════════════
+       SECTION
+    ════════════════════════════════════════ */
+    .section{padding:44px 56px;}
+    .section-hd{
+      display:flex;align-items:baseline;gap:14px;margin-bottom:28px;
     }
-    .tool-card {
-      position:relative; background:var(--panel); border:1px solid var(--border);
-      border-radius:20px; padding:24px; text-decoration:none; color:var(--text);
-      display:flex; flex-direction:column; gap:16px;
-      transition:transform .2s, border-color .2s, box-shadow .2s;
+    .section-hd-title{font-size:19px;font-weight:800;letter-spacing:-.3px;}
+    .section-hd-sub{font-size:12.5px;color:var(--muted);}
+
+    /* ════════════════════════════════════════
+       TOOL CARDS GRID
+    ════════════════════════════════════════ */
+    .tools-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+      gap:16px;
+    }
+    .tool-card{
+      position:relative;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:20px;padding:24px;
+      text-decoration:none;color:var(--text);
+      display:flex;flex-direction:column;gap:0;
       overflow:hidden;
+      transition:transform .22s ease,border-color .22s,box-shadow .22s;
     }
-    .tool-card::before {
-      content:''; position:absolute; inset:0; border-radius:20px;
-      background:var(--glow); opacity:0; transition:opacity .3s;
+    /* glow layer */
+    .tool-card::before{
+      content:'';position:absolute;inset:0;border-radius:20px;
+      background:var(--card-glow,transparent);
+      opacity:0;transition:opacity .3s;pointer-events:none;
     }
-    .tool-card:hover { transform:translateY(-3px); border-color:rgba(255,255,255,.14); box-shadow:0 16px 40px rgba(0,0,0,.35); }
-    .tool-card:hover::before { opacity:1; }
-    .tool-card-glow { --glow:radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,200,255,.06), transparent); }
+    .tool-card:hover{
+      transform:translateY(-4px);
+      border-color:rgba(255,255,255,.14);
+      box-shadow:0 20px 48px rgba(0,0,0,.4);
+    }
+    .tool-card:hover::before{opacity:1;}
 
-    .card-top { display:flex; align-items:flex-start; justify-content:space-between; }
-    .card-icon {
-      width:44px; height:44px; border-radius:14px; display:flex;
-      align-items:center; justify-content:center; flex-shrink:0;
+    .card-top{
+      display:flex;align-items:flex-start;justify-content:space-between;
+      margin-bottom:18px;
     }
-    .card-badge {
-      font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
-      padding:4px 10px; border-radius:100px; border:1px solid;
+    .card-icon{
+      width:46px;height:46px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
     }
-    .card-title { font-size:17px; font-weight:800; letter-spacing:-.3px; margin-bottom:6px; }
-    .card-desc  { font-size:13px; color:var(--muted); line-height:1.6; flex:1; }
-    .card-features { display:flex; flex-direction:column; gap:7px; }
-    .card-feat {
-      display:flex; align-items:center; gap:8px;
-      font-size:12px; font-weight:500; color:rgba(255,255,255,.55);
+    .card-tag{
+      font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+      padding:4px 10px;border-radius:100px;border:1px solid;
     }
-    .feat-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
-    .card-arrow {
-      display:flex; align-items:center; justify-content:space-between;
-      padding-top:14px; border-top:1px solid var(--border); margin-top:auto;
-      font-size:12px; font-weight:600; color:var(--muted);
+    .card-title{font-size:17px;font-weight:800;letter-spacing:-.3px;margin-bottom:8px;}
+    .card-desc{font-size:13px;color:var(--muted);line-height:1.65;flex:1;}
+
+    .card-feats{display:flex;flex-direction:column;gap:7px;margin-top:18px;}
+    .card-feat{
+      display:flex;align-items:center;gap:8px;
+      font-size:12px;color:rgba(255,255,255,.45);font-weight:500;
+    }
+    .feat-pip{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+
+    .card-footer{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-top:20px;padding-top:16px;
+      border-top:1px solid var(--border);
+      font-size:12px;font-weight:600;color:var(--muted2);
       transition:color .15s;
     }
-    .tool-card:hover .card-arrow { color:rgba(255,255,255,.8); }
-    .arrow-icon { transition:transform .2s; }
-    .tool-card:hover .arrow-icon { transform:translateX(4px); }
+    .tool-card:hover .card-footer{color:rgba(255,255,255,.75);}
+    .card-arrow{transition:transform .2s;}
+    .tool-card:hover .card-arrow{transform:translateX(5px);}
 
-    /* ── TIPS SECTION ── */
-    .tips-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
-    .tip-card {
-      background:var(--panel); border:1px solid var(--border); border-radius:14px;
-      padding:16px 18px; display:flex; gap:12px; align-items:flex-start;
+    /* ════════════════════════════════════════
+       SHORTCUTS QUICK ROW
+    ════════════════════════════════════════ */
+    .tips-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+      gap:12px;
     }
-    .tip-num {
-      width:24px; height:24px; border-radius:8px; flex-shrink:0;
-      display:flex; align-items:center; justify-content:center;
-      font-size:11px; font-weight:800;
+    .tip-card{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:14px;padding:16px 18px;
+      display:flex;gap:12px;align-items:flex-start;
+      transition:border-color .2s;
     }
-    .tip-text { font-size:12px; color:rgba(255,255,255,.55); line-height:1.6; }
-    .tip-text strong { color:rgba(255,255,255,.8); font-weight:600; }
+    .tip-card:hover{border-color:var(--border2);}
+    .tip-num{
+      width:26px;height:26px;border-radius:9px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      font-size:11px;font-weight:800;
+    }
+    .tip-text{font-size:12px;color:rgba(255,255,255,.45);line-height:1.65;}
+    .tip-text strong{color:rgba(255,255,255,.75);font-weight:600;}
 
-    /* ── FOOTER ── */
-    .footer {
-      margin-top:auto; padding:24px 60px;
+    .shortcuts-wrap{
+      display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;
+    }
+    .shortcut{
+      display:flex;align-items:center;gap:7px;
+      background:rgba(255,255,255,.03);border:1px solid var(--border);
+      border-radius:9px;padding:7px 13px;
+      font-size:11px;color:var(--muted);font-weight:500;
+      transition:background .15s,border-color .15s;
+    }
+    .shortcut:hover{background:rgba(255,255,255,.06);border-color:var(--border2);color:rgba(255,255,255,.7);}
+    .shortcut kbd{
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
+      border-radius:5px;padding:1px 7px;
+      font-family:monospace;font-size:10px;font-weight:700;
+      color:rgba(255,255,255,.65);
+    }
+
+    /* ════════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════════ */
+    .footer{
+      margin-top:auto;
+      padding:24px 56px;
       border-top:1px solid var(--border);
-      display:flex; align-items:center; justify-content:space-between;
-      font-size:12px; color:var(--muted);
+      display:flex;align-items:center;justify-content:space-between;
+      flex-wrap:wrap;gap:12px;
+      font-size:12px;color:var(--muted);
     }
-    .footer-links { display:flex; gap:20px; }
-    .footer-links a { color:var(--muted); text-decoration:none; transition:color .15s; }
-    .footer-links a:hover { color:rgba(255,255,255,.8); }
+    .footer-links{display:flex;gap:20px;flex-wrap:wrap;}
+    .footer-links a{color:var(--muted);text-decoration:none;transition:color .15s;}
+    .footer-links a:hover{color:rgba(255,255,255,.75);}
 
-    /* ── KEYBOARD SHORTCUT CHIPS ── */
-    .shortcut-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px; }
-    .shortcut {
-      display:flex; align-items:center; gap:6px;
-      background:rgba(255,255,255,.04); border:1px solid var(--border);
-      border-radius:8px; padding:6px 12px;
-      font-size:11px; color:rgba(255,255,255,.45); font-weight:500;
-    }
-    .shortcut kbd {
-      background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1);
-      border-radius:4px; padding:1px 6px; font-family:monospace;
-      font-size:10px; font-weight:700; color:rgba(255,255,255,.65);
+    /* ════════════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════════════ */
+
+    /* Tablet ≤ 1024px */
+    @media(max-width:1024px){
+      .hero{padding:56px 40px 52px;}
+      .hero-sphere{width:220px;height:220px;right:3%;}
+      .section{padding:36px 40px;}
+      .footer{padding:20px 40px;}
+      .stats-bar{grid-template-columns:repeat(2,1fr);}
+      .stat-cell:nth-child(2){border-right:none;}
+      .stat-cell:nth-child(3){border-top:1px solid var(--border);}
+      .stat-cell:nth-child(4){border-top:1px solid var(--border);border-right:none;}
     }
 
-    @media(max-width:900px) {
-      .hero { padding:48px 32px 40px; }
-      .section { padding:32px; }
-      .stats-row { flex-wrap:wrap; }
-      .stat-item { min-width:140px; border-right:none; border-bottom:1px solid var(--border); }
-      .footer { padding:20px 32px; flex-direction:column; gap:12px; text-align:center; }
+    /* Mobile ≤ 768px */
+    @media(max-width:768px){
+      .sidebar{display:none;}
+      .topbar{display:flex;}
+      .main{margin-left:0;padding-top:var(--topbar-h);}
+
+      .hero{padding:40px 20px 44px;}
+      .hero-sphere{
+        width:160px;height:160px;
+        right:-30px;top:auto;bottom:-40px;
+        transform:none;
+        opacity:.5;
+        animation:none;
+      }
+      .hero-title{font-size:clamp(32px,8vw,44px);}
+      .hero-sub{font-size:14px;}
+      .hero-actions{gap:10px;}
+      .btn-primary,.btn-ghost{padding:12px 20px;font-size:13px;}
+
+      .stats-bar{grid-template-columns:repeat(2,1fr);}
+      .stat-cell{padding:16px 18px;gap:10px;}
+      .stat-number{font-size:19px;}
+
+      .section{padding:28px 20px;}
+      .section-hd{flex-direction:column;gap:4px;margin-bottom:20px;}
+
+      .tools-grid{grid-template-columns:1fr;gap:12px;}
+      .tips-grid{grid-template-columns:1fr 1fr;gap:10px;}
+
+      .shortcuts-wrap{gap:6px;}
+      .shortcut{font-size:10.5px;padding:6px 10px;}
+
+      .footer{padding:20px;flex-direction:column;text-align:center;gap:14px;}
+      .footer-links{justify-content:center;}
     }
-    @media(max-width:600px) {
-      .main { margin-left:0; }
-      .sidebar { display:none; }
-      .hero-wave { display:none; }
-      .hero-title { font-size:32px; }
+
+    /* Small mobile ≤ 480px */
+    @media(max-width:480px){
+      .tips-grid{grid-template-columns:1fr;}
+      .stats-bar{grid-template-columns:1fr 1fr;}
+      .hero-sphere{display:none;}
     }
+
+    /* Large desktop ≥ 1280px */
+    @media(min-width:1280px){
+      .tools-grid{grid-template-columns:repeat(4,1fr);}
+      .hero-sphere{width:380px;height:380px;}
+    }
+
+    /* ── entrance animations ── */
+    .anim-in{
+      opacity:0;transform:translateY(18px);
+      transition:opacity .45s ease,transform .45s ease;
+    }
+    .anim-in.visible{opacity:1;transform:none;}
   </style>
 </head>
 <body>
 
-<!-- ── SIDEBAR ── -->
-<nav class="sidebar">
-  <a href="index.html" class="sidebar-logo">
-    <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zM9 10l12-3"/></svg>
+<!-- ════════════════════════════════════════
+     SIDEBAR (desktop)
+════════════════════════════════════════ -->
+<nav class="sidebar" id="sidebar">
+  <a href="index.html" class="sidebar-logo" aria-label="Accueil">
+    <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zM9 10l12-3"/>
+    </svg>
   </a>
+
   <a href="fl-studio-cheatsheet.html" class="nav-item" data-tip="Raccourcis">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path stroke-linecap="round" d="M7 9h.01M11 9h2m4 0h.01M7 13h4m6 0h.01"/></svg>
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <rect x="2" y="5" width="20" height="14" rx="3"/>
+      <path stroke-linecap="round" d="M7 9h.01M11 9h2m4 0h.01M7 13h4m6 0h.01"/>
+    </svg>
   </a>
   <a href="fl-studio-tips.html" class="nav-item" data-tip="Tips & Astuces">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 16v-4m0-4h.01"/></svg>
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <path stroke-linecap="round" d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+    </svg>
   </a>
   <a href="beatscan.html" class="nav-item" data-tip="BeatScan">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2z"/></svg>
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+    </svg>
   </a>
-  <a href="mastering.html" class="nav-item" data-tip="Mastering Pro">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+  <a href="mastering.html" class="nav-item" data-tip="Mastering">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+      <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+      <line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/>
+      <line x1="17" y1="16" x2="23" y2="16"/>
+    </svg>
   </a>
   <a href="songstats.html" class="nav-item" data-tip="Songstats">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+    </svg>
   </a>
+
   <div class="nav-sep"></div>
   <div class="sidebar-spacer"></div>
+
   <div class="nav-item active" data-tip="Accueil">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9"/></svg>
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9"/>
+    </svg>
   </div>
 </nav>
 
-<!-- ── MAIN ── -->
-<div class="main">
+<!-- ════════════════════════════════════════
+     MOBILE TOP BAR
+════════════════════════════════════════ -->
+<header class="topbar" id="topbar">
+  <a href="index.html" class="topbar-logo">
+    <div class="topbar-logo-icon">
+      <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zM9 10l12-3"/>
+      </svg>
+    </div>
+    <span class="topbar-logo-name">FL Studio Toolkit</span>
+  </a>
+  <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleDrawer()">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ════════════════════════════════════════
+     MOBILE DRAWER
+════════════════════════════════════════ -->
+<div class="drawer-backdrop" id="backdrop" onclick="closeDrawer()"></div>
+<nav class="drawer" id="drawer">
+  <a href="index.html" class="drawer-item active">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9"/>
+    </svg>
+    Accueil
+  </a>
+  <a href="fl-studio-cheatsheet.html" class="drawer-item">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <rect x="2" y="5" width="20" height="14" rx="3"/>
+      <path stroke-linecap="round" d="M7 9h.01M11 9h2m4 0h.01M7 13h4m6 0h.01"/>
+    </svg>
+    Raccourcis Clavier
+  </a>
+  <a href="fl-studio-tips.html" class="drawer-item">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <path stroke-linecap="round" d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+    </svg>
+    Tips & Astuces
+  </a>
+  <a href="beatscan.html" class="drawer-item">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+    </svg>
+    BeatScan
+  </a>
+  <a href="mastering.html" class="drawer-item">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+      <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+      <line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/>
+      <line x1="17" y1="16" x2="23" y2="16"/>
+    </svg>
+    Mastering Pro
+  </a>
+  <a href="songstats.html" class="drawer-item">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+      <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+    </svg>
+    Songstats
+  </a>
+</nav>
+
+<!-- ════════════════════════════════════════
+     MAIN
+════════════════════════════════════════ -->
+<main class="main">
 
   <!-- HERO -->
-  <div class="hero">
-    <div class="hero-noise"></div>
+  <section class="hero">
+    <div class="hero-bg"></div>
+
+    <!-- Decorative sphere -->
+    <div class="hero-sphere"></div>
 
     <div class="hero-badge">
-      <div class="badge-dot"></div>
+      <div class="badge-pulse"></div>
       FL Studio 21 · Toolkit complet
     </div>
 
     <h1 class="hero-title">
       Produis mieux.<br>
-      <span>Maîtrise ton son.</span>
+      <span class="grad">Maîtrise ton son.</span>
     </h1>
+
     <p class="hero-sub">
-      Un ensemble d'outils pour beatmakers — raccourcis clavier, conseils de production,
-      analyse BPM/tonalité et mastering audio professionnel. Tout en local, sans installation.
+      Raccourcis clavier, conseils de production, analyse BPM/tonalité,
+      mastering audio et stats streaming. Tout en ligne, sans installation.
     </p>
 
-    <div class="hero-cta">
+    <div class="hero-actions">
       <a href="beatscan.html" class="btn-primary">
-        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2z"/></svg>
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
         Analyser un beat
       </a>
-      <a href="mastering.html" class="btn-ghost">
-        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-        Ouvrir le Mastering
+      <a href="songstats.html" class="btn-ghost">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+        Voir les stats
       </a>
     </div>
+  </section>
 
-    <!-- big decorative waveform -->
-    <svg class="hero-wave" width="420" height="260" viewBox="0 0 420 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="0"   y="100" width="8" height="60"  rx="4" fill="white"/>
-      <rect x="16"  y="70"  width="8" height="120" rx="4" fill="white"/>
-      <rect x="32"  y="50"  width="8" height="160" rx="4" fill="white"/>
-      <rect x="48"  y="30"  width="8" height="200" rx="4" fill="white"/>
-      <rect x="64"  y="60"  width="8" height="140" rx="4" fill="white"/>
-      <rect x="80"  y="40"  width="8" height="180" rx="4" fill="white"/>
-      <rect x="96"  y="20"  width="8" height="220" rx="4" fill="white"/>
-      <rect x="112" y="55"  width="8" height="150" rx="4" fill="white"/>
-      <rect x="128" y="80"  width="8" height="100" rx="4" fill="white"/>
-      <rect x="144" y="35"  width="8" height="190" rx="4" fill="white"/>
-      <rect x="160" y="10"  width="8" height="240" rx="4" fill="white"/>
-      <rect x="176" y="45"  width="8" height="170" rx="4" fill="white"/>
-      <rect x="192" y="75"  width="8" height="110" rx="4" fill="white"/>
-      <rect x="208" y="25"  width="8" height="210" rx="4" fill="white"/>
-      <rect x="224" y="55"  width="8" height="150" rx="4" fill="white"/>
-      <rect x="240" y="85"  width="8" height="90"  rx="4" fill="white"/>
-      <rect x="256" y="40"  width="8" height="180" rx="4" fill="white"/>
-      <rect x="272" y="65"  width="8" height="130" rx="4" fill="white"/>
-      <rect x="288" y="95"  width="8" height="70"  rx="4" fill="white"/>
-      <rect x="304" y="50"  width="8" height="160" rx="4" fill="white"/>
-      <rect x="320" y="30"  width="8" height="200" rx="4" fill="white"/>
-      <rect x="336" y="70"  width="8" height="120" rx="4" fill="white"/>
-      <rect x="352" y="100" width="8" height="60"  rx="4" fill="white"/>
-      <rect x="368" y="80"  width="8" height="100" rx="4" fill="white"/>
-      <rect x="384" y="110" width="8" height="40"  rx="4" fill="white"/>
-      <rect x="400" y="90"  width="8" height="80"  rx="4" fill="white"/>
-    </svg>
-  </div>
-
-  <!-- STATS -->
-  <div class="stats-row">
-    <div class="stat-item">
-      <div class="stat-icon" style="background:rgba(0,200,255,.1);">
-        <svg width="18" height="18" fill="none" stroke="var(--accent2)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path stroke-linecap="round" d="M7 9h.01M11 9h2m4 0h.01M7 13h4m6 0h.01"/></svg>
+  <!-- STATS BAR -->
+  <div class="stats-bar anim-in">
+    <div class="stat-cell">
+      <div class="stat-icon-wrap" style="background:rgba(0,200,255,.08);">
+        <svg width="18" height="18" fill="none" stroke="var(--cyan)" stroke-width="1.8" viewBox="0 0 24 24">
+          <rect x="2" y="5" width="20" height="14" rx="3"/>
+          <path stroke-linecap="round" d="M7 9h.01M11 9h2m4 0h.01M7 13h4m6 0h.01"/>
+        </svg>
       </div>
       <div>
-        <div class="stat-num" style="color:var(--accent2);">66</div>
-        <div class="stat-lbl">Raccourcis clavier</div>
+        <div class="stat-number" style="color:var(--cyan);">66</div>
+        <div class="stat-label">Raccourcis clavier</div>
       </div>
     </div>
-    <div class="stat-item">
-      <div class="stat-icon" style="background:rgba(155,127,255,.1);">
-        <svg width="18" height="18" fill="none" stroke="var(--purple)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+    <div class="stat-cell">
+      <div class="stat-icon-wrap" style="background:rgba(155,127,255,.08);">
+        <svg width="18" height="18" fill="none" stroke="var(--purple)" stroke-width="1.8" viewBox="0 0 24 24">
+          <path stroke-linecap="round" d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+        </svg>
       </div>
       <div>
-        <div class="stat-num" style="color:var(--purple);">40+</div>
-        <div class="stat-lbl">Conseils pro</div>
+        <div class="stat-number" style="color:var(--purple);">40+</div>
+        <div class="stat-label">Conseils pro</div>
       </div>
     </div>
-    <div class="stat-item">
-      <div class="stat-icon" style="background:rgba(255,107,43,.1);">
-        <svg width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2z"/></svg>
+    <div class="stat-cell">
+      <div class="stat-icon-wrap" style="background:rgba(255,107,43,.08);">
+        <svg width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="1.8" viewBox="0 0 24 24">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
       </div>
       <div>
-        <div class="stat-num" style="color:var(--accent);">BPM + Key</div>
-        <div class="stat-lbl">Analyse audio réelle</div>
+        <div class="stat-number" style="color:var(--accent);">BPM</div>
+        <div class="stat-label">Analyse audio réelle</div>
       </div>
     </div>
-    <div class="stat-item">
-      <div class="stat-icon" style="background:rgba(34,197,94,.1);">
-        <svg width="18" height="18" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    <div class="stat-cell">
+      <div class="stat-icon-wrap" style="background:rgba(34,197,94,.08);">
+        <svg width="18" height="18" fill="none" stroke="var(--green)" stroke-width="1.8" viewBox="0 0 24 24">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          <path stroke-linecap="round" d="M5 19 2 22m0 0 3 3M2 22h20"/>
+        </svg>
       </div>
       <div>
-        <div class="stat-num" style="color:var(--green);">WAV</div>
-        <div class="stat-lbl">Export masterisé</div>
+        <div class="stat-number" style="color:var(--green);">WAV</div>
+        <div class="stat-label">Export masterisé</div>
       </div>
     </div>
   </div>
 
-  <!-- TOOLS GRID -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-title">Outils disponibles</div>
-      <div class="section-sub">4 modules · 100% local · aucune installation</div>
+  <!-- TOOLS -->
+  <section class="section">
+    <div class="section-hd">
+      <div class="section-hd-title">Outils disponibles</div>
+      <div class="section-hd-sub">5 modules · 100% en ligne · aucune installation</div>
     </div>
     <div class="tools-grid">
 
       <!-- CHEATSHEET -->
-      <a href="fl-studio-cheatsheet.html" class="tool-card tool-card-glow" style="--glow:radial-gradient(ellipse 80% 60% at 50% -20%, rgba(0,200,255,.07), transparent);">
+      <a href="fl-studio-cheatsheet.html" class="tool-card anim-in"
+         style="--card-glow:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,200,255,.06), transparent);">
         <div class="card-top">
-          <div class="card-icon" style="background:linear-gradient(135deg,rgba(0,200,255,.15),rgba(0,200,255,.05));">
-            <svg width="22" height="22" fill="none" stroke="var(--accent2)" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path stroke-linecap="round" d="M7 9h.01M11 9h2m4 0h.01M7 13h4m6 0h.01"/></svg>
+          <div class="card-icon" style="background:rgba(0,200,255,.1);">
+            <svg width="22" height="22" fill="none" stroke="var(--cyan)" stroke-width="1.7" viewBox="0 0 24 24">
+              <rect x="2" y="5" width="20" height="14" rx="3"/>
+              <path stroke-linecap="round" d="M7 9h.01M11 9h2m4 0h.01M7 13h4m6 0h.01"/>
+            </svg>
           </div>
-          <div class="card-badge" style="color:var(--accent2);border-color:rgba(0,200,255,.2);background:rgba(0,200,255,.06);">Référence</div>
+          <div class="card-tag" style="color:var(--cyan);border-color:rgba(0,200,255,.2);background:rgba(0,200,255,.06);">Référence</div>
         </div>
-        <div>
-          <div class="card-title">Raccourcis Clavier</div>
-          <div class="card-desc">Tous les shortcuts FL Studio 21 organisés par catégorie avec recherche instantanée. Ne plus jamais chercher dans les menus.</div>
+        <div class="card-title">Raccourcis Clavier</div>
+        <div class="card-desc">Tous les shortcuts FL Studio 21 organisés par catégorie avec recherche instantanée.</div>
+        <div class="card-feats">
+          <div class="card-feat"><div class="feat-pip" style="background:var(--cyan);"></div>Navigation · Piano Roll · Mixer</div>
+          <div class="card-feat"><div class="feat-pip" style="background:var(--cyan);"></div>Filtrage par catégorie</div>
+          <div class="card-feat"><div class="feat-pip" style="background:var(--cyan);"></div>66 raccourcis Windows</div>
         </div>
-        <div class="card-features">
-          <div class="card-feat"><div class="feat-dot" style="background:var(--accent2);"></div>Navigation · Piano Roll · Mixer</div>
-          <div class="card-feat"><div class="feat-dot" style="background:var(--accent2);"></div>Filtrage par catégorie</div>
-          <div class="card-feat"><div class="feat-dot" style="background:var(--accent2);"></div>66 raccourcis Windows</div>
-        </div>
-        <div class="card-arrow">
+        <div class="card-footer">
           Ouvrir le cheatsheet
-          <svg class="arrow-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg class="card-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
         </div>
       </a>
 
       <!-- TIPS -->
-      <a href="fl-studio-tips.html" class="tool-card" style="--glow:radial-gradient(ellipse 80% 60% at 50% -20%, rgba(155,127,255,.07), transparent);">
+      <a href="fl-studio-tips.html" class="tool-card anim-in"
+         style="--card-glow:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(155,127,255,.07), transparent);">
         <div class="card-top">
-          <div class="card-icon" style="background:linear-gradient(135deg,rgba(155,127,255,.15),rgba(155,127,255,.05));">
-            <svg width="22" height="22" fill="none" stroke="var(--purple)" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+          <div class="card-icon" style="background:rgba(155,127,255,.1);">
+            <svg width="22" height="22" fill="none" stroke="var(--purple)" stroke-width="1.7" viewBox="0 0 24 24">
+              <path stroke-linecap="round" d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
           </div>
-          <div class="card-badge" style="color:var(--purple);border-color:rgba(155,127,255,.2);background:rgba(155,127,255,.06);">Production</div>
+          <div class="card-tag" style="color:var(--purple);border-color:rgba(155,127,255,.2);background:rgba(155,127,255,.06);">Production</div>
         </div>
-        <div>
-          <div class="card-title">Tips & Astuces</div>
-          <div class="card-desc">Conseils de production avancés pour beatmakers : mixage, arrangement, sound design et workflow FL Studio.</div>
+        <div class="card-title">Tips & Astuces</div>
+        <div class="card-desc">Conseils avancés pour beatmakers : mixage, arrangement, sound design et workflow FL Studio.</div>
+        <div class="card-feats">
+          <div class="card-feat"><div class="feat-pip" style="background:var(--purple);"></div>Mixage · Arrangement · Automation</div>
+          <div class="card-feat"><div class="feat-pip" style="background:var(--purple);"></div>Tips classés par niveau</div>
+          <div class="card-feat"><div class="feat-pip" style="background:var(--purple);"></div>40+ conseils pro</div>
         </div>
-        <div class="card-features">
-          <div class="card-feat"><div class="feat-dot" style="background:var(--purple);"></div>Mixage · Arrangement · Automation</div>
-          <div class="card-feat"><div class="feat-dot" style="background:var(--purple);"></div>Tips classés par niveau</div>
-          <div class="card-feat"><div class="feat-dot" style="background:var(--purple);"></div>40+ conseils pro</div>
-        </div>
-        <div class="card-arrow">
+        <div class="card-footer">
           Voir les astuces
-          <svg class="arrow-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg class="card-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
         </div>
       </a>
 
       <!-- BEATSCAN -->
-      <a href="beatscan.html" class="tool-card" style="--glow:radial-gradient(ellipse 80% 60% at 50% -20%, rgba(255,107,43,.06), transparent);">
+      <a href="beatscan.html" class="tool-card anim-in"
+         style="--card-glow:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255,107,43,.06), transparent);">
         <div class="card-top">
-          <div class="card-icon" style="background:linear-gradient(135deg,rgba(255,107,43,.15),rgba(255,107,43,.05));">
-            <svg width="22" height="22" fill="none" stroke="var(--accent)" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2z"/></svg>
+          <div class="card-icon" style="background:rgba(255,107,43,.1);">
+            <svg width="22" height="22" fill="none" stroke="var(--accent)" stroke-width="1.7" viewBox="0 0 24 24">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
           </div>
-          <div class="card-badge" style="color:var(--accent);border-color:rgba(255,107,43,.2);background:rgba(255,107,43,.06);">Analyse</div>
+          <div class="card-tag" style="color:var(--accent);border-color:rgba(255,107,43,.2);background:rgba(255,107,43,.06);">Analyse</div>
         </div>
-        <div>
-          <div class="card-title">BeatScan</div>
-          <div class="card-desc">Analyse BPM et tonalité en temps réel par traitement de signal réel — autocorrélation, Goertzel chroma, profils Krumhansl-Schmuckler.</div>
+        <div class="card-title">BeatScan</div>
+        <div class="card-desc">Analyse BPM et tonalité en temps réel par traitement de signal — autocorrélation et profils Krumhansl-Schmuckler.</div>
+        <div class="card-feats">
+          <div class="card-feat"><div class="feat-pip" style="background:var(--accent);"></div>Détection BPM par autocorrélation</div>
+          <div class="card-feat"><div class="feat-pip" style="background:var(--accent);"></div>Tonalité : 24 gammes majeures/mineures</div>
+          <div class="card-feat"><div class="feat-pip" style="background:var(--accent);"></div>Waveform bicolore · Lecture</div>
         </div>
-        <div class="card-features">
-          <div class="card-feat"><div class="feat-dot" style="background:var(--accent);"></div>Détection BPM par autocorrélation</div>
-          <div class="card-feat"><div class="feat-dot" style="background:var(--accent);"></div>Tonalité : 24 gammes majeures/mineures</div>
-          <div class="card-feat"><div class="feat-dot" style="background:var(--accent);"></div>Waveform bicolore · Lecture</div>
-        </div>
-        <div class="card-arrow">
+        <div class="card-footer">
           Scanner un fichier
-          <svg class="arrow-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg class="card-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
         </div>
       </a>
 
       <!-- MASTERING -->
-      <a href="mastering.html" class="tool-card" style="--glow:radial-gradient(ellipse 80% 60% at 50% -20%, rgba(34,197,94,.05), transparent);">
+      <a href="mastering.html" class="tool-card anim-in"
+         style="--card-glow:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(34,197,94,.05), transparent);">
         <div class="card-top">
-          <div class="card-icon" style="background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(0,200,255,.06));">
-            <svg width="22" height="22" fill="none" stroke="var(--green)" stroke-width="1.8" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          <div class="card-icon" style="background:rgba(34,197,94,.1);">
+            <svg width="22" height="22" fill="none" stroke="var(--green)" stroke-width="1.7" viewBox="0 0 24 24">
+              <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+              <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+              <line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/>
+              <line x1="17" y1="16" x2="23" y2="16"/>
+            </svg>
           </div>
-          <div class="card-badge" style="color:var(--green);border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.06);">Mastering</div>
+          <div class="card-tag" style="color:var(--green);border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.06);">Mastering</div>
         </div>
-        <div>
-          <div class="card-title">Mastering Pro</div>
-          <div class="card-desc">Chaîne de mastering complète : EQ 5 bandes, compresseur avec GR meter, saturation analogique, limiteur et export WAV 16-bit.</div>
+        <div class="card-title">Mastering Pro</div>
+        <div class="card-desc">Chaîne complète : EQ 5 bandes, compresseur GR meter, saturation analogique, limiteur et export WAV 16-bit.</div>
+        <div class="card-feats">
+          <div class="card-feat"><div class="feat-pip" style="background:var(--green);"></div>EQ · Compresseur · Saturation · Limiteur</div>
+          <div class="card-feat"><div class="feat-pip" style="background:var(--green);"></div>5 presets : Balanced, Trap, Lo-Fi, Loud…</div>
+          <div class="card-feat"><div class="feat-pip" style="background:var(--green);"></div>Export WAV via Web Audio API</div>
         </div>
-        <div class="card-features">
-          <div class="card-feat"><div class="feat-dot" style="background:var(--green);"></div>EQ · Compresseur · Saturation · Limiteur</div>
-          <div class="card-feat"><div class="feat-dot" style="background:var(--green);"></div>5 presets : Balanced, Trap, Lo-Fi, Loud…</div>
-          <div class="card-feat"><div class="feat-dot" style="background:var(--green);"></div>Export WAV masterisé via Web Audio API</div>
-        </div>
-        <div class="card-arrow">
+        <div class="card-footer">
           Ouvrir le mastering
-          <svg class="arrow-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg class="card-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+      </a>
+
+      <!-- SONGSTATS -->
+      <a href="songstats.html" class="tool-card anim-in"
+         style="--card-glow:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(245,158,11,.05), transparent);">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(245,158,11,.1);">
+            <svg width="22" height="22" fill="none" stroke="var(--yellow)" stroke-width="1.7" viewBox="0 0 24 24">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+          </div>
+          <div class="card-tag" style="color:var(--yellow);border-color:rgba(245,158,11,.2);background:rgba(245,158,11,.06);">Analytics</div>
+        </div>
+        <div class="card-title">Songstats</div>
+        <div class="card-desc">Stats de streaming en temps réel via Songstats & Radiostats — Spotify, Apple Music, TikTok, YouTube, radio.</div>
+        <div class="card-feats">
+          <div class="card-feat"><div class="feat-pip" style="background:var(--yellow);"></div>Recherche artiste ou track</div>
+          <div class="card-feat"><div class="feat-pip" style="background:var(--yellow);"></div>Stats radio & SiriusXM</div>
+          <div class="card-feat"><div class="feat-pip" style="background:var(--yellow);"></div>Auth Spotify PKCE intégrée</div>
+        </div>
+        <div class="card-footer">
+          Voir les stats
+          <svg class="card-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
         </div>
       </a>
 
     </div>
-  </div>
+  </section>
 
   <!-- QUICK TIPS -->
-  <div class="section" style="padding-top:0;">
-    <div class="section-head">
-      <div class="section-title">Shortcuts rapides à retenir</div>
-      <div class="section-sub">Les indispensables de chaque session</div>
+  <section class="section" style="padding-top:0;">
+    <div class="section-hd">
+      <div class="section-hd-title">Raccourcis essentiels</div>
+      <div class="section-hd-sub">Les indispensables de chaque session</div>
     </div>
-    <div class="tips-grid">
+    <div class="tips-grid anim-in">
       <div class="tip-card">
-        <div class="tip-num" style="background:rgba(0,200,255,.1);color:var(--accent2);">1</div>
-        <div class="tip-text"><strong>F5 / F6 / F7 / F8 / F9</strong> — ouvre la Playlist, Step Seq, Piano Roll, Sampler et Mixer en un clic</div>
+        <div class="tip-num" style="background:rgba(0,200,255,.1);color:var(--cyan);">1</div>
+        <div class="tip-text"><strong>F5 → F9</strong> — ouvre Playlist, Step Seq, Piano Roll, Sampler et Mixer en un clic</div>
       </div>
       <div class="tip-card">
         <div class="tip-num" style="background:rgba(155,127,255,.1);color:var(--purple);">2</div>
@@ -497,79 +882,90 @@
         <div class="tip-text"><strong>Ctrl+L</strong> — colle le dernier pattern pour un loop rapide sans quitter la Playlist</div>
       </div>
       <div class="tip-card">
-        <div class="tip-num" style="background:rgba(234,179,8,.1);color:var(--yellow);">4</div>
-        <div class="tip-text"><strong>Alt+clic</strong> sur un paramètre pour le remettre à sa valeur par défaut instantanément</div>
+        <div class="tip-num" style="background:rgba(245,158,11,.1);color:var(--yellow);">4</div>
+        <div class="tip-text"><strong>Alt+clic</strong> — remet un paramètre à sa valeur par défaut instantanément</div>
       </div>
       <div class="tip-card">
         <div class="tip-num" style="background:rgba(34,197,94,.1);color:var(--green);">5</div>
-        <div class="tip-text"><strong>Ctrl+B</strong> dans le Piano Roll — duplique la sélection vers la droite, parfait pour les boucles</div>
+        <div class="tip-text"><strong>Ctrl+B</strong> dans le Piano Roll — duplique la sélection vers la droite</div>
       </div>
       <div class="tip-card">
         <div class="tip-num" style="background:rgba(239,68,68,.1);color:#EF4444;">6</div>
-        <div class="tip-text"><strong>Shift+Ctrl+S</strong> — sauvegarde une nouvelle version numérotée automatiquement. Sauvegarde souvent.</div>
+        <div class="tip-text"><strong>Shift+Ctrl+S</strong> — sauvegarde une nouvelle version numérotée automatiquement</div>
       </div>
     </div>
 
-    <div class="shortcut-row" style="margin-top:24px;">
-      <div class="shortcut"><kbd>Espace</kbd> Play/Stop global</div>
+    <div class="shortcuts-wrap anim-in">
+      <div class="shortcut"><kbd>Espace</kbd> Play / Stop</div>
       <div class="shortcut"><kbd>F4</kbd> Nouveau pattern</div>
       <div class="shortcut"><kbd>Ctrl+M</kbd> Mute piste</div>
       <div class="shortcut"><kbd>Ctrl+G</kbd> Group sélection</div>
       <div class="shortcut"><kbd>Alt+drag</kbd> Copie rapide</div>
-      <div class="shortcut"><kbd>R</kbd> Outil crayon Piano Roll</div>
+      <div class="shortcut"><kbd>R</kbd> Crayon Piano Roll</div>
     </div>
-  </div>
+  </section>
 
   <!-- FOOTER -->
-  <div class="footer">
-    <div>FL Studio Toolkit · Tous les outils tournent en local dans ton navigateur</div>
+  <footer class="footer">
+    <div>FL Studio Toolkit · Tous les outils tournent dans ton navigateur</div>
     <div class="footer-links">
       <a href="fl-studio-cheatsheet.html">Raccourcis</a>
       <a href="fl-studio-tips.html">Tips</a>
       <a href="beatscan.html">BeatScan</a>
       <a href="mastering.html">Mastering</a>
+      <a href="songstats.html">Songstats</a>
     </div>
-  </div>
+  </footer>
 
-</div>
+</main>
 
 <script>
-  // Animate stat numbers on scroll
-  const statNums = document.querySelectorAll('.stat-num');
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.transform = 'translateY(0)';
-        e.target.style.opacity   = '1';
-      }
-    });
-  }, { threshold:.3 });
-  statNums.forEach(n => {
-    n.style.transform  = 'translateY(8px)';
-    n.style.opacity    = '0';
-    n.style.transition = 'transform .4s ease, opacity .4s ease';
-    io.observe(n);
-  });
+/* ── Mobile drawer ── */
+function toggleDrawer(){
+  const open = document.getElementById('drawer').classList.toggle('open');
+  document.getElementById('backdrop').classList.toggle('open', open);
+  document.getElementById('backdrop').style.display = open ? 'block' : 'none';
+  document.getElementById('hamburger').classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('backdrop').classList.remove('open');
+  document.getElementById('backdrop').style.display = 'none';
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeDrawer(); });
 
-  // Cards entrance animation
-  const cards = document.querySelectorAll('.tool-card');
-  const cardIO = new IntersectionObserver(entries => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        setTimeout(() => {
-          e.target.style.transform = 'translateY(0)';
-          e.target.style.opacity   = '1';
-        }, i * 60);
-        cardIO.unobserve(e.target);
+/* ── IntersectionObserver — entrance animations ── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach((e, idx) => {
+    if(e.isIntersecting){
+      /* Stagger children if it's the grid */
+      const children = e.target.querySelectorAll('.anim-in');
+      if(children.length){
+        children.forEach((c, i) => {
+          setTimeout(() => { c.style.opacity='1'; c.style.transform='none'; }, i * 70);
+        });
+      } else {
+        setTimeout(() => { e.target.style.opacity='1'; e.target.style.transform='none'; }, 0);
       }
-    });
-  }, { threshold:.1 });
-  cards.forEach(c => {
-    c.style.transform  = 'translateY(16px)';
-    c.style.opacity    = '0';
-    c.style.transition = 'transform .45s ease, opacity .45s ease, border-color .2s, box-shadow .2s';
-    cardIO.observe(c);
+      io.unobserve(e.target);
+    }
   });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.anim-in').forEach(el => {
+  el.style.transition = 'opacity .5s ease, transform .5s ease';
+  io.observe(el);
+});
+
+/* Hero items animate immediately */
+setTimeout(() => {
+  document.querySelectorAll('.hero .anim-in').forEach(el => {
+    el.style.opacity='1'; el.style.transform='none';
+  });
+}, 100);
 </script>
 </body>
 </html>
