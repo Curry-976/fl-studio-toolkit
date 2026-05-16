@@ -308,8 +308,10 @@
 // ═══════════════════════════════════════════════════
 //  CONFIG — endpoints vérifiés par curl
 // ═══════════════════════════════════════════════════
-const BASE_URL  = 'https://songstats.p.rapidapi.com';
-const RAPID_HOST = 'songstats.p.rapidapi.com';
+const BASE_URL    = 'https://songstats.p.rapidapi.com';
+const RAPID_HOST  = 'songstats.p.rapidapi.com';
+const RADIO_URL   = 'https://radiostats.p.rapidapi.com';
+const RADIO_HOST  = 'radiostats.p.rapidapi.com';
 
 // ── Spotify PKCE ──
 const SP_CLIENT_ID = 'cb7b6530acf34d37818d74e8c3bbb781';
@@ -553,6 +555,24 @@ async function apiGet(path, params = {}) {
   return json;
 }
 
+async function radioGet(path, params = {}) {
+  const url = new URL(RADIO_URL + path);
+  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+  const headers = { 'X-RapidAPI-Key': apiKey, 'X-RapidAPI-Host': RADIO_HOST };
+  let res;
+  try {
+    res = await fetchTimeout(url.toString(), { method: 'GET', headers }, 8000);
+  } catch {
+    res = await fetchTimeout(
+      `https://corsproxy.io/?${encodeURIComponent(url.toString())}`,
+      { method: 'GET', headers }, 10000
+    );
+  }
+  const json = await res.json();
+  if (!res.ok || json.result === 'error') return null; // silencieux si pas de data radio
+  return json;
+}
+
 // ═══════════════════════════════════════════════════
 //  SEARCH
 // ═══════════════════════════════════════════════════
@@ -604,8 +624,12 @@ async function searchArtist(query) {
 
 async function loadArtistById(spotifyArtistId) {
   const srcList = [...activeSources].join(',') || 'spotify';
-  const data = await apiGet('/artists/stats', { spotify_artist_id: spotifyArtistId, source: srcList });
-  renderArtist(data.artist_info || {}, data.stats || []);
+  const [data, radioData] = await Promise.all([
+    apiGet('/artists/stats', { spotify_artist_id: spotifyArtistId, source: srcList }),
+    radioGet('/artists/stats', { spotify_artist_id: spotifyArtistId }),
+  ]);
+  const radioStats = radioData?.stats?.[0]?.data || null;
+  renderArtist(data.artist_info || {}, data.stats || [], radioStats);
   document.getElementById('topbar-sub').textContent = data.artist_info?.name || spotifyArtistId;
 }
 
@@ -712,13 +736,15 @@ async function loadTrackById(spotifyTrackId, isrc, srcList, label) {
 
   if (!ssTrackId && !isrc) throw new Error('Track non trouvé dans la base Songstats.');
 
-  const statsRes = await apiGet('/tracks/stats', {
-    ...(ssTrackId ? { songstats_track_id: ssTrackId } : { isrc }),
-    source: srcList,
-  });
+  const radioParams = isrc ? { isrc } : (ssTrackId ? { songstats_track_id: ssTrackId } : {});
+  const [statsRes, radioData] = await Promise.all([
+    apiGet('/tracks/stats', { ...(ssTrackId ? { songstats_track_id: ssTrackId } : { isrc }), source: srcList }),
+    Object.keys(radioParams).length ? radioGet('/tracks/stats', radioParams) : Promise.resolve(null),
+  ]);
 
   const ti = statsRes.track_info || trackInfo.track_info || {};
-  renderTrack(ti, statsRes.stats || []);
+  const radioStats = radioData?.stats?.[0]?.data || null;
+  renderTrack(ti, statsRes.stats || [], radioStats);
   document.getElementById('topbar-sub').textContent = ti.title || label || spotifyTrackId;
 }
 
@@ -829,7 +855,34 @@ function normaliseStats(statsArr) {
 // ═══════════════════════════════════════════════════
 //  RENDER — ARTIST
 // ═══════════════════════════════════════════════════
-function renderArtist(info, statsArr) {
+// ═══════════════════════════════════════════════════
+//  RADIO CARD
+// ═══════════════════════════════════════════════════
+function buildRadioCard(r) {
+  if (!r) return '';
+  const rows = [
+    { label: '📻 Passages radio',  val: fmt(r.radio_plays_total),   sub: `${fmt(r.radio_stations_total)} stations` },
+    { label: '🛰️ SiriusXM plays',  val: fmt(r.sxm_plays_total),     sub: r.sxm_royalties_total ? `${fmt(r.sxm_royalties_total)} royalties` : '' },
+  ].filter(x => x.val && x.val !== '0');
+  if (!rows.length) return '';
+  return `
+  <div>
+    <div class="section-title">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="7" width="22" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><circle cx="12" cy="14" r="3"/><line x1="7" y1="14" x2="7.01" y2="14"/></svg>
+      Stats Radio
+    </div>
+    <div class="stats-grid">
+      ${rows.map(r => `
+      <div class="stat-card">
+        <div class="stat-label"><div class="stat-src-dot" style="background:#E53E3E;"></div>${r.label}</div>
+        <div class="stat-val">${r.val}</div>
+        <div class="stat-sub">${r.sub}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderArtist(info, statsArr, radioStats = null) {
   const stats  = normaliseStats(statsArr);
   const name   = info.name   || '—';
   const avatar = info.avatar || '';
@@ -876,6 +929,7 @@ function renderArtist(info, statsArr) {
     </div>`;
   }
 
+  html += buildRadioCard(radioStats);
   setMainBody(html);
   if (stats.length) setTimeout(() => drawBarChart(stats, 'artist'), 50);
 }
@@ -883,7 +937,7 @@ function renderArtist(info, statsArr) {
 // ═══════════════════════════════════════════════════
 //  RENDER — TRACK
 // ═══════════════════════════════════════════════════
-function renderTrack(info, statsArr) {
+function renderTrack(info, statsArr, radioStats = null) {
   const stats   = normaliseStats(statsArr);
   const title   = info.title  || '—';
   const artists = (info.artists || []).map(a => a.name).join(', ');
@@ -921,6 +975,7 @@ function renderTrack(info, statsArr) {
     </div>`;
   }
 
+  html += buildRadioCard(radioStats);
   setMainBody(html);
   if (stats.length) setTimeout(() => drawBarChart(stats, 'track'), 50);
 }
