@@ -499,10 +499,21 @@ async function apiGet(path, params = {}) {
   if (!apiKey) throw new Error('Clé API manquante.');
   const url = new URL(BASE_URL + path);
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-  const res = await fetch(url.toString(), {
-    method: 'GET',
-    headers: { 'X-RapidAPI-Key': apiKey, 'X-RapidAPI-Host': RAPID_HOST }
-  });
+  const headers = { 'X-RapidAPI-Key': apiKey, 'X-RapidAPI-Host': RAPID_HOST };
+
+  // Essai direct, puis proxy CORS si CORS bloqué (ex. GitHub Pages)
+  let res;
+  try {
+    res = await fetchTimeout(url.toString(), { method: 'GET', headers }, 8000);
+  } catch {
+    // corsproxy.io forward tous les headers vers la cible
+    res = await fetchTimeout(
+      `https://corsproxy.io/?${encodeURIComponent(url.toString())}`,
+      { method: 'GET', headers },
+      10000
+    );
+  }
+
   const json = await res.json();
   if (!res.ok || json.result === 'error') {
     let hint = '';
