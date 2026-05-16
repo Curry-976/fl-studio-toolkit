@@ -44,7 +44,7 @@
     .sidebar{width:72px;min-width:72px;height:100vh;background:#060A18;border-right:1px solid rgba(0,240,255,.15);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:4px;z-index:100;position:relative;}
     .sidebar-logo{width:40px;height:40px;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));background:linear-gradient(135deg,#00C8FF,#9B7FFF);display:flex;align-items:center;justify-content:center;margin-bottom:20px;flex-shrink:0;text-decoration:none;color:#000;font-family:'Space Mono',monospace;}
     .nav-sep{width:28px;height:1px;background:rgba(0,240,255,.1);margin:6px 0;}
-    .nav-item{position:relative;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:rgba(180,210,255,.35);text-decoration:none;transition:background .15s,color .15s;cursor:none;}
+    .nav-item{position:relative;width:44px;height:44px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:rgba(180,210,255,.35);text-decoration:none;transition:background .15s,color .15s;cursor:none;}
     .nav-item:hover{background:rgba(0,240,255,.06);color:#00F0FF;}
     .nav-item.active{background:rgba(0,240,255,.08);color:#00F0FF;border-left:2px solid #00F0FF;}
     .nav-item::after{content:attr(data-tip);position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:#0A0E20;border:1px solid rgba(0,240,255,.15);color:#00F0FF;font-size:12px;font-weight:500;font-family:'Space Mono',monospace;text-transform:uppercase;white-space:nowrap;padding:5px 10px;border-radius:7px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:200;}
