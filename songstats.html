@@ -582,16 +582,26 @@ async function searchArtist(query) {
   if (!spIsConnected()) { showConnectInstructions(); return; }
 
   const results = await spotifySearch(query, 'artist');
-  const artists  = results.artists?.items || [];
+  let artists    = results.artists?.items || [];
   if (!artists.length) {
     showError('Artiste introuvable sur Spotify. Vérifie l\'orthographe.');
     return;
   }
   if (artists.length === 1) {
     await loadArtistById(artists[0].id);
-  } else {
-    showArtistPicker(artists, query);
+    return;
   }
+  // Enrichir avec les vrais followers via /artists?ids= (un seul appel batch)
+  try {
+    const ids = artists.map(a => a.id).join(',');
+    const enriched = await fetchTimeout(
+      `https://api.spotify.com/v1/artists?ids=${ids}`,
+      { headers: { 'Authorization': `Bearer ${_spToken}` } }, 6000
+    );
+    const ed = await enriched.json();
+    if (ed.artists) artists = ed.artists.filter(Boolean);
+  } catch {}
+  showArtistPicker(artists, query);
 }
 
 async function loadArtistById(spotifyArtistId) {
@@ -610,7 +620,7 @@ function showArtistPicker(artists, query) {
       <div class="pick-avatar">${img ? `<img src="${img}" alt="">` : '🎤'}</div>
       <div>
         <div class="pick-name">${a.name}</div>
-        <div class="pick-sub">${genres}${a.popularity ? ` · Popularité ${a.popularity}/100` : ''}</div>
+        <div class="pick-sub">${(a.followers?.total||0).toLocaleString('fr-FR')} abonnés${genres ? ' · ' + genres : ''}</div>
       </div>
     </div>`;
   }).join('');
