@@ -1542,11 +1542,12 @@ async function doSignup() {
   else { okEl.textContent = '✓ Compte créé ! Vérifie ton email pour confirmer.'; okEl.className += ' show'; }
 }
 
-async function doLoginGoogle() {
-  if (!SUPABASE_READY) return;
-  // Force toujours HTTPS — Supabase Auth ne fonctionne pas en HTTP
-  const redirectTo = 'https://mayanabeat.fr/beatstore.html';
-  await db.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });
+function doLoginGoogle() {
+  // Bypass SDK — construit l'URL OAuth directement avec flow_type=implicit
+  // pour recevoir #access_token dans le hash au retour (pas de PKCE ?code=)
+  const redirectTo = encodeURIComponent('https://mayanabeat.fr/beatstore.html');
+  const url = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${redirectTo}&flow_type=implicit`;
+  window.location.href = url;
 }
 
 async function doLogout() {
