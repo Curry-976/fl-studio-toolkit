@@ -1323,19 +1323,30 @@ let currentUser = null;
 let currentProducer = null;
 
 async function checkAuth() {
+  // Force HTTPS en production
+  if (location.protocol === 'http:' && location.hostname !== 'localhost') {
+    location.replace(location.href.replace('http:', 'https:'));
+    return;
+  }
   if (!SUPABASE_READY) return;
-  const { data: { session } } = await db.auth.getSession();
-  if (session?.user) await onAuthChange(session.user);
 
+  // Écoute d'abord les changements (capte le retour OAuth)
   db.auth.onAuthStateChange(async (event, session) => {
+    console.log('[Auth]', event, session?.user?.email);
     if (session?.user) await onAuthChange(session.user);
     else onAuthSignOut();
   });
+
+  // Vérifie la session existante
+  const { data: { session } } = await db.auth.getSession();
+  console.log('[Auth] session existante:', session?.user?.email || 'aucune');
+  if (session?.user) await onAuthChange(session.user);
 }
 
 async function onAuthChange(user) {
   currentUser = user;
-  const { data: producer } = await db.from('producers').select('*').eq('id', user.id).single();
+  const { data: producer, error } = await db.from('producers').select('*').eq('id', user.id).single();
+  if (error) console.warn('[Auth] producers query error:', error.message);
   currentProducer = producer;
   renderAuthArea();
   closeAuth();
@@ -1449,7 +1460,9 @@ async function doSignup() {
 
 async function doLoginGoogle() {
   if (!SUPABASE_READY) return;
-  await db.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
+  // Force toujours HTTPS — Supabase Auth ne fonctionne pas en HTTP
+  const redirectTo = 'https://mayanabeat.fr/beatstore.html';
+  await db.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });
 }
 
 async function doLogout() {
