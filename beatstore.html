@@ -6,6 +6,9 @@
   <title>FL Studio — Beat Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared.css" />
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
   <style>
     :root {
       --bg:#03050D; --bg2:#080C1A; --surface:#0D1228; --card:#0F1530;
@@ -399,6 +402,97 @@
     .sell-perk { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10px; color:var(--muted); }
     .sell-perk::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--cyan); flex-shrink:0; }
 
+    /* ── Auth button ── */
+    .btn-auth {
+      display:flex; align-items:center; gap:8px;
+      padding:9px 16px; border-radius:4px; cursor:none;
+      font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      background:rgba(0,240,255,.06); color:var(--muted); border:1px solid var(--border2);
+      transition:all .2s;
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+    }
+    .btn-auth:hover { border-color:var(--cyan); color:var(--cyan); }
+    .btn-auth svg { width:14px; height:14px; }
+
+    .producer-badge {
+      display:flex; align-items:center; gap:10px;
+      padding:6px 14px; border-radius:4px;
+      background:rgba(0,240,255,.06); border:1px solid var(--border2);
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+    }
+    .producer-avatar {
+      width:28px; height:28px; border-radius:50%;
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2));
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--mono); font-size:11px; font-weight:700; color:#000;
+      flex-shrink:0;
+    }
+    .producer-name { font-family:var(--mono); font-size:11px; color:var(--cyan); }
+    .producer-role { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+    .btn-logout { background:none; border:none; color:var(--muted); cursor:none; font-size:14px; padding:2px; transition:color .18s; }
+    .btn-logout:hover { color:#ff6b6b; }
+
+    /* ── Auth modal ── */
+    #auth-overlay {
+      position:fixed; inset:0; background:rgba(3,5,13,.88); backdrop-filter:blur(10px);
+      z-index:900; display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:opacity .25s;
+    }
+    #auth-overlay.open { opacity:1; pointer-events:all; }
+    .auth-modal {
+      background:var(--bg2); border:1px solid var(--border2);
+      clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+      padding:32px; width:380px; max-width:94vw;
+      transform:translateY(16px); transition:transform .25s;
+    }
+    #auth-overlay.open .auth-modal { transform:translateY(0); }
+    .auth-logo { font-family:var(--mono); font-size:22px; font-weight:700; color:var(--cyan); margin-bottom:4px; }
+    .auth-sub { font-size:12px; color:var(--muted); margin-bottom:24px; }
+    .auth-tabs { display:flex; gap:0; margin-bottom:24px; border-bottom:1px solid var(--border2); }
+    .auth-tab {
+      flex:1; padding:10px; text-align:center; cursor:none; border:none; background:none;
+      font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      color:var(--muted); transition:all .18s; border-bottom:2px solid transparent;
+    }
+    .auth-tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+    .auth-form { display:flex; flex-direction:column; gap:12px; }
+    .auth-err { padding:10px 12px; background:rgba(255,80,80,.1); border:1px solid rgba(255,80,80,.25); border-radius:4px; font-size:11px; color:#ff9999; display:none; }
+    .auth-err.show { display:block; }
+    .auth-success { padding:10px 12px; background:rgba(0,255,136,.1); border:1px solid rgba(0,255,136,.25); border-radius:4px; font-size:11px; color:#00FF88; display:none; }
+    .auth-success.show { display:block; }
+    .btn-auth-submit {
+      padding:12px; border:none; border-radius:4px; cursor:none;
+      font-family:var(--mono); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2));
+      color:#000; transition:all .2s; margin-top:4px;
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+    }
+    .btn-auth-submit:hover { box-shadow:0 0 20px rgba(0,240,255,.4); }
+    .btn-auth-submit:disabled { opacity:.5; cursor:not-allowed; }
+    .auth-sep { text-align:center; font-size:11px; color:var(--muted); position:relative; }
+    .auth-sep::before, .auth-sep::after { content:''; position:absolute; top:50%; width:38%; height:1px; background:var(--border2); }
+    .auth-sep::before { left:0; }
+    .auth-sep::after { right:0; }
+
+    /* ── My beats panel ── */
+    .my-beats-btn {
+      font-family:var(--mono); font-size:9px; font-weight:700; text-transform:uppercase;
+      letter-spacing:.08em; color:var(--muted); background:none; border:none; cursor:none;
+      transition:color .18s; padding:2px 4px;
+    }
+    .my-beats-btn:hover { color:var(--cyan); }
+
+    /* ── Supabase status indicator ── */
+    .db-status {
+      display:inline-flex; align-items:center; gap:5px;
+      font-family:var(--mono); font-size:8px; font-weight:700; text-transform:uppercase;
+      letter-spacing:.08em; color:var(--muted); padding:4px 8px;
+      border:1px solid var(--border); border-radius:2px;
+    }
+    .db-dot { width:5px; height:5px; border-radius:50%; background:rgba(180,210,255,.3); }
+    .db-dot.live { background:var(--green); box-shadow:0 0 6px var(--green); animation:blink 2s infinite; }
+    .db-dot.demo { background:var(--yellow); }
+
     @media (max-width:600px) {
       main { padding:20px 16px 120px; }
       .license-grid { grid-template-columns:1fr; }
@@ -450,7 +544,10 @@
       <div class="store-hd-top">
         <div>
           <div class="store-title">Beat <span>Store</span></div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px;">Achetez des beats — vendez vos créations</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+            <span style="font-size:12px;color:var(--muted);">Achetez des beats — vendez vos créations</span>
+            <div class="db-status" id="db-status"><div class="db-dot demo" id="db-dot"></div><span id="db-label">DEMO</span></div>
+          </div>
         </div>
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
           <div class="hud-stats">
@@ -464,7 +561,14 @@
               <div><div class="stat-chip-val" id="stat-sales">12</div><div class="stat-chip-lbl">Ventes aujourd'hui</div></div>
             </div>
           </div>
-          <button class="btn-sell" onclick="openUpload()">
+          <!-- Auth / Producteur -->
+          <div id="auth-area">
+            <button class="btn-auth" onclick="openAuth()">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              Connexion Producteur
+            </button>
+          </div>
+          <button class="btn-sell" onclick="onSellClick()">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
             Vendre mes beats
           </button>
@@ -552,6 +656,55 @@
     <button class="btn-pl btn-pl-exclu" id="pl-exclu-btn" onclick="openLicense()">Exclu —€</button>
   </div>
   <button class="player-close" onclick="closePlayer()">✕</button>
+</div>
+
+<!-- ── Auth modal ── -->
+<div id="auth-overlay" onclick="closeAuth(event)">
+  <div class="auth-modal">
+    <div class="auth-logo">FL TOOLKIT</div>
+    <div class="auth-sub">Espace producteur — connecte-toi pour vendre tes beats</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Connexion</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Inscription</button>
+    </div>
+    <div class="auth-form" id="auth-form-login">
+      <div class="auth-err" id="login-err"></div>
+      <div class="auth-success" id="login-ok"></div>
+      <div class="form-group">
+        <div class="form-label">Email</div>
+        <input class="form-input" type="email" id="login-email" placeholder="ton@email.com" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <div class="form-label">Mot de passe</div>
+        <input class="form-input" type="password" id="login-pwd" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+      <button class="btn-auth-submit" id="btn-login" onclick="doLogin()">Se connecter</button>
+      <div class="auth-sep">ou</div>
+      <button class="btn-auth-submit" style="background:rgba(0,240,255,.06);color:var(--cyan);border:1px solid var(--border2);" onclick="doLoginGoogle()">
+        Continuer avec Google
+      </button>
+    </div>
+    <div class="auth-form" id="auth-form-signup" style="display:none;">
+      <div class="auth-err" id="signup-err"></div>
+      <div class="auth-success" id="signup-ok"></div>
+      <div class="form-group">
+        <div class="form-label">Nom de producteur</div>
+        <input class="form-input" type="text" id="signup-username" placeholder="@ProdByX" autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <div class="form-label">Email</div>
+        <input class="form-input" type="email" id="signup-email" placeholder="ton@email.com" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <div class="form-label">Mot de passe (min. 8 caractères)</div>
+        <input class="form-input" type="password" id="signup-pwd" placeholder="••••••••" autocomplete="new-password" />
+      </div>
+      <button class="btn-auth-submit" id="btn-signup" onclick="doSignup()">Créer mon compte</button>
+    </div>
+    <div style="margin-top:16px;text-align:center;">
+      <button class="modal-close" onclick="closeAuth()" style="font-size:13px;color:var(--muted);background:none;border:none;cursor:none;">✕ Fermer</button>
+    </div>
+  </div>
 </div>
 
 <!-- ── License modal ── -->
@@ -1016,8 +1169,318 @@ function submitBeat() {
   closeUpload();
 }
 
+// ══════════════════════════════════════════════════════════════
+//  SUPABASE — Chargement des données
+// ══════════════════════════════════════════════════════════════
+
+async function loadBeats() {
+  if (!SUPABASE_READY) { applyFilters(); return; }
+
+  try {
+    const { data, error } = await db
+      .from('beats')
+      .select('*, producers(username, display_name)')
+      .eq('is_active', true)
+      .order('plays', { ascending: false })
+      .limit(100);
+
+    if (error || !data || data.length === 0) { applyFilters(); return; }
+
+    // Transformer les données Supabase
+    BEATS.length = 0;
+    data.forEach((b, i) => {
+      BEATS.push({
+        id:       i + 1,           // ID numérique pour waveform seed
+        dbId:     b.id,            // UUID Supabase
+        title:    b.title,
+        producer: b.producers?.username || b.producers?.display_name || 'Unknown',
+        genre:    b.genre,
+        bpm:      b.bpm,
+        key:      b.key,
+        mood:     b.mood || '',
+        plays:    b.plays,
+        sales:    b.sales,
+        prices: {
+          lease:    Math.round(b.price_lease    / 100),
+          trackout: Math.round(b.price_trackout / 100),
+          exclu:    Math.round(b.price_exclu    / 100),
+        },
+        accent:   GENRE_COLORS[b.genre] || '#00F0FF',
+        dur:      b.duration || 180,
+        audioUrl: b.audio_url,
+      });
+    });
+
+    applyFilters();
+    setDbStatus('live');
+  } catch (e) {
+    console.error('[Supabase] loadBeats:', e);
+    applyFilters();
+  }
+}
+
+async function loadStats() {
+  if (!SUPABASE_READY) return;
+  try {
+    const [{ count: bc }, { count: pc }, { count: sc }] = await Promise.all([
+      db.from('beats').select('*', { count:'exact', head:true }).eq('is_active', true),
+      db.from('producers').select('*', { count:'exact', head:true }),
+      db.from('purchases').select('*', { count:'exact', head:true })
+        .eq('status','completed')
+        .gte('created_at', new Date().toISOString().split('T')[0]),
+    ]);
+    if (bc !== null) document.getElementById('stat-beats').textContent = bc;
+    if (pc !== null) document.getElementById('stat-prod').textContent  = pc;
+    if (sc !== null) document.getElementById('stat-sales').textContent = sc;
+  } catch(e) { /* silently ignore */ }
+}
+
+function setDbStatus(state) {
+  const dot = document.getElementById('db-dot');
+  const lbl = document.getElementById('db-label');
+  dot.className = 'db-dot ' + state;
+  lbl.textContent = state === 'live' ? 'LIVE' : 'DEMO';
+}
+
+// ── Incrémenter les écoutes
+async function trackPlay(beat) {
+  if (!SUPABASE_READY || !beat.dbId) return;
+  try { await db.rpc('increment_plays', { beat_id: beat.dbId }); } catch(e) {}
+}
+
+// ══════════════════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════════════════
+
+let currentUser = null;
+let currentProducer = null;
+
+async function checkAuth() {
+  if (!SUPABASE_READY) return;
+  const { data: { session } } = await db.auth.getSession();
+  if (session?.user) await onAuthChange(session.user);
+
+  db.auth.onAuthStateChange(async (event, session) => {
+    if (session?.user) await onAuthChange(session.user);
+    else onAuthSignOut();
+  });
+}
+
+async function onAuthChange(user) {
+  currentUser = user;
+  const { data: producer } = await db.from('producers').select('*').eq('id', user.id).single();
+  currentProducer = producer;
+  renderAuthArea();
+  closeAuth();
+}
+
+function onAuthSignOut() {
+  currentUser = null;
+  currentProducer = null;
+  renderAuthArea();
+}
+
+function renderAuthArea() {
+  const area = document.getElementById('auth-area');
+  if (!currentUser) {
+    area.innerHTML = `<button class="btn-auth" onclick="openAuth()">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      Connexion Producteur
+    </button>`;
+  } else {
+    const initial = (currentProducer?.username || currentUser.email || '?')[0].toUpperCase();
+    const name    = currentProducer?.username || currentUser.email.split('@')[0];
+    area.innerHTML = `<div class="producer-badge">
+      <div class="producer-avatar">${initial}</div>
+      <div>
+        <div class="producer-name">${name}</div>
+        <div class="producer-role">Producteur</div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()" title="Déconnexion">✕</button>
+    </div>`;
+  }
+}
+
+function openAuth() {
+  if (!SUPABASE_READY) {
+    alert('⚠️ Supabase non configuré.\nOuvre supabase.js et renseigne ton URL + clé anon.');
+    return;
+  }
+  document.getElementById('auth-overlay').classList.add('open');
+}
+function closeAuth(e) {
+  if (!e || e.target === document.getElementById('auth-overlay'))
+    document.getElementById('auth-overlay').classList.remove('open');
+}
+
+function switchTab(tab) {
+  document.getElementById('auth-form-login').style.display  = tab === 'login'  ? 'flex' : 'none';
+  document.getElementById('auth-form-signup').style.display = tab === 'signup' ? 'flex' : 'none';
+  document.getElementById('tab-login').classList.toggle('active',  tab === 'login');
+  document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+}
+
+async function doLogin() {
+  if (!SUPABASE_READY) return;
+  const email = document.getElementById('login-email').value.trim();
+  const pwd   = document.getElementById('login-pwd').value;
+  const errEl = document.getElementById('login-err');
+  const okEl  = document.getElementById('login-ok');
+  const btn   = document.getElementById('btn-login');
+  errEl.className = 'auth-err'; okEl.className = 'auth-success';
+
+  if (!email || !pwd) { errEl.textContent = 'Email et mot de passe requis.'; errEl.className += ' show'; return; }
+  btn.disabled = true; btn.textContent = 'Connexion…';
+
+  const { error } = await db.auth.signInWithPassword({ email, password: pwd });
+  btn.disabled = false; btn.textContent = 'Se connecter';
+
+  if (error) { errEl.textContent = error.message; errEl.className += ' show'; }
+  else { okEl.textContent = '✓ Connecté !'; okEl.className += ' show'; }
+}
+
+async function doSignup() {
+  if (!SUPABASE_READY) return;
+  const username = document.getElementById('signup-username').value.trim().replace('@','');
+  const email    = document.getElementById('signup-email').value.trim();
+  const pwd      = document.getElementById('signup-pwd').value;
+  const errEl    = document.getElementById('signup-err');
+  const okEl     = document.getElementById('signup-ok');
+  const btn      = document.getElementById('btn-signup');
+  errEl.className = 'auth-err'; okEl.className = 'auth-success';
+
+  if (!username || !email || !pwd) { errEl.textContent = 'Tous les champs sont requis.'; errEl.className += ' show'; return; }
+  if (pwd.length < 8) { errEl.textContent = 'Mot de passe trop court (min. 8 caractères).'; errEl.className += ' show'; return; }
+  btn.disabled = true; btn.textContent = 'Création…';
+
+  const { error } = await db.auth.signUp({
+    email, password: pwd,
+    options: { data: { username, display_name: username } }
+  });
+  btn.disabled = false; btn.textContent = 'Créer mon compte';
+
+  if (error) { errEl.textContent = error.message; errEl.className += ' show'; }
+  else { okEl.textContent = '✓ Compte créé ! Vérifie ton email pour confirmer.'; okEl.className += ' show'; }
+}
+
+async function doLoginGoogle() {
+  if (!SUPABASE_READY) return;
+  await db.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
+}
+
+async function doLogout() {
+  if (!SUPABASE_READY) return;
+  await db.auth.signOut();
+}
+
+// ── Vendre : vérifie auth d'abord
+function onSellClick() {
+  if (!SUPABASE_READY || !currentUser) { openAuth(); return; }
+  openUpload();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  UPLOAD BEAT → SUPABASE
+// ══════════════════════════════════════════════════════════════
+
+let uploadedAudioFile = null;
+
+// Override handleDrop pour stocker le fichier
+function handleDrop(e, type) {
+  e.preventDefault();
+  const files = e.dataTransfer.files;
+  if (files.length > 0 && type === 'audio') {
+    uploadedAudioFile = files[0];
+    document.getElementById('audio-name').textContent = '✓ ' + files[0].name;
+    document.getElementById('drop-audio').classList.remove('drag');
+  }
+}
+
+async function submitBeat() {
+  if (!SUPABASE_READY || !currentUser) { openAuth(); return; }
+
+  const title    = document.getElementById('up-title').value.trim();
+  const producer = document.getElementById('up-producer').value.trim();
+  const genre    = document.getElementById('up-genre').value;
+  const bpm      = parseInt(document.getElementById('up-bpm').value) || 120;
+  const key      = document.getElementById('up-key').value;
+  const mood     = document.getElementById('up-mood').value;
+  const lease    = Math.round(parseFloat(document.getElementById('up-price-lease').value) * 100) || 2900;
+  const trackout = Math.round(parseFloat(document.getElementById('up-price-track').value) * 100) || 5900;
+  const exclu    = Math.round(parseFloat(document.getElementById('up-price-exclu').value) * 100) || 19900;
+
+  if (!title) { alert('Titre requis.'); return; }
+
+  const btn = document.querySelector('.btn-submit');
+  btn.textContent = 'Upload en cours…'; btn.disabled = true;
+
+  try {
+    let audioUrl = null, audioPath = null, duration = 180;
+
+    // 1. Upload audio si un fichier est sélectionné
+    if (uploadedAudioFile) {
+      const ext  = uploadedAudioFile.name.split('.').pop();
+      audioPath  = `${currentUser.id}/${Date.now()}.${ext}`;
+      const { error: storErr } = await db.storage
+        .from('beats-audio')
+        .upload(audioPath, uploadedAudioFile, { contentType: uploadedAudioFile.type });
+      if (storErr) throw storErr;
+      const { data: urlData } = db.storage.from('beats-audio').getPublicUrl(audioPath);
+      audioUrl = urlData.publicUrl;
+
+      // Durée audio
+      duration = await getAudioDuration(uploadedAudioFile);
+    }
+
+    // 2. Insérer le beat en base
+    const { data: beat, error: dbErr } = await db.from('beats').insert({
+      producer_id:    currentUser.id,
+      title, genre, bpm, key, mood,
+      price_lease:    lease,
+      price_trackout: trackout,
+      price_exclu:    exclu,
+      audio_url:      audioUrl,
+      audio_path:     audioPath,
+      duration,
+    }).select().single();
+
+    if (dbErr) throw dbErr;
+
+    alert(`✅ "${title}" mis en vente avec succès !\n\nIl apparaît maintenant dans le store.`);
+    closeUpload();
+    loadBeats(); // Recharger la grille
+  } catch(e) {
+    alert('❌ Erreur : ' + (e.message || JSON.stringify(e)));
+  } finally {
+    btn.textContent = 'Mettre en vente — Commission 15%';
+    btn.disabled = false;
+  }
+}
+
+function getAudioDuration(file) {
+  return new Promise(resolve => {
+    const audio = new Audio();
+    audio.src = URL.createObjectURL(file);
+    audio.onloadedmetadata = () => { URL.revokeObjectURL(audio.src); resolve(Math.round(audio.duration)); };
+    audio.onerror = () => resolve(180);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  OVERRIDE playBeat : tracking réel
+// ══════════════════════════════════════════════════════════════
+
+const _origPlayBeat = playBeat;
+// Wrap playBeat pour tracker les écoutes
+function playBeat(beat) {
+  _origPlayBeat(beat);
+  trackPlay(beat); // async, non bloquant
+}
+
 // ── Init
-applyFilters();
+loadBeats();
+loadStats();
+checkAuth();
 
 // Resize player waveform on window resize
 window.addEventListener('resize', () => {
