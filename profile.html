@@ -420,6 +420,13 @@
     }
     .login-wall-register:hover { border-color:var(--border2); color:var(--text); background:rgba(255,255,255,.04); }
     .lw-error { color:#FF3366; font-size:11px; font-family:var(--mono); padding:8px 12px; background:rgba(255,51,102,.06); border:1px solid rgba(255,51,102,.2); width:100%; text-align:left; }
+    .lw-forgot { background:none; border:none; color:var(--muted); font-family:var(--mono); font-size:10px;
+      cursor:pointer; text-decoration:underline; text-underline-offset:3px; padding:0; transition:color .2s; }
+    .lw-forgot:hover { color:var(--cyan); }
+    .lw-back { background:none; border:none; color:var(--muted); font-family:var(--mono); font-size:10px;
+      cursor:pointer; display:flex; align-items:center; gap:5px; padding:0; transition:color .2s; margin-bottom:4px; }
+    .lw-back:hover { color:var(--cyan); }
+    .lw-back svg { width:12px; height:12px; }
 
     /* ── Responsive ── */
     @media (max-width:768px) {
@@ -615,8 +622,46 @@
             <input id="lw-password" type="password" placeholder="Mot de passe" class="lw-input" />
             <button class="login-wall-submit" onclick="doLoginEmail()">Se connecter</button>
             <button class="login-wall-register" onclick="doRegisterEmail()">Créer un compte</button>
+            <button class="lw-forgot" onclick="showResetRequest()">Mot de passe oublié ?</button>
           </div>
           <div id="lw-error" class="lw-error" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reset request panel -->
+    <div id="reset-request" style="display:none; align-items:center; justify-content:center; min-height:calc(100vh - 60px); padding:40px 20px;">
+      <div class="login-wall">
+        <div class="login-wall-icon">
+          <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 12H8m8 0a4 4 0 11-8 0 4 4 0 018 0zm-4-8v1m0 14v1m7-8h-1M5 12H4"/></svg>
+        </div>
+        <h2>Réinitialiser</h2>
+        <p>Saisis ton email — on t'envoie un lien pour créer un nouveau mot de passe.</p>
+        <div class="login-wall-btns">
+          <button class="lw-back" onclick="showLoginWall()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            Retour
+          </button>
+          <input id="rr-email" type="email" placeholder="ton@email.com" class="lw-input" />
+          <button class="login-wall-submit" onclick="doResetRequest()">Envoyer le lien</button>
+          <div id="rr-msg" class="lw-error" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New password panel (après clic sur le lien email) -->
+    <div id="reset-password" style="display:none; align-items:center; justify-content:center; min-height:calc(100vh - 60px); padding:40px 20px;">
+      <div class="login-wall">
+        <div class="login-wall-icon">
+          <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <h2>Nouveau mot de passe</h2>
+        <p>Choisis un nouveau mot de passe sécurisé (min. 8 caractères).</p>
+        <div class="login-wall-btns">
+          <input id="np-password" type="password" placeholder="Nouveau mot de passe" class="lw-input" />
+          <input id="np-confirm"  type="password" placeholder="Confirmer le mot de passe" class="lw-input" />
+          <button class="login-wall-submit" onclick="doSetNewPassword()">Enregistrer</button>
+          <div id="np-msg" class="lw-error" style="display:none"></div>
         </div>
       </div>
     </div>
@@ -686,6 +731,23 @@ let isOwnProfile = false;
 /* ── Init ── */
 async function init() {
   const params = new URLSearchParams(location.search);
+
+  // ── Retour lien reset mot de passe (hash type=recovery) ────
+  const hashParams = new URLSearchParams(location.hash.slice(1));
+  if (hashParams.get('type') === 'recovery' && hashParams.get('access_token')) {
+    // Stocke le token de récupération en session Supabase
+    if (SUPABASE_READY) {
+      await db.auth.setSession({
+        access_token:  hashParams.get('access_token'),
+        refresh_token: hashParams.get('refresh_token') || '',
+      });
+    }
+    history.replaceState(null, '', location.pathname);
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('reset-password').style.display = 'flex';
+    return;
+  }
+  // ────────────────────────────────────────────────────────────
 
   // ── Retour OAuth Google (PKCE) ──────────────────────────────
   const oauthCode = params.get('code');
@@ -1070,6 +1132,69 @@ async function doRegisterEmail() {
   el.style.borderColor = 'rgba(0,255,136,.2)';
   el.textContent = '✓ Compte créé ! Vérifie ton email pour confirmer.';
   el.style.display = 'block';
+}
+
+/* ── Password Reset ── */
+function showResetRequest() {
+  document.getElementById('login-wall').style.display = 'none';
+  document.getElementById('reset-request').style.display = 'flex';
+  document.getElementById('reset-password').style.display = 'none';
+}
+
+function rrMsg(msg, ok = false) {
+  const el = document.getElementById('rr-msg');
+  el.textContent = msg;
+  el.style.display = msg ? 'block' : 'none';
+  el.style.color = ok ? 'var(--green)' : '#FF3366';
+  el.style.background = ok ? 'rgba(0,255,136,.06)' : 'rgba(255,51,102,.06)';
+  el.style.borderColor = ok ? 'rgba(0,255,136,.2)' : 'rgba(255,51,102,.2)';
+}
+
+async function doResetRequest() {
+  if (!SUPABASE_READY) { rrMsg('Supabase non configuré.'); return; }
+  const email = document.getElementById('rr-email').value.trim();
+  if (!email) { rrMsg('Saisis ton email.'); return; }
+
+  const btn = document.querySelector('#reset-request .login-wall-submit');
+  btn.disabled = true; btn.textContent = 'Envoi…';
+  rrMsg('');
+
+  const redirectTo = location.origin + location.pathname;
+  const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo });
+  btn.disabled = false; btn.textContent = 'Envoyer le lien';
+
+  if (error) { rrMsg(error.message); return; }
+  rrMsg('✓ Email envoyé ! Vérifie ta boîte mail.', true);
+}
+
+function npMsg(msg, ok = false) {
+  const el = document.getElementById('np-msg');
+  el.textContent = msg;
+  el.style.display = msg ? 'block' : 'none';
+  el.style.color = ok ? 'var(--green)' : '#FF3366';
+  el.style.background = ok ? 'rgba(0,255,136,.06)' : 'rgba(255,51,102,.06)';
+  el.style.borderColor = ok ? 'rgba(0,255,136,.2)' : 'rgba(255,51,102,.2)';
+}
+
+async function doSetNewPassword() {
+  if (!SUPABASE_READY) { npMsg('Supabase non configuré.'); return; }
+  const pwd1 = document.getElementById('np-password').value;
+  const pwd2 = document.getElementById('np-confirm').value;
+  if (!pwd1) { npMsg('Saisis un mot de passe.'); return; }
+  if (pwd1.length < 8) { npMsg('Minimum 8 caractères.'); return; }
+  if (pwd1 !== pwd2) { npMsg('Les mots de passe ne correspondent pas.'); return; }
+
+  const btn = document.querySelector('#reset-password .login-wall-submit');
+  btn.disabled = true; btn.textContent = 'Enregistrement…';
+  npMsg('');
+
+  const { error } = await db.auth.updateUser({ password: pwd1 });
+  btn.disabled = false; btn.textContent = 'Enregistrer';
+
+  if (error) { npMsg(error.message); return; }
+  npMsg('✓ Mot de passe mis à jour !', true);
+  // Redirige vers le profil après 1.5s
+  setTimeout(() => { history.replaceState(null, '', location.pathname); location.reload(); }, 1500);
 }
 
 /* ── Toast ── */
