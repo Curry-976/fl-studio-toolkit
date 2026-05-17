@@ -141,6 +141,15 @@
     }
     .btn-share:hover { border-color:var(--cyan); color:var(--cyan); background:rgba(0,240,255,.08); }
     .btn-share svg { width:14px; height:14px; }
+    .btn-logout {
+      display:flex; align-items:center; gap:8px; padding:9px 18px;
+      border:1px solid rgba(255,51,102,.2); border-radius:4px; background:rgba(255,51,102,.04);
+      color:rgba(255,100,130,.6); font-family:var(--mono); font-size:10px; font-weight:700;
+      text-transform:uppercase; letter-spacing:.08em; cursor:pointer; transition:all .2s;
+      clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);
+    }
+    .btn-logout:hover { border-color:rgba(255,51,102,.5); color:#FF3366; background:rgba(255,51,102,.08); }
+    .btn-logout svg { width:14px; height:14px; }
 
     /* ── Stats cards (own profile only) ── */
     .stats-section { padding:28px 40px; border-bottom:1px solid var(--border); }
@@ -491,6 +500,12 @@
                   <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/>
                 </svg>
                 Partager
+              </button>
+              <button class="btn-logout" id="btn-logout" style="display:none" onclick="doLogout()">
+                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
+                </svg>
+                Déconnexion
               </button>
             </div>
           </div>
@@ -870,6 +885,11 @@ function renderProfile(producer, beats, purchases) {
     }
   }
 
+  // Logout button (own profile)
+  if (isOwnProfile) {
+    document.getElementById('btn-logout').style.display = 'flex';
+  }
+
   // Stats section (own profile)
   if (isOwnProfile) {
     document.getElementById('stats-section').style.display = 'block';
@@ -1132,6 +1152,15 @@ async function doRegisterEmail() {
   el.style.borderColor = 'rgba(0,255,136,.2)';
   el.textContent = '✓ Compte créé ! Vérifie ton email pour confirmer.';
   el.style.display = 'block';
+}
+
+/* ── Logout ── */
+async function doLogout() {
+  if (SUPABASE_READY) await db.auth.signOut();
+  // Supprime le token manuellement au cas où
+  const key = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
+  localStorage.removeItem(key);
+  location.reload();
 }
 
 /* ── Password Reset ── */
