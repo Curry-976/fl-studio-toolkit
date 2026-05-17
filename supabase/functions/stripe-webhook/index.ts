@@ -78,6 +78,28 @@ serve(async (req) => {
     }
   }
 
+  // ── account.updated → onboarding Stripe Connect terminé
+  if (event.type === "account.updated") {
+    const account = event.data.object as Stripe.Account;
+    const isVerified =
+      account.charges_enabled &&
+      account.payouts_enabled &&
+      account.details_submitted;
+
+    if (isVerified) {
+      const { error } = await sb
+        .from("producers")
+        .update({ stripe_verified: true })
+        .eq("stripe_account", account.id);
+
+      if (error) {
+        console.error("[stripe-webhook] Update stripe_verified failed:", error.message);
+      } else {
+        console.log(`[stripe-webhook] ✅ Compte Connect ${account.id} vérifié`);
+      }
+    }
+  }
+
   return new Response(JSON.stringify({ received: true }), {
     headers: { "Content-Type": "application/json" },
   });

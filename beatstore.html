@@ -356,6 +356,22 @@
     .form-input::placeholder { color:var(--muted); }
     .form-select option { background:#0D1228; color:var(--text); }
 
+    /* ── Stripe Connect ── */
+    .btn-stripe-connect {
+      display:inline-block; margin-top:6px;
+      padding:5px 10px; border-radius:4px; border:none; cursor:none;
+      background:linear-gradient(135deg,rgba(0,240,255,.15),rgba(191,95,255,.15));
+      border:1px solid rgba(0,240,255,.3);
+      color:var(--cyan); font-family:var(--mono); font-size:10px; font-weight:700;
+      letter-spacing:.04em; transition:all .2s; white-space:nowrap;
+    }
+    .btn-stripe-connect:hover { background:rgba(0,240,255,.2); box-shadow:0 0 12px rgba(0,240,255,.2); }
+    .btn-stripe-pending { border-color:rgba(255,215,0,.4); color:var(--yellow);
+      background:rgba(255,215,0,.08); }
+    .btn-stripe-pending:hover { background:rgba(255,215,0,.15); }
+    .stripe-ok { margin-top:5px; font-size:10px; color:var(--green);
+      font-family:var(--mono); letter-spacing:.03em; }
+
     .drop-zone {
       border:2px dashed rgba(0,240,255,.2); border-radius:4px; padding:24px;
       display:flex; flex-direction:column; align-items:center; gap:8px;
@@ -1319,7 +1335,7 @@ async function checkAuth() {
 
 async function onAuthChange(user) {
   currentUser = user;
-  const { data: producer } = await db.from('producers').select('*').eq('id', user.id).single();
+  const { data: producer } = await db.from('producers').select('*').eq('user_id', user.id).single();
   currentProducer = producer;
   renderAuthArea();
   closeAuth();
@@ -1341,11 +1357,28 @@ function renderAuthArea() {
   } else {
     const initial = (currentProducer?.username || currentUser.email || '?')[0].toUpperCase();
     const name    = currentProducer?.username || currentUser.email.split('@')[0];
+    const stripeVerified  = currentProducer?.stripe_verified;
+    const stripeAccount   = currentProducer?.stripe_account;
+
+    let stripeBadge = '';
+    if (!stripeAccount) {
+      stripeBadge = `<button class="btn-stripe-connect" onclick="connectStripe()">
+        💳 Connecter Stripe pour être payé
+      </button>`;
+    } else if (!stripeVerified) {
+      stripeBadge = `<button class="btn-stripe-connect btn-stripe-pending" onclick="connectStripe()">
+        ⏳ Finaliser l'onboarding Stripe
+      </button>`;
+    } else {
+      stripeBadge = `<div class="stripe-ok">✅ Stripe Connect actif — tu reçois 85% de chaque vente</div>`;
+    }
+
     area.innerHTML = `<div class="producer-badge">
       <div class="producer-avatar">${initial}</div>
-      <div>
+      <div style="flex:1;min-width:0;">
         <div class="producer-name">${name}</div>
         <div class="producer-role">Producteur</div>
+        ${stripeBadge}
       </div>
       <button class="btn-logout" onclick="doLogout()" title="Déconnexion">✕</button>
     </div>`;
@@ -1529,11 +1562,26 @@ function playBeat(beat) {
   trackPlay(beat); // async, non bloquant
 }
 
-// ── Retour Stripe (success / cancel)
+// ── Connexion Stripe Connect
+async function connectStripe() {
+  if (!SUPABASE_READY || !currentUser) { openAuth(); return; }
+  try {
+    showToast('⏳ Redirection vers Stripe…', 'var(--cyan)');
+    const { data, error } = await db.functions.invoke('create-connect-account', {
+      body: { origin: window.location.origin },
+    });
+    if (error || !data?.url) throw new Error(error?.message || 'Erreur Stripe Connect');
+    window.location.href = data.url;
+  } catch (err) {
+    showToast('❌ ' + err.message, 'var(--pink)');
+  }
+}
+
+// ── Retour Stripe (success / cancel / stripe connect)
 (function handleStripeReturn() {
   const params = new URLSearchParams(window.location.search);
   const payment = params.get('payment');
-  if (!payment) return;
+  const stripe  = params.get('stripe');
 
   // Nettoie l'URL
   const clean = window.location.pathname;
@@ -1543,6 +1591,18 @@ function playBeat(beat) {
     setTimeout(() => showToast('🎉 Paiement confirmé ! Tu vas recevoir ton beat par email.', '#00FF88'), 500);
   } else if (payment === 'cancel') {
     setTimeout(() => showToast('❌ Paiement annulé — reviens quand tu veux !', 'var(--pink)'), 500);
+  } else if (stripe === 'connected') {
+    setTimeout(async () => {
+      showToast('🎉 Stripe Connect activé ! Tu vas recevoir 85% de chaque vente.', '#00FF88');
+      // Recharge le profil producteur pour afficher le bon statut
+      if (currentUser) {
+        const { data: prod } = await db.from('producers').select('*').eq('user_id', currentUser.id).single();
+        currentProducer = prod;
+        renderAuthArea();
+      }
+    }, 500);
+  } else if (stripe === 'refresh') {
+    setTimeout(() => showToast('⚠️ Session Stripe expirée. Clique à nouveau sur "Connecter Stripe".', 'var(--yellow)'), 500);
   }
 })();
 
