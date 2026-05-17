@@ -109,6 +109,58 @@
       transform: translateY(-50%) translateX(0);
     }
 
+    /* ── Logout button ── */
+    #shared-sidebar .sb-logout {
+      width: 44px;
+      height: 44px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,80,110,.4);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    #shared-sidebar .sb-logout:hover {
+      background: rgba(255,51,102,.08);
+      color: #FF3366;
+    }
+    #shared-sidebar .sb-logout svg {
+      width: 20px;
+      height: 20px;
+    }
+    #shared-sidebar .sb-logout::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: calc(100% + 12px);
+      top: 50%;
+      transform: translateY(-50%) translateX(-4px);
+      background: #0A0E20;
+      color: #FF3366;
+      font-family: var(--mono, 'Space Mono', monospace);
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,51,102,.3);
+      clip-path: polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .18s, transform .18s;
+      z-index: 9999;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    #shared-sidebar .sb-logout:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+    }
+
     /* ── Layout helpers (for pages that use .layout wrapper) ── */
     .layout {
       display: flex;
@@ -180,6 +232,11 @@
     <aside class="sidebar" id="shared-sidebar">
       <a href="index.html" class="sidebar-logo" style="text-decoration:none"><span>MB</span></a>
       <nav class="sidebar-nav">${navHTML}</nav>
+      <button class="sb-logout" id="sb-logout-btn" data-tip="Déconnexion" style="display:none" onclick="sbLogout()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
+        </svg>
+      </button>
     </aside>`;
 
   // ── Inject sidebar into DOM ────────────────────────────────
@@ -193,5 +250,29 @@
     } else {
       document.body.insertAdjacentHTML('afterbegin', sidebarHTML);
     }
+
+    // ── Show logout button if user is logged in ──────────────
+    try {
+      const sbKey = Object.keys(localStorage).find(k => k.startsWith('sb-') && k.endsWith('-auth-token'));
+      if (sbKey) {
+        const parsed = JSON.parse(localStorage.getItem(sbKey) || '{}');
+        const now = Math.floor(Date.now() / 1000);
+        if (parsed.user && parsed.expires_at > now - 300) {
+          const btn = document.getElementById('sb-logout-btn');
+          if (btn) btn.style.display = 'flex';
+        }
+      }
+    } catch(e) {}
   });
+
+  // ── Logout handler ────────────────────────────────────────
+  window.sbLogout = async function() {
+    try {
+      const sbKey = Object.keys(localStorage).find(k => k.startsWith('sb-') && k.endsWith('-auth-token'));
+      if (sbKey) localStorage.removeItem(sbKey);
+      // Utilise le client Supabase s'il est disponible
+      if (typeof db !== 'undefined' && db && db.auth) await db.auth.signOut();
+    } catch(e) {}
+    window.location.href = 'profile.html';
+  };
 })();
