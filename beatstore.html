@@ -1369,12 +1369,33 @@ async function checkAuth() {
 }
 
 async function onAuthChange(user) {
+  if (currentUser?.id === user.id) return; // déjà chargé — évite les doublons
   currentUser = user;
-  const { data: producer, error } = await db.from('producers').select('*').eq('id', user.id).single();
-  if (error) console.warn('[Auth] producers query error:', error.message);
-  currentProducer = producer;
-  renderAuthArea();
+  renderAuthArea(); // affiche immédiatement l'avatar/initial sans attendre le producer
   closeAuth();
+
+  // Charge le profil producer en arrière-plan
+  try {
+    const storageKey = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
+    const raw = localStorage.getItem(storageKey);
+    const jwt = raw ? JSON.parse(raw)?.access_token : null;
+
+    const resp = await fetch(
+      `${SUPABASE_URL}/rest/v1/producers?id=eq.${user.id}&select=*&limit=1`,
+      { headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${jwt || SUPABASE_ANON}`,
+          'Accept': 'application/json'
+        }
+      }
+    );
+    const rows = await resp.json();
+    currentProducer = rows?.[0] || null;
+    if (currentProducer) console.log('[Auth] Producteur:', currentProducer.username);
+  } catch(e) {
+    console.warn('[Auth] Chargement producer échoué:', e.message);
+  }
+  renderAuthArea(); // re-render avec les données producer
 }
 
 function onAuthSignOut() {
