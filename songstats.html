@@ -9,19 +9,8 @@
   <style>
     body { height: 100vh; display: flex; overflow: hidden; }
 
-    /* ── SIDEBAR ── */
-    .sidebar{width:72px;min-width:72px;height:100vh;background:var(--sidebar);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:4px;z-index:100;border-right:1px solid var(--border2);position:relative;}
-    .sidebar-logo{width:40px;height:40px;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));background:linear-gradient(135deg,var(--cyan2),#9B7FFF);display:flex;align-items:center;justify-content:center;margin-bottom:20px;flex-shrink:0;text-decoration:none;box-shadow:0 0 20px rgba(0,240,255,.25);}
-    .nav-sep{width:28px;height:1px;background:var(--border);margin:6px 0;}
-    .nav-item{position:relative;width:44px;height:44px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:rgba(180,210,255,.35);text-decoration:none;transition:background .15s,color .15s;cursor:none;}
-    .nav-item:hover{background:rgba(0,240,255,.06);color:var(--cyan);box-shadow:0 0 12px rgba(0,240,255,.1);}
-    .nav-item.active{background:rgba(0,240,255,.08);color:var(--cyan);border-left:2px solid var(--cyan);}
-    .nav-item::after{content:attr(data-tip);position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:#0A0E20;color:var(--cyan);font-family:var(--mono);font-size:10px;font-weight:700;white-space:nowrap;padding:5px 10px;border:1px solid var(--border2);clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);pointer-events:none;opacity:0;transition:opacity .15s;z-index:200;text-transform:uppercase;letter-spacing:.08em;}
-    .nav-item:hover::after{opacity:1;}
-    .sidebar-spacer{flex:1;}
-
     /* ── LEFT PANEL ── */
-    .left-panel{width:300px;min-width:300px;background:var(--panel);overflow-y:auto;border-right:1px solid var(--border);position:relative;z-index:2;}
+    .left-panel{width:300px;min-width:300px;background:var(--panel);overflow-y:auto;border-right:1px solid var(--border);position:relative;z-index:2;margin-left:var(--sidebar-w,72px);}
     .panel-header{position:sticky;top:0;z-index:10;padding:18px 20px 14px;border-bottom:1px solid var(--border);background:var(--panel);}
     .panel-brand{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
     .brand-icon{width:34px;height:34px;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);background:linear-gradient(135deg,#1DB954,#00C8FF);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -152,7 +141,7 @@
 
     @media(max-width:1000px){.left-panel{width:260px;min-width:260px;}}
     @media(max-width:720px){.left-panel{display:none;}}
-    @media(max-width:580px){.sidebar{display:none;}}
+    @media(max-width:580px){}
   </style>
   <script src="supabase.js"></script>
   <script src="navbar.js"></script>
@@ -162,36 +151,6 @@
 <canvas id="bg-particles" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></canvas>
 <div id="c-dot"></div>
 <div id="c-ring"></div>
-
-<!-- ── SIDEBAR ── -->
-<nav class="sidebar">
-  <a href="index.html" class="sidebar-logo">
-    <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:13px;color:#000;">FL</span>
-  </a>
-  <a href="fl-studio-cheatsheet.html" class="nav-item" data-tip="Raccourcis">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path stroke-linecap="round" d="M7 9h.01M11 9h2m4 0h.01M7 13h4m6 0h.01"/></svg>
-  </a>
-  <a href="fl-studio-tips.html" class="nav-item" data-tip="Tips & Astuces">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 16v-4m0-4h.01"/></svg>
-  </a>
-  <a href="beatscan.html" class="nav-item" data-tip="BeatScan">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2z"/></svg>
-  </a>
-  <a href="mastering.html" class="nav-item" data-tip="Mastering Pro">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-  </a>
-  <a href="songstats.html" class="nav-item active" data-tip="Songstats">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-  </a>
-  <a href="beatstore.html" class="nav-item" data-tip="Beat Store">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-  </a>
-  <div class="nav-sep"></div>
-  <div class="sidebar-spacer"></div>
-  <div class="nav-item" data-tip="Paramètres">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-  </div>
-</nav>
 
 <!-- ── LEFT PANEL ── -->
 <aside class="left-panel">

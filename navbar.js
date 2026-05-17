@@ -5,6 +5,127 @@
 // ══════════════════════════════════════════════════════════════
 
 (function () {
+  // ── Inject sidebar CSS ─────────────────────────────────────
+  const style = document.createElement('style');
+  style.id = 'navbar-styles';
+  style.textContent = `
+    /* ── Sidebar shell — #shared-sidebar pour écraser les CSS de pages ── */
+    #shared-sidebar {
+      width: var(--sidebar-w, 72px) !important;
+      background: var(--bg2, #080C1A) !important;
+      position: fixed !important;
+      left: 0 !important; top: 0 !important; bottom: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      padding: 20px 0 !important;
+      z-index: 200 !important;
+      gap: 6px !important;
+      border-right: 1px solid var(--border2, rgba(0,240,255,.15)) !important;
+      box-sizing: border-box !important;
+    }
+
+    /* ── Logo ── */
+    #shared-sidebar .sidebar-logo {
+      width: 40px;
+      height: 40px;
+      clip-path: polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+      background: linear-gradient(135deg, var(--cyan2,#00C8FF), var(--purple2,#9B7FFF));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono, 'Space Mono', monospace);
+      font-weight: 700;
+      font-size: 13px;
+      color: #000;
+      margin-bottom: 24px;
+      box-shadow: 0 0 20px rgba(0,240,255,.3);
+      flex-shrink: 0;
+      text-decoration: none !important;
+    }
+
+    /* ── Nav list ── */
+    #shared-sidebar .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    /* ── Nav items ── */
+    #shared-sidebar .sb-item {
+      width: 44px;
+      height: 44px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted, rgba(180,210,255,.35));
+      text-decoration: none;
+      transition: all .2s;
+      position: relative;
+    }
+    #shared-sidebar .sb-item:hover {
+      background: rgba(0,240,255,.06);
+      color: var(--cyan, #00F0FF);
+      box-shadow: 0 0 12px rgba(0,240,255,.1);
+    }
+    #shared-sidebar .sb-item.active {
+      background: rgba(0,240,255,.08);
+      color: var(--cyan, #00F0FF);
+      border-left: 2px solid var(--cyan, #00F0FF);
+    }
+    #shared-sidebar .sb-item svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ── Tooltip ── */
+    #shared-sidebar .sb-item::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: calc(100% + 12px);
+      top: 50%;
+      transform: translateY(-50%) translateX(-4px);
+      background: #0A0E20;
+      color: var(--cyan, #00F0FF);
+      font-family: var(--mono, 'Space Mono', monospace);
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      padding: 8px 14px;
+      border: 1px solid rgba(0,240,255,.3);
+      clip-path: polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .18s, transform .18s;
+      z-index: 9999;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      box-shadow: 0 0 20px rgba(0,240,255,.15), 0 4px 16px rgba(0,0,0,.6);
+    }
+    #shared-sidebar .sb-item:hover::after {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+    }
+
+    /* ── Layout helpers (for pages that use .layout wrapper) ── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    .layout > main,
+    .layout > .main-content,
+    .layout > section,
+    .layout > .page-content {
+      margin-left: var(--sidebar-w, 72px);
+      flex: 1;
+      min-width: 0;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // ── Build nav links ────────────────────────────────────────
   const page = window.location.pathname.split('/').pop() || 'index.html';
 
   const links = [
@@ -20,7 +141,7 @@
     },
     {
       href: 'profile.html',
-      tip: 'Mon Profil',
+      tip: 'Compte',
       svg: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>`
     },
     {
@@ -61,8 +182,11 @@
       <nav class="sidebar-nav">${navHTML}</nav>
     </aside>`;
 
-  // Injecte la sidebar au début du .layout ou du body
+  // ── Inject sidebar into DOM ────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
+    // Avoid double-injection
+    if (document.getElementById('shared-sidebar')) return;
+
     const layout = document.querySelector('.layout');
     if (layout) {
       layout.insertAdjacentHTML('afterbegin', sidebarHTML);

@@ -34,42 +34,6 @@
 
     /* ── Layout ── */
     .layout { display:flex; min-height:100vh; position:relative; z-index:2; }
-    .sidebar {
-      width:var(--sidebar-w); background:var(--bg2);
-      position:fixed; left:0; top:0; bottom:0;
-      display:flex; flex-direction:column; align-items:center;
-      padding:20px 0; z-index:200; gap:6px;
-      border-right:1px solid var(--border2);
-    }
-    .sidebar-logo {
-      width:40px; height:40px;
-      clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
-      background:linear-gradient(135deg,var(--cyan2),var(--purple2));
-      display:flex; align-items:center; justify-content:center;
-      font-family:var(--mono); font-weight:700; font-size:13px; color:#000;
-      margin-bottom:24px; box-shadow:0 0 20px rgba(0,240,255,.3); flex-shrink:0;
-    }
-    .sidebar-nav { display:flex; flex-direction:column; gap:4px; flex:1; }
-    .sb-item {
-      width:44px; height:44px; border-radius:4px;
-      display:flex; align-items:center; justify-content:center;
-      color:var(--muted); text-decoration:none;
-      transition:all .2s; position:relative; cursor:none;
-    }
-    .sb-item:hover { background:rgba(0,240,255,.06); color:var(--cyan); box-shadow:0 0 12px rgba(0,240,255,.1); }
-    .sb-item.active { background:rgba(0,240,255,.08); color:var(--cyan); border-left:2px solid var(--cyan); }
-    .sb-item svg { width:20px; height:20px; }
-    .sb-item::after {
-      content:attr(data-tip); position:absolute;
-      left:calc(100% + 14px); background:#0A0E20; color:var(--cyan);
-      font-family:var(--mono); font-size:10px; font-weight:700; white-space:nowrap;
-      padding:6px 10px; border:1px solid var(--border2);
-      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
-      pointer-events:none; opacity:0; transition:opacity .15s; z-index:300;
-      text-transform:uppercase; letter-spacing:.08em;
-    }
-    .sb-item:hover::after { opacity:1; }
-    .sidebar-bottom { margin-top:auto; display:flex; flex-direction:column; gap:4px; }
 
     /* ── Main ── */
     main {
