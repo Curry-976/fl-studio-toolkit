@@ -38,7 +38,14 @@ function initSupabase() {
     console.warn('[Supabase] Clés non configurées — mode demo activé');
     return false;
   }
-  db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+    auth: {
+      flowType: 'implicit',       // retourne #access_token dans l'URL (pas PKCE ?code=)
+      autoRefreshToken: false,    // on gère le refresh manuellement (bypass navigator.locks)
+      persistSession: true,
+      detectSessionInUrl: false,  // on le fait manuellement dans checkAuth
+    }
+  });
   console.log('[Supabase] Connecté ✓');
   return true;
 }
