@@ -893,24 +893,8 @@ _drawPts();
 // ═══════════════════════════════════════════════════════════
 //  BEAT DATA
 // ═══════════════════════════════════════════════════════════
-const BEATS = [
-  { id:1,  title:'Midnight Trap',    producer:'ProdByDark',     genre:'Trap',     bpm:140, key:'Am',  mood:'Sombre',      plays:4231, sales:89, prices:{lease:35,trackout:69,exclu:249}, accent:'#00F0FF', dur:191 },
-  { id:2,  title:'London Streets',   producer:'UKDrillBeats',   genre:'Drill',    bpm:145, key:'Dm',  mood:'Agressif',    plays:1891, sales:47, prices:{lease:29,trackout:55,exclu:169}, accent:'#BF5FFF', dur:163 },
-  { id:3,  title:'Golden Era',       producer:'BoomTapProd',    genre:'Boom Bap', bpm:90,  key:'Gm',  mood:'Classique',   plays:634,  sales:12, prices:{lease:19,trackout:39,exclu:119}, accent:'#FFD700', dur:214 },
-  { id:4,  title:'Study Session',    producer:'ChillWave',      genre:'Lo-Fi',    bpm:75,  key:'C',   mood:'Détendu',     plays:2841, sales:67, prices:{lease:15,trackout:29,exclu:89},  accent:'#7BA7D4', dur:241 },
-  { id:5,  title:'Accra Nights',     producer:'AfroKing237',    genre:'Afrobeats',bpm:105, key:'F#m', mood:'Festif',      plays:1583, sales:41, prices:{lease:29,trackout:55,exclu:179}, accent:'#00FF88', dur:198 },
-  { id:6,  title:'Velvet Soul',      producer:'SoulProdLyon',   genre:'R&B',      bpm:85,  key:'Bbm', mood:'Romantique',  plays:921,  sales:29, prices:{lease:25,trackout:49,exclu:159}, accent:'#FF6B9D', dur:207 },
-  { id:7,  title:'Ghost Ride',       producer:'PhonkGod',       genre:'Phonk',    bpm:155, key:'Em',  mood:'Sombre',      plays:3124, sales:54, prices:{lease:25,trackout:49,exclu:149}, accent:'#FF6B35', dur:174 },
-  { id:8,  title:'Cloud Nine',       producer:'DreamBeats',     genre:'Trap',     bpm:90,  key:'Dbm', mood:'Mélancolique',plays:758,  sales:15, prices:{lease:19,trackout:39,exclu:119}, accent:'#B9B9FF', dur:228 },
-  { id:9,  title:'Deep Circuit',     producer:'TechHousePro',   genre:'House',    bpm:124, key:'Cm',  mood:'Énergique',   plays:1047, sales:33, prices:{lease:29,trackout:59,exclu:189}, accent:'#00FFCC', dur:361 },
-  { id:10, title:'Drill Season',     producer:'DrillMaker95',   genre:'Drill',    bpm:138, key:'F#m', mood:'Intense',     plays:892,  sales:18, prices:{lease:25,trackout:49,exclu:149}, accent:'#BF5FFF', dur:152 },
-  { id:11, title:'Chill Vibes',      producer:'LoFiProdParis',  genre:'Lo-Fi',    bpm:70,  key:'Am',  mood:'Paisible',    plays:1672, sales:38, prices:{lease:15,trackout:29,exclu:79},  accent:'#7BA7D4', dur:253 },
-  { id:12, title:'Afro Fusion',      producer:'AfroKing237',    genre:'Afrobeats',bpm:112, key:'Bm',  mood:'Festif',      plays:2108, sales:52, prices:{lease:29,trackout:55,exclu:175}, accent:'#00FF88', dur:185 },
-  { id:13, title:'Trap God Deluxe',  producer:'GodMadeBeats',   genre:'Trap',     bpm:145, key:'Bm',  mood:'Puissant',    plays:5012, sales:103,prices:{lease:35,trackout:69,exclu:299}, accent:'#00F0FF', dur:191 },
-  { id:14, title:'Neo Soul',         producer:'SoulProdLyon',   genre:'R&B',      bpm:78,  key:'Ebm', mood:'Mélancolique',plays:445,  sales:9,  prices:{lease:25,trackout:49,exclu:155}, accent:'#FF6B9D', dur:232 },
-  { id:15, title:'808 Mafia',        producer:'ProdByDark',     genre:'Trap',     bpm:140, key:'Cm',  mood:'Sombre',      plays:2977, sales:61, prices:{lease:35,trackout:69,exclu:249}, accent:'#00F0FF', dur:178 },
-  { id:16, title:'Memphis Drift',    producer:'PhonkGod',       genre:'Phonk',    bpm:150, key:'Am',  mood:'Sombre',      plays:1834, sales:44, prices:{lease:25,trackout:49,exclu:149}, accent:'#FF6B35', dur:167 },
-];
+// Beats chargés depuis Supabase — tableau vide au démarrage
+const BEATS = [];
 
 // ── Pseudo-random waveform (seeded)
 function seededRandom(n) { const x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); }
@@ -1072,9 +1056,13 @@ function formatNum(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : n; }
 function renderGrid() {
   const grid = document.getElementById('beat-grid');
   if (filtered.length === 0) {
+    const isFiltered = document.getElementById('search-input').value || activeGenre !== 'all';
     grid.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">🔍</div>
-      <div class="empty-text">Aucun beat trouvé pour cette recherche</div>
+      <div class="empty-icon">${isFiltered ? '🔍' : '🎵'}</div>
+      <div class="empty-text">${isFiltered
+        ? 'Aucun beat trouvé pour cette recherche'
+        : 'Aucun beat disponible pour l\'instant — sois le premier à en publier !'
+      }</div>
     </div>`;
     return;
   }
