@@ -289,8 +289,6 @@ let activeSources = new Set(['spotify','apple_music','tiktok','youtube']);
 //  INIT
 // ═══════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('api-key-input').value = apiKey;
-  if (apiKey) { setKeyOK(true); if (!localStorage.getItem('ss_api_key')) localStorage.setItem('ss_api_key', DEFAULT_KEY); }
   buildSources();
   updateSpotifyBadge();
   const code = new URLSearchParams(window.location.search).get('code');
@@ -315,28 +313,6 @@ function toggleSource(id, el) {
   if (activeSources.has(id)) activeSources.delete(id);
   else activeSources.add(id);
   el.classList.toggle('on', activeSources.has(id));
-}
-
-// ═══════════════════════════════════════════════════
-//  API KEY
-// ═══════════════════════════════════════════════════
-function saveApiKey() {
-  const val = document.getElementById('api-key-input').value.trim();
-  if (!val) { showToast('Entre une clé API'); return; }
-  apiKey = val;
-  localStorage.setItem('ss_api_key', val);
-  setKeyOK(true);
-  showToast('✅ Clé enregistrée');
-}
-
-function setKeyOK(ok) {
-  document.getElementById('key-status').classList.toggle('ok', ok);
-  document.getElementById('api-status-badge').style.display = ok ? '' : 'none';
-}
-
-function toggleKeyVisibility() {
-  const inp = document.getElementById('api-key-input');
-  inp.type = inp.type === 'password' ? 'text' : 'password';
 }
 
 // ═══════════════════════════════════════════════════
