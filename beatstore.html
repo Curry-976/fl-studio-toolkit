@@ -1566,13 +1566,18 @@ function playBeat(beat) {
 async function connectStripe() {
   if (!SUPABASE_READY || !currentUser) { openAuth(); return; }
   try {
-    showToast('⏳ Redirection vers Stripe…', 'var(--cyan)');
+    showToast('⏳ Connexion à Stripe en cours…', 'var(--cyan)');
     const { data, error } = await db.functions.invoke('create-connect-account', {
       body: { origin: window.location.origin },
     });
-    if (error || !data?.url) throw new Error(error?.message || 'Erreur Stripe Connect');
-    window.location.href = data.url;
+    console.log('[connectStripe] data:', data, 'error:', error);
+    if (error) throw new Error('Erreur réseau : ' + error.message);
+    if (data?.error) throw new Error('Erreur Stripe : ' + data.error);
+    if (!data?.url) throw new Error('URL Stripe manquante');
+    showToast('✅ Redirection vers Stripe…', 'var(--green)');
+    setTimeout(() => { window.location.href = data.url; }, 500);
   } catch (err) {
+    console.error('[connectStripe]', err);
     showToast('❌ ' + err.message, 'var(--pink)');
   }
 }
