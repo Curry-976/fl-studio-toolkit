@@ -106,8 +106,8 @@ serve(async (req) => {
         tier,
         producer_id: beat.producer_id,
       },
-      success_url: `${origin ?? "https://curry-976.github.io/fl-studio-toolkit"}/beatstore.html?payment=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin ?? "https://curry-976.github.io/fl-studio-toolkit"}/beatstore.html?payment=cancel`,
+      success_url: `${origin ?? "https://mayanabeat.fr"}/beatstore.html?payment=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin ?? "https://mayanabeat.fr"}/beatstore.html?payment=cancel`,
       // Stripe Connect : transfert automatique vers le producteur (si connecté)
       ...(beat.producers?.stripe_account
         ? {
