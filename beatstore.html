@@ -1330,17 +1330,42 @@ async function checkAuth() {
   }
   if (!SUPABASE_READY) return;
 
-  // Écoute d'abord les changements (capte le retour OAuth)
+  // ── Fallback rapide : lis le token depuis localStorage directement
+  // (évite le blocage de navigator.locks quand plusieurs onglets sont ouverts)
+  try {
+    const storageKey = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
+    const raw = localStorage.getItem(storageKey);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const user = parsed?.user;
+      const expiresAt = parsed?.expires_at;
+      const now = Math.floor(Date.now() / 1000);
+      if (user && expiresAt && expiresAt > now) {
+        console.log('[Auth] Session locale:', user.email);
+        await onAuthChange(user);
+      }
+    }
+  } catch(e) {
+    console.warn('[Auth] Fallback localStorage échoué:', e.message);
+  }
+
+  // Écoute les changements (retour OAuth, logout, refresh token)
   db.auth.onAuthStateChange(async (event, session) => {
     console.log('[Auth]', event, session?.user?.email);
+    if (event === 'SIGNED_OUT') { onAuthSignOut(); return; }
     if (session?.user) await onAuthChange(session.user);
-    else onAuthSignOut();
   });
 
-  // Vérifie la session existante
-  const { data: { session } } = await db.auth.getSession();
-  console.log('[Auth] session existante:', session?.user?.email || 'aucune');
-  if (session?.user) await onAuthChange(session.user);
+  // Vérifie la session via SDK (peut être lent si lock navigator multi-onglets)
+  try {
+    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 4000));
+    const { data: { session } } = await Promise.race([db.auth.getSession(), timeout]);
+    console.log('[Auth] SDK session:', session?.user?.email || 'aucune');
+    if (session?.user) await onAuthChange(session.user);
+  } catch(e) {
+    if (e.message === 'timeout') console.warn('[Auth] getSession() timeout — fallback localStorage utilisé');
+    else console.error('[Auth] getSession() error:', e.message);
+  }
 }
 
 async function onAuthChange(user) {
