@@ -1,0 +1,77 @@
+/* FL Studio Toolkit — Shared CSS */
+
+:root {
+  --bg: #03050D;
+  --bg2: #080C1A;
+  --surface: #0D1228;
+  --card: #0F1530;
+  --card-border: rgba(0,240,255,.1);
+  --sidebar: #060A18;
+  --panel: #0A0E20;
+  --cyan: #00F0FF;
+  --cyan2: #00C8FF;
+  --purple: #BF5FFF;
+  --purple2: #9B7FFF;
+  --orange: #FF6B2B;
+  --green: #00FF87;
+  --yellow: #FFD700;
+  --red: #FF3366;
+  --pink: #EC4899;
+  --text: #E8F0FF;
+  --text2: rgba(180,210,255,.6);
+  --muted: rgba(180,210,255,.35);
+  --muted2: rgba(180,210,255,.18);
+  --border: rgba(0,240,255,.08);
+  --border2: rgba(0,240,255,.15);
+  --shadow: 0 2px 24px rgba(0,240,255,.06);
+  --shadow-md: 0 6px 40px rgba(0,240,255,.1);
+  --radius: 4px;
+  --mono: 'Space Mono', monospace;
+  --sidebar-w: 72px;
+  --topbar-h: 58px;
+  --panel-w: 260px;
+  --accent: #FF6B2B;
+  --accent2: #00C8FF;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); cursor: none; }
+
+/* Scanlines overlay */
+body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background: repeating-linear-gradient(0deg, transparent 0, transparent 3px, rgba(0,0,0,.06) 3px, rgba(0,0,0,.06) 4px);
+}
+
+/* Animated background grid */
+#bg-grid {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(0,240,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: grid-drift 20s linear infinite;
+}
+@keyframes grid-drift { from { background-position: 0 0; } to { background-position: 60px 60px; } }
+
+/* Custom cursor */
+#c-dot {
+  position: fixed; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--cyan); pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  box-shadow: 0 0 8px var(--cyan), 0 0 16px rgba(0,240,255,.4);
+}
+#c-ring {
+  position: fixed; width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid rgba(0,240,255,.5); pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: rgba(0,240,255,.15); border-radius: 4px; }
+
+/* Common keyframes */
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+@keyframes blink  { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
