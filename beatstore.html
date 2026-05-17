@@ -1330,42 +1330,80 @@ async function checkAuth() {
   }
   if (!SUPABASE_READY) return;
 
-  // ── Fallback rapide : lis le token depuis localStorage directement
-  // (évite le blocage de navigator.locks quand plusieurs onglets sont ouverts)
+  const STORAGE_KEY = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
+
+  // ── 1. Retour OAuth Google : parse le hash de l'URL manuellement
+  // (le SDK est bloqué par navigator.locks et ne peut pas le faire)
+  if (location.hash && location.hash.includes('access_token')) {
+    try {
+      const params = new URLSearchParams(location.hash.slice(1));
+      const access_token  = params.get('access_token');
+      const refresh_token = params.get('refresh_token');
+      const expires_in    = parseInt(params.get('expires_in') || '3600');
+      if (access_token) {
+        // Récupère le user depuis l'API auth
+        const resp = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+          headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${access_token}` }
+        });
+        const user = await resp.json();
+        if (user?.id) {
+          // Stocke la session en localStorage
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            access_token, refresh_token,
+            expires_at: Math.floor(Date.now() / 1000) + expires_in,
+            user
+          }));
+          // Nettoie le hash de l'URL
+          history.replaceState(null, '', location.pathname + location.search);
+          console.log('[Auth] OAuth Google capté manuellement:', user.email);
+          await onAuthChange(user);
+          return; // session établie, pas besoin d'aller plus loin
+        }
+      }
+    } catch(e) {
+      console.warn('[Auth] Parse hash OAuth échoué:', e.message);
+    }
+  }
+
+  // ── 2. Fallback localStorage : session existante
   try {
-    const storageKey = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
-    const raw = localStorage.getItem(storageKey);
+    const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      const user = parsed?.user;
-      const expiresAt = parsed?.expires_at;
       const now = Math.floor(Date.now() / 1000);
-      if (user && expiresAt && expiresAt > now) {
-        console.log('[Auth] Session locale:', user.email);
-        await onAuthChange(user);
+      if (parsed?.user && parsed?.expires_at > now - 300) {
+        // Token encore valide (ou presque — on rafraîchit en arrière-plan)
+        console.log('[Auth] Session locale:', parsed.user.email);
+        await onAuthChange(parsed.user);
+        // Refresh silencieux si expiré
+        if (parsed.expires_at < now && parsed.refresh_token) {
+          const r = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON },
+            body: JSON.stringify({ refresh_token: parsed.refresh_token })
+          });
+          if (r.ok) {
+            const fresh = await r.json();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+              ...parsed,
+              access_token: fresh.access_token,
+              refresh_token: fresh.refresh_token,
+              expires_at: Math.floor(Date.now() / 1000) + fresh.expires_in
+            }));
+          }
+        }
+        return;
       }
     }
   } catch(e) {
     console.warn('[Auth] Fallback localStorage échoué:', e.message);
   }
 
-  // Écoute les changements (retour OAuth, logout, refresh token)
+  // ── 3. Écoute les changements SDK (logout principalement)
   db.auth.onAuthStateChange(async (event, session) => {
-    console.log('[Auth]', event, session?.user?.email);
     if (event === 'SIGNED_OUT') { onAuthSignOut(); return; }
-    if (session?.user) await onAuthChange(session.user);
+    if (session?.user && !currentUser) await onAuthChange(session.user);
   });
-
-  // Vérifie la session via SDK (peut être lent si lock navigator multi-onglets)
-  try {
-    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 4000));
-    const { data: { session } } = await Promise.race([db.auth.getSession(), timeout]);
-    console.log('[Auth] SDK session:', session?.user?.email || 'aucune');
-    if (session?.user) await onAuthChange(session.user);
-  } catch(e) {
-    if (e.message === 'timeout') console.warn('[Auth] getSession() timeout — fallback localStorage utilisé');
-    else console.error('[Auth] getSession() error:', e.message);
-  }
 }
 
 async function onAuthChange(user) {
