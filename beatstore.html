@@ -717,6 +717,18 @@
       </div>
       <button class="modal-close" onclick="closeLicense()">✕</button>
     </div>
+    <!-- Infos acheteur -->
+    <div id="buyer-form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+      <div>
+        <div class="form-label">Ton prénom / nom</div>
+        <input class="form-input" id="buyer-name" type="text" placeholder="Ex: Kylian M." autocomplete="name" />
+      </div>
+      <div>
+        <div class="form-label">Email (reçois le fichier ici)</div>
+        <input class="form-input" id="buyer-email" type="email" placeholder="ton@email.com" autocomplete="email" />
+      </div>
+    </div>
+
     <div class="license-grid">
       <!-- Lease -->
       <div class="license-card">
@@ -1139,10 +1151,56 @@ function closeLicense(e) {
     document.getElementById('modal-overlay').classList.remove('open');
   }
 }
-function buyBeat(tier) {
+async function buyBeat(tier) {
   if (!activeLicenseBeat) return;
-  // TODO: Stripe checkout integration
-  alert(`🔜 Stripe Checkout — ${activeLicenseBeat.title} · ${tier.charAt(0).toUpperCase()+tier.slice(1)} ${activeLicenseBeat.prices[tier === 'trackout' ? 'trackout' : tier === 'lease' ? 'lease' : 'exclu']}€\n\nIntégration Stripe à connecter.`);
+
+  const buyerEmail = document.getElementById('buyer-email').value.trim();
+  const buyerName  = document.getElementById('buyer-name').value.trim();
+
+  if (!buyerEmail || !buyerEmail.includes('@')) {
+    document.getElementById('buyer-email').focus();
+    document.getElementById('buyer-email').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('buyer-email').style.borderColor = '', 2000);
+    return;
+  }
+
+  // Bouton en chargement
+  const btns = document.querySelectorAll('.btn-license-buy');
+  btns.forEach(b => { b.disabled = true; b.textContent = '⏳ Redirection…'; });
+
+  try {
+    if (!SUPABASE_READY) throw new Error('Supabase non configuré — mode démo');
+
+    const { data, error } = await db.functions.invoke('stripe-checkout', {
+      body: {
+        beat_id: activeLicenseBeat.id,
+        tier,
+        buyer_email: buyerEmail,
+        buyer_name: buyerName,
+        origin: window.location.origin,
+      }
+    });
+
+    if (error) throw error;
+    if (!data?.url) throw new Error('URL Stripe manquante');
+
+    // Redirige vers Stripe Checkout
+    window.location.href = data.url;
+
+  } catch (err) {
+    console.error('[buyBeat]', err);
+    btns.forEach(b => { b.disabled = false; });
+    // Restore les labels
+    document.querySelectorAll('.btn-license-buy')[0].textContent = 'Acheter ce lease';
+    document.querySelectorAll('.btn-license-buy')[1].textContent = 'Acheter le trackout';
+    document.querySelectorAll('.btn-license-buy')[2].textContent = "Acheter l'exclusivité";
+
+    if (err.message?.includes('non configuré') || err.message?.includes('démo')) {
+      alert('⚠️ Stripe non encore configuré.\n\nDéploie les Edge Functions Supabase et ajoute tes clés Stripe pour activer les paiements.');
+    } else {
+      alert('❌ Erreur paiement : ' + (err.message || err));
+    }
+  }
 }
 
 // ── Upload modal
@@ -1160,13 +1218,17 @@ function handleDrop(e, type) {
     document.getElementById('drop-audio').classList.remove('drag');
   }
 }
-function submitBeat() {
-  const title = document.getElementById('up-title').value.trim();
-  const producer = document.getElementById('up-producer').value.trim();
-  if (!title || !producer) { alert('Titre et nom de producteur requis.'); return; }
-  // TODO: Supabase upload + Stripe connect
-  alert('✅ Beat soumis ! Intégration Supabase + Stripe à connecter.\n\nTon beat sera visible après validation (< 24h).');
-  closeUpload();
+// submitBeat défini plus bas (après handleDrop qui déclare uploadedAudioFile)
+
+function showToast(msg, color) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = `position:fixed;bottom:160px;left:50%;transform:translateX(-50%);
+    background:${color || 'var(--cyan)'};color:#000;font-family:var(--mono);font-size:12px;
+    font-weight:700;padding:12px 24px;border-radius:4px;z-index:9999;
+    box-shadow:0 4px 20px rgba(0,240,255,.4);`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1397,44 +1459,43 @@ function handleDrop(e, type) {
 }
 
 async function submitBeat() {
-  if (!SUPABASE_READY || !currentUser) { openAuth(); return; }
+  if (!SUPABASE_READY) { alert('Supabase non configuré.'); return; }
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { openAuth(); return; }
+  const uid = session.user.id;
 
   const title    = document.getElementById('up-title').value.trim();
-  const producer = document.getElementById('up-producer').value.trim();
   const genre    = document.getElementById('up-genre').value;
   const bpm      = parseInt(document.getElementById('up-bpm').value) || 120;
   const key      = document.getElementById('up-key').value;
-  const mood     = document.getElementById('up-mood').value;
+  const mood     = document.getElementById('up-mood')?.value || '';
   const lease    = Math.round(parseFloat(document.getElementById('up-price-lease').value) * 100) || 2900;
-  const trackout = Math.round(parseFloat(document.getElementById('up-price-track').value) * 100) || 5900;
+  const trackout = Math.round(parseFloat(document.getElementById('up-price-track')?.value || document.getElementById('up-price-trackout')?.value) * 100) || 5900;
   const exclu    = Math.round(parseFloat(document.getElementById('up-price-exclu').value) * 100) || 19900;
 
   if (!title) { alert('Titre requis.'); return; }
+  if (!uploadedAudioFile) { alert('Ajoute un fichier audio (MP3 ou WAV).'); return; }
 
   const btn = document.querySelector('.btn-submit');
-  btn.textContent = 'Upload en cours…'; btn.disabled = true;
+  if (btn) { btn.textContent = '⏳ Upload en cours…'; btn.disabled = true; }
 
   try {
-    let audioUrl = null, audioPath = null, duration = 180;
+    // 1. Upload audio
+    const ext  = uploadedAudioFile.name.split('.').pop();
+    const audioPath = `${uid}/${Date.now()}_${title.replace(/\s+/g,'_')}.${ext}`;
+    const { error: storErr } = await db.storage
+      .from('beats-audio')
+      .upload(audioPath, uploadedAudioFile, { contentType: uploadedAudioFile.type, upsert: true });
+    if (storErr) throw storErr;
+    const { data: urlData } = db.storage.from('beats-audio').getPublicUrl(audioPath);
+    const audioUrl = urlData.publicUrl;
 
-    // 1. Upload audio si un fichier est sélectionné
-    if (uploadedAudioFile) {
-      const ext  = uploadedAudioFile.name.split('.').pop();
-      audioPath  = `${currentUser.id}/${Date.now()}.${ext}`;
-      const { error: storErr } = await db.storage
-        .from('beats-audio')
-        .upload(audioPath, uploadedAudioFile, { contentType: uploadedAudioFile.type });
-      if (storErr) throw storErr;
-      const { data: urlData } = db.storage.from('beats-audio').getPublicUrl(audioPath);
-      audioUrl = urlData.publicUrl;
+    // 2. Durée audio
+    const duration = await getAudioDuration(uploadedAudioFile).catch(() => 180);
 
-      // Durée audio
-      duration = await getAudioDuration(uploadedAudioFile);
-    }
-
-    // 2. Insérer le beat en base
-    const { data: beat, error: dbErr } = await db.from('beats').insert({
-      producer_id:    currentUser.id,
+    // 3. Insérer le beat en base
+    const { error: dbErr } = await db.from('beats').insert({
+      producer_id:    uid,
       title, genre, bpm, key, mood,
       price_lease:    lease,
       price_trackout: trackout,
@@ -1442,18 +1503,20 @@ async function submitBeat() {
       audio_url:      audioUrl,
       audio_path:     audioPath,
       duration,
-    }).select().single();
-
+    });
     if (dbErr) throw dbErr;
 
-    alert(`✅ "${title}" mis en vente avec succès !\n\nIl apparaît maintenant dans le store.`);
     closeUpload();
-    loadBeats(); // Recharger la grille
+    uploadedAudioFile = null;
+    document.getElementById('audio-name').textContent = 'Glisse ton fichier ici ou clique';
+    await loadBeats();
+    showToast(`✅ "${title}" mis en vente avec succès !`);
+
   } catch(e) {
+    console.error('[submitBeat]', e);
     alert('❌ Erreur : ' + (e.message || JSON.stringify(e)));
   } finally {
-    btn.textContent = 'Mettre en vente — Commission 15%';
-    btn.disabled = false;
+    if (btn) { btn.textContent = 'Mettre en vente — Commission 15%'; btn.disabled = false; }
   }
 }
 
@@ -1476,6 +1539,23 @@ function playBeat(beat) {
   _origPlayBeat(beat);
   trackPlay(beat); // async, non bloquant
 }
+
+// ── Retour Stripe (success / cancel)
+(function handleStripeReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const payment = params.get('payment');
+  if (!payment) return;
+
+  // Nettoie l'URL
+  const clean = window.location.pathname;
+  window.history.replaceState({}, '', clean);
+
+  if (payment === 'success') {
+    setTimeout(() => showToast('🎉 Paiement confirmé ! Tu vas recevoir ton beat par email.', '#00FF88'), 500);
+  } else if (payment === 'cancel') {
+    setTimeout(() => showToast('❌ Paiement annulé — reviens quand tu veux !', 'var(--pink)'), 500);
+  }
+})();
 
 // ── Init
 loadBeats();
