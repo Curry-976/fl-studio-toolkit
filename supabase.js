@@ -9,8 +9,8 @@
 //  5. Storage → New bucket "beats-audio" (public) + "beats-covers" (public)
 // ══════════════════════════════════════════════════════════════
 
-const SUPABASE_URL  = 'https://TON-PROJECT-ID.supabase.co';
-const SUPABASE_ANON = 'ta-cle-anon-publique-ici';
+const SUPABASE_URL  = 'https://fjwftrucqerwshhpmezl.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqd2Z0cnVjcWVyd3NoaHBtZXpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwMTY5MTYsImV4cCI6MjA5NDU5MjkxNn0.Lhc2F9LeqRQOqcnOSiF46pvwwIMXgnnNAI0YRmjkpWU';
 
 // Couleurs par genre (utilisées pour les waveforms)
 const GENRE_COLORS = {
