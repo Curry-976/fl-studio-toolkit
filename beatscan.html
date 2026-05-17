@@ -5,42 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BeatScan — Analyseur Audio Pro</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
   <style>
-    :root {
-      --bg:#03050D; --bg2:#080C1A; --surface:#0D1228; --card:#0F1530;
-      --sidebar:#060A18; --panel:#0A0E20;
-      --cyan:#00F0FF; --cyan2:#00C8FF; --purple:#BF5FFF; --purple2:#9B7FFF;
-      --orange:#FF6B2B; --green:#00FF87; --yellow:#FFD700; --red:#FF3366;
-      --text:#E8F0FF; --muted:rgba(180,210,255,.35); --muted2:rgba(180,210,255,.18);
-      --border:rgba(0,240,255,.08); --border2:rgba(0,240,255,.15);
-      --shadow: 0 2px 24px rgba(0,240,255,.06);
-      --mono:'Space Mono',monospace;
-      /* layout */
-      --accent:  #FF6B2B;
-      --accent2: #00C8FF;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; overflow: hidden; cursor: none; }
-    body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:1;
-      background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.06) 3px,rgba(0,0,0,.06) 4px); }
-
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
-
-    /* ── BG Grid ── */
-    #bg-grid { position:fixed; inset:0; pointer-events:none; z-index:0;
-      background-image:linear-gradient(rgba(0,240,255,.025) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(0,240,255,.025) 1px,transparent 1px);
-      background-size:60px 60px; animation:grid-drift 20s linear infinite; }
-    @keyframes grid-drift { from{background-position:0 0;} to{background-position:60px 60px;} }
-
-    /* ── Custom Cursor ── */
-    #c-dot { position:fixed; width:8px; height:8px; border-radius:50%; background:#00F0FF;
-      pointer-events:none; z-index:9999; transform:translate(-50%,-50%);
-      box-shadow:0 0 8px #00F0FF,0 0 16px rgba(0,240,255,.4); }
-    #c-ring { position:fixed; width:32px; height:32px; border-radius:50%;
-      border:1px solid rgba(0,240,255,.5); pointer-events:none; z-index:9998;
-      transform:translate(-50%,-50%); }
+    body { display: flex; overflow: hidden; }
 
     /* ── Sidebar ── */
     .sidebar {
@@ -585,6 +552,10 @@
         <div class="page-sub">BPM · Gamme · Genre — analyse réelle par signal audio</div>
       </div>
       <div class="real-badge">⚡ ANALYSE RÉELLE</div>
+      <button id="share-btn" onclick="shareResults()" style="display:none;align-items:center;gap:7px;padding:5px 14px;border:1px solid rgba(0,240,255,.25);background:rgba(0,240,255,.06);color:var(--cyan);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);cursor:none;transition:background .15s,border-color .15s;">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Partager
+      </button>
     </div>
   </div>
 
@@ -825,82 +796,130 @@ function processFile(file) {
 function pause(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ═══════════════════════════════════════════════════════════
-//  REAL BPM DETECTION  — onset autocorrelation
+//  REAL BPM DETECTION  — multi-band onset + harmonic ACF
 // ═══════════════════════════════════════════════════════════
-function computeBPM(audioBuffer) {
-  const sr = audioBuffer.sampleRate;
-  const maxSamples = Math.min(audioBuffer.length, sr * 90); // max 90s
 
-  // Mix to mono
-  const mono = new Float32Array(maxSamples);
-  const numCh = audioBuffer.numberOfChannels;
-  for (let ch = 0; ch < numCh; ch++) {
-    const chData = audioBuffer.getChannelData(ch);
-    for (let i = 0; i < maxSamples; i++) mono[i] += chData[i] / numCh;
-  }
+/* Low-pass IIR helper */
+function _lpFilter(signal, sr, cutoff) {
+  const a = (1 / (2 * Math.PI * cutoff)) / (1 / (2 * Math.PI * cutoff) + 1 / sr);
+  const out = new Float32Array(signal.length);
+  out[0] = signal[0];
+  for (let i = 1; i < signal.length; i++) out[i] = (1 - a) * signal[i] + a * out[i-1];
+  return out;
+}
 
-  // Low-pass IIR filter (cutoff ~200 Hz — keeps kick/bass)
-  const RC  = 1 / (2 * Math.PI * 200);
-  const dt  = 1 / sr;
-  const a   = dt / (RC + dt);
-  const lp  = new Float32Array(maxSamples);
-  lp[0] = mono[0];
-  for (let i = 1; i < maxSamples; i++) lp[i] = a * mono[i] + (1 - a) * lp[i-1];
-
-  // RMS energy envelope — 23ms frames, 10ms hop
-  const fSize = Math.round(sr * 0.023);
-  const hSize = Math.round(sr * 0.010);
-  const nFrames = Math.floor((maxSamples - fSize) / hSize);
+/* RMS envelope helper */
+function _rmsEnv(signal, fSize, hSize, nFrames) {
   const env = new Float32Array(nFrames);
   for (let i = 0; i < nFrames; i++) {
-    let rms = 0;
-    const s = i * hSize;
-    for (let j = 0; j < fSize; j++) { const v = lp[s+j]||0; rms += v*v; }
+    let s = i * hSize, rms = 0;
+    for (let j = 0; j < fSize; j++) { const v = signal[s+j]||0; rms += v*v; }
     env[i] = Math.sqrt(rms / fSize);
   }
+  return env;
+}
 
-  // Half-wave rectified 1st-order difference (onset strength)
+/* Normalize in-place */
+function _norm(arr) {
+  let mx = 0;
+  for (let i = 0; i < arr.length; i++) if (arr[i] > mx) mx = arr[i];
+  if (mx > 0) for (let i = 0; i < arr.length; i++) arr[i] /= mx;
+}
+
+function computeBPM(audioBuffer) {
+  const sr = audioBuffer.sampleRate;
+
+  // Analyse 60 s starting from 10 % into the track (skip intro)
+  const startOff = Math.floor(audioBuffer.length * 0.10);
+  const analyzeLen = Math.min(sr * 60, audioBuffer.length - startOff);
+
+  // Mix to mono
+  const mono = new Float32Array(analyzeLen);
+  const numCh = audioBuffer.numberOfChannels;
+  for (let ch = 0; ch < numCh; ch++) {
+    const d = audioBuffer.getChannelData(ch);
+    for (let i = 0; i < analyzeLen; i++) mono[i] += d[startOff + i] / numCh;
+  }
+
+  // Two bands: sub-bass kick (≤200 Hz) + full signal
+  const kick = _lpFilter(mono, sr, 200);
+
+  // Frame params: 23 ms frames, 10 ms hop → 100 fps
+  const fSize  = Math.round(sr * 0.023);
+  const hSize  = Math.round(sr * 0.010);
+  const nFrames = Math.floor((analyzeLen - fSize) / hSize);
+  const fps    = 1000 / 10; // 100
+
+  // Onset strength (half-wave rectified 1st diff of RMS envelope)
+  const eKick = _rmsEnv(kick, fSize, hSize, nFrames);
+  const eFull = _rmsEnv(mono, fSize, hSize, nFrames);
+
+  const oKick = new Float32Array(nFrames);
+  const oFull = new Float32Array(nFrames);
+  for (let i = 1; i < nFrames; i++) {
+    oKick[i] = Math.max(0, eKick[i] - eKick[i-1]);
+    oFull[i] = Math.max(0, eFull[i] - eFull[i-1]);
+  }
+  _norm(oKick); _norm(oFull);
+
+  // Blend: kick carries 70 % of the signal (kick defines the beat)
   const onset = new Float32Array(nFrames);
-  for (let i = 1; i < nFrames; i++) onset[i] = Math.max(0, env[i] - env[i-1]);
-
-  // Normalise onset
-  let mx = 0; for (let i = 0; i < nFrames; i++) if (onset[i]>mx) mx=onset[i];
-  if (mx > 0) for (let i = 0; i < nFrames; i++) onset[i] /= mx;
+  for (let i = 0; i < nFrames; i++) onset[i] = 0.70 * oKick[i] + 0.30 * oFull[i];
 
   // Autocorrelation — BPM range 55–210
-  const fps    = 1000 / 10; // 100 frames/sec (hop = 10ms)
   const minLag = Math.floor(fps * 60 / 210);
   const maxLag = Math.ceil(fps  * 60 / 55);
   const N = onset.length;
-  let bestLag = minLag, bestVal = -Infinity;
 
+  const acf = new Float32Array(maxLag + 1);
   for (let lag = minLag; lag <= maxLag; lag++) {
-    let sum = 0;
-    const count = N - lag;
-    for (let i = 0; i < count; i++) sum += onset[i] * onset[i+lag];
-    const corr = sum / count;
-    if (corr > bestVal) { bestVal = corr; bestLag = lag; }
+    let sum = 0, cnt = N - lag;
+    for (let i = 0; i < cnt; i++) sum += onset[i] * onset[i + lag];
+    acf[lag] = sum / cnt; // unbiased
   }
 
-  // Refine: also check half-period (handle double-time)
-  const halfLag = Math.round(bestLag / 2);
-  if (halfLag >= minLag) {
-    let halfSum = 0;
-    const count = N - halfLag;
-    for (let i = 0; i < count; i++) halfSum += onset[i] * onset[i+halfLag];
-    if (halfSum/count > bestVal * 0.85) bestLag = halfLag; // prefer higher BPM if strong
+  // Harmonic-enhanced score: reward lags whose harmonics (×2, ×4) are also strong
+  const enhanced = new Float32Array(maxLag + 1);
+  for (let lag = minLag; lag <= maxLag; lag++) {
+    let score = acf[lag];
+    const d2 = lag * 2, d4 = lag * 4, h2 = Math.round(lag / 2);
+    if (d2 <= maxLag) score += 0.50 * acf[d2];
+    if (d4 <= maxLag) score += 0.25 * acf[d4];
+    if (h2 >= minLag) score += 0.30 * acf[h2];
+    enhanced[lag] = score;
   }
 
-  const bpm = Math.round(60 * fps / bestLag);
+  // Best lag from enhanced ACF
+  let bestLag = minLag, bestEnh = -Infinity;
+  for (let lag = minLag; lag <= maxLag; lag++) {
+    if (enhanced[lag] > bestEnh) { bestEnh = enhanced[lag]; bestLag = lag; }
+  }
 
-  // Confidence = peak prominence over local mean
+  // Octave disambiguation: evaluate raw BPM, ×2, ×0.5
+  // Use a soft prior centred on 120 BPM (σ = 40) — stays musical, still allows 140 trap etc.
+  const rawBPM = fps * 60 / bestLag;
+  const candidateLags = [
+    bestLag,
+    Math.round(bestLag / 2),
+    bestLag * 2,
+  ].filter(l => l >= minLag && l <= maxLag);
+
+  let finalLag = bestLag, bestScore = -Infinity;
+  for (const l of candidateLags) {
+    const bpmC = fps * 60 / l;
+    const prior = Math.exp(-Math.pow(bpmC - 120, 2) / (2 * 40 * 40));
+    const score = acf[l] * (1 + 0.35 * prior);
+    if (score > bestScore) { bestScore = score; finalLag = l; }
+  }
+
+  const bpm = Math.round(fps * 60 / finalLag);
+
+  // Confidence: peak prominence over mean ACF
   let mean = 0;
-  for (let lag = minLag; lag <= maxLag; lag++) {
-    let s = 0; for (let i = 0; i < N-lag; i++) s += onset[i]*onset[i+lag]; mean += s/(N-lag);
-  }
+  for (let lag = minLag; lag <= maxLag; lag++) mean += acf[lag];
   mean /= (maxLag - minLag + 1);
-  const prominence = bestVal / (mean + 1e-6);
-  const confidence = Math.min(97, Math.max(68, Math.round(60 + Math.log1p(prominence) * 14)));
+  const prominence = acf[finalLag] / (mean + 1e-6);
+  const confidence = Math.min(97, Math.max(60, Math.round(55 + Math.log1p(prominence) * 15)));
 
   return { bpm, confidence };
 }
@@ -1049,6 +1068,11 @@ function showResults(file, bpmResult, chroma, keyResult) {
   const genre = estimateGenre(bpmResult.bpm);
   document.getElementById('genre-emoji').textContent = genre.emoji;
   document.getElementById('genre-name').textContent  = genre.name;
+
+  // Store share data + show button
+  _shareData = { bpm: bpmResult.bpm, confBpm: bpmResult.confidence, noteEn, isMinor: keyResult.isMinor, confKey: keyResult.confidence, genre: genre.name };
+  const shareBtn = document.getElementById('share-btn');
+  if (shareBtn) shareBtn.style.display = 'inline-flex';
   document.getElementById('genre-desc').textContent  = genre.desc;
   document.getElementById('genre-conf').textContent  = genre.conf + '%';
   document.getElementById('genre-conf-bar').style.width = genre.conf + '%';
@@ -1410,6 +1434,55 @@ function formatTime(s) {
   const m=Math.floor(s/60), sec=Math.floor(s%60);
   return m+':'+String(sec).padStart(2,'0');
 }
+
+// ── Share ──────────────────────────────────────────────────
+let _shareData = null;
+
+function shareResults() {
+  if (!_shareData) return;
+  const p = new URLSearchParams({
+    bpm:       _shareData.bpm,
+    key:       _shareData.noteEn + (_shareData.isMinor ? 'm' : ''),
+    genre:     _shareData.genre,
+    conf_bpm:  _shareData.confBpm,
+    conf_key:  _shareData.confKey,
+  });
+  const url = location.origin + location.pathname + '?' + p.toString();
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('🔗 Lien copié dans le clipboard !');
+  }).catch(() => {
+    prompt('Copie ce lien :', url);
+  });
+}
+
+function loadSharedResults() {
+  const p = new URLSearchParams(location.search);
+  const bpm = parseInt(p.get('bpm'));
+  const keyRaw = p.get('key');
+  const genre = p.get('genre');
+  const confBpm = parseInt(p.get('conf_bpm')) || 80;
+  const confKey = parseInt(p.get('conf_key')) || 80;
+  if (!bpm || !keyRaw) return;
+
+  const isMinor = keyRaw.endsWith('m');
+  const noteEn  = isMinor ? keyRaw.slice(0, -1) : keyRaw;
+  const keyIndex = NOTES.indexOf(noteEn);
+  if (keyIndex === -1) return;
+
+  const bpmResult  = { bpm, confidence: confBpm };
+  const fakeChroma = new Float32Array(12);
+  fakeChroma[keyIndex] = 1;
+  const keyResult  = { keyIndex, isMinor, confidence: confKey };
+
+  showResults({ name: 'Résultat partagé', size: 0 }, bpmResult, fakeChroma, keyResult);
+  // audioBuffer manquant — désactiver le player
+  document.getElementById('player-section').style.display = 'none';
+  document.getElementById('state-results').style.display  = 'block';
+  showToast('📊 Résultat partagé chargé');
+  window.history.replaceState({}, '', location.pathname);
+}
+
+document.addEventListener('DOMContentLoaded', loadSharedResults);
 
 function showToast(msg) {
   const t = document.createElement('div');
