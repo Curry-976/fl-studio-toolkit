@@ -1621,17 +1621,68 @@ function playBeat(beat) {
   trackPlay(beat); // async, non bloquant
 }
 
+// ── Récupère un JWT valide (refresh auto si expiré)
+async function getValidJWT() {
+  const storageKey = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
+  const raw = localStorage.getItem(storageKey);
+  if (!raw) return null;
+  const parsed = JSON.parse(raw);
+  const now = Math.floor(Date.now() / 1000);
+
+  // Token encore valide
+  if (parsed.expires_at > now + 10) return parsed.access_token;
+
+  // Token expiré — refresh via fetch direct (bypass SDK lock)
+  if (!parsed.refresh_token) return null;
+  try {
+    const resp = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON },
+      body: JSON.stringify({ refresh_token: parsed.refresh_token })
+    });
+    if (!resp.ok) return null;
+    const fresh = await resp.json();
+    // Sauvegarde le nouveau token
+    localStorage.setItem(storageKey, JSON.stringify({
+      ...parsed,
+      access_token: fresh.access_token,
+      refresh_token: fresh.refresh_token,
+      expires_at: Math.floor(Date.now() / 1000) + fresh.expires_in
+    }));
+    // Met à jour currentUser si besoin
+    if (fresh.user) { currentUser = fresh.user; }
+    return fresh.access_token;
+  } catch(e) {
+    console.warn('[getValidJWT] refresh échoué:', e.message);
+    return null;
+  }
+}
+
 // ── Connexion Stripe Connect
 async function connectStripe() {
   if (!SUPABASE_READY || !currentUser) { openAuth(); return; }
   try {
     showToast('⏳ Connexion à Stripe en cours…', 'var(--cyan)');
-    const { data, error } = await db.functions.invoke('create-connect-account', {
-      body: { origin: window.location.origin },
+
+    const jwt = await getValidJWT();
+    if (!jwt) {
+      showToast('⚠️ Session expirée — reconnecte-toi', 'var(--yellow)');
+      setTimeout(() => openAuth(), 1000);
+      return;
+    }
+
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/create-connect-account`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt}`,
+        'apikey': SUPABASE_ANON
+      },
+      body: JSON.stringify({ origin: window.location.origin })
     });
-    console.log('[connectStripe] data:', data, 'error:', error);
-    if (error) throw new Error('Erreur réseau : ' + error.message);
-    if (data?.error) throw new Error('Erreur Stripe : ' + data.error);
+    const data = await resp.json();
+    console.log('[connectStripe]', data);
+    if (data?.error) throw new Error(data.error);
     if (!data?.url) throw new Error('URL Stripe manquante');
     showToast('✅ Redirection vers Stripe…', 'var(--green)');
     setTimeout(() => { window.location.href = data.url; }, 500);
