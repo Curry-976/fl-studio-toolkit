@@ -5,32 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Songstats — FL Studio Toolkit</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
   <style>
-    :root {
-      --bg:#03050D; --surface:#0D1228; --sidebar:#060A18; --panel:#0A0E20;
-      --accent:#FF6B2B; --accent2:#00C8FF; --purple:#9B7FFF; --green:#00FF87;
-      --cyan:#00F0FF; --cyan2:#00C8FF; --purple2:#BF5FFF;
-      --border:rgba(0,240,255,.08); --border2:rgba(0,240,255,.15);
-      --text:#E8F0FF; --muted:rgba(180,210,255,.4);
-      --mono:'Space Mono',monospace;
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;overflow:hidden;cursor:none;}
-    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
-      background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.06) 3px,rgba(0,0,0,.06) 4px);}
-    #bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;
-      background-image:linear-gradient(rgba(0,240,255,.025) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(0,240,255,.025) 1px,transparent 1px);
-      background-size:60px 60px;animation:grid-drift 20s linear infinite;}
-    @keyframes grid-drift{from{background-position:0 0;}to{background-position:60px 60px;}}
-    #c-dot{position:fixed;width:8px;height:8px;border-radius:50%;background:var(--cyan);
-      pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
-      box-shadow:0 0 8px var(--cyan),0 0 16px rgba(0,240,255,.4);}
-    #c-ring{position:fixed;width:32px;height:32px;border-radius:50%;
-      border:1px solid rgba(0,240,255,.5);pointer-events:none;z-index:9998;
-      transform:translate(-50%,-50%);}
-    ::-webkit-scrollbar{width:4px;}
-    ::-webkit-scrollbar-thumb{background:rgba(0,240,255,.1);border-radius:4px;}
+    body { height: 100vh; display: flex; overflow: hidden; }
 
     /* ── SIDEBAR ── */
     .sidebar{width:72px;min-width:72px;height:100vh;background:var(--sidebar);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:4px;z-index:100;border-right:1px solid var(--border2);position:relative;}
@@ -204,6 +181,9 @@
   <a href="songstats.html" class="nav-item active" data-tip="Songstats">
     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
   </a>
+  <a href="beatstore.html" class="nav-item" data-tip="Beat Store">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+  </a>
   <div class="nav-sep"></div>
   <div class="sidebar-spacer"></div>
   <div class="nav-item" data-tip="Paramètres">
@@ -297,6 +277,10 @@
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
       <div id="api-status-badge" style="display:none;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:700;background:#E0F8EE;color:#15803D;">● API connectée</div>
+      <button id="share-btn" onclick="shareCurrentResult()" style="display:none;align-items:center;gap:7px;padding:5px 14px;border:1px solid rgba(0,240,255,.25);background:rgba(0,240,255,.06);color:var(--cyan);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);cursor:none;transition:background .15s;">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Partager
+      </button>
     </div>
   </div>
 
@@ -366,6 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSpotifyBadge();
   const code = new URLSearchParams(window.location.search).get('code');
   if (code) handlePKCECallback(code);
+  else loadSharedQuery();
 });
 
 function buildSources() {
@@ -651,6 +636,7 @@ async function loadArtistById(spotifyArtistId) {
   const radioStats = radioData?.stats?.[0]?.data || null;
   renderArtist(data.artist_info || {}, data.stats || [], radioStats);
   document.getElementById('topbar-sub').textContent = data.artist_info?.name || spotifyArtistId;
+  setShareData('artist', spotifyArtistId);
 }
 
 function showArtistPicker(artists, query) {
@@ -766,6 +752,7 @@ async function loadTrackById(spotifyTrackId, isrc, srcList, label) {
   const radioStats = radioData?.stats?.[0]?.data || null;
   renderTrack(ti, statsRes.stats || [], radioStats);
   document.getElementById('topbar-sub').textContent = ti.title || label || spotifyTrackId;
+  setShareData('track', spotifyTrackId || isrc);
 }
 
 function showTrackPicker(tracks, query) {
@@ -1163,6 +1150,44 @@ function showToast(msg) {
   t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1A1D2E;color:#fff;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.3);pointer-events:none;transition:opacity .3s;';
   document.body.appendChild(t);
   setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, 2500);
+}
+
+// ── Share ─────────────────────────────────────────────────
+let _currentShareId = null, _currentShareTab = null;
+
+function shareCurrentResult() {
+  if (!_currentShareId) return;
+  const p = new URLSearchParams({ tab: _currentShareTab, q: _currentShareId });
+  const url = location.origin + location.pathname + '?' + p.toString();
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('🔗 Lien copié dans le clipboard !');
+  }).catch(() => {
+    prompt('Copie ce lien :', url);
+  });
+}
+
+function setShareData(tab, id) {
+  _currentShareId  = id;
+  _currentShareTab = tab;
+  const btn = document.getElementById('share-btn');
+  if (btn) btn.style.display = 'inline-flex';
+}
+
+function loadSharedQuery() {
+  const p   = new URLSearchParams(location.search);
+  const tab = p.get('tab');
+  const q   = p.get('q');
+  if (!q) return;
+  window.history.replaceState({}, '', location.pathname);
+  if (tab === 'track') {
+    setTab('track');
+    document.getElementById('search-input').value = q;
+  } else {
+    setTab('artist');
+    document.getElementById('search-input').value = q;
+  }
+  // Auto-trigger search after init
+  setTimeout(doSearch, 300);
 }
 </script>
 <script>

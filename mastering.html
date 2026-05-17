@@ -5,40 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mastering Pro — FL Studio Toolkit</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
   <style>
-    :root {
-      --bg:#03050D; --bg2:#080C1A; --surface:#0D1228; --card:#0F1530;
-      --sidebar:#060A18; --panel:#0A0E20;
-      --cyan:#00F0FF; --cyan2:#00C8FF; --purple:#BF5FFF; --purple2:#9B7FFF;
-      --orange:#FF6B2B; --green:#00FF87; --yellow:#FFD700; --red:#FF3366;
-      --text:#E8F0FF; --muted:rgba(180,210,255,.35); --muted2:rgba(180,210,255,.18);
-      --border:rgba(0,240,255,.08); --border2:rgba(0,240,255,.15);
-      --shadow: 0 2px 24px rgba(0,240,255,.06);
-      --mono:'Space Mono',monospace;
-      /* keep accent vars for legacy usage */
-      --accent:#FF6B2B; --accent2:#00C8FF;
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;overflow:hidden;cursor:none;}
-    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
-      background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.06) 3px,rgba(0,0,0,.06) 4px);}
-    #bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;
-      background-image:linear-gradient(rgba(0,240,255,.025) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(0,240,255,.025) 1px,transparent 1px);
-      background-size:60px 60px;animation:grid-drift 20s linear infinite;}
-    @keyframes grid-drift{from{background-position:0 0;}to{background-position:60px 60px;}}
-
-    /* ── CUSTOM CURSOR ── */
-    #c-dot{position:fixed;width:8px;height:8px;border-radius:50%;background:#00F0FF;
-      pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
-      box-shadow:0 0 8px #00F0FF,0 0 16px rgba(0,240,255,.4);}
-    #c-ring{position:fixed;width:32px;height:32px;border-radius:50%;
-      border:1px solid rgba(0,240,255,.5);pointer-events:none;z-index:9998;
-      transform:translate(-50%,-50%);}
-
-    ::-webkit-scrollbar{width:4px;}
-    ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.1);border-radius:4px;}
-    .panel-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);}
+    body { height: 100vh; display: flex; overflow: hidden; }
+    .panel-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); }
 
     /* ── SIDEBAR ── */
     .sidebar{width:72px;min-width:72px;height:100vh;background:#060A18;border-right:1px solid rgba(0,240,255,.15);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:4px;z-index:100;position:relative;}
@@ -245,6 +215,9 @@
   <a href="songstats.html" class="nav-item" data-tip="Songstats">
     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
   </a>
+  <a href="beatstore.html" class="nav-item" data-tip="Beat Store">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+  </a>
   <div class="nav-sep"></div>
   <div class="sidebar-spacer"></div>
   <div class="nav-item" data-tip="Paramètres">
@@ -389,6 +362,11 @@
           <button class="ab-btn active" id="ab-a" onclick="switchAB('A')">A</button>
           <button class="ab-btn"        id="ab-b" onclick="switchAB('B')">B</button>
         </div>
+        <!-- Share -->
+        <button id="share-btn" onclick="shareChain()" style="display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border:1px solid rgba(0,240,255,.25);background:rgba(0,240,255,.06);color:#00F0FF;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);cursor:none;transition:background .15s;">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Partager
+        </button>
         <!-- Bypass -->
         <div class="bypass-wrap" onclick="toggleBypass()">
           <div class="tog-track" id="bypass-track"><div class="tog-thumb"></div></div>
@@ -1562,6 +1540,64 @@ function showToast(msg){
   t.style.cssText='position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1A1D2E;color:#fff;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.35);pointer-events:none;transition:opacity .3s;';
   document.body.appendChild(t);setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},2500);
 }
+
+// ── Share ─────────────────────────────────────────────────
+function shareChain() {
+  const eq     = BANDS.map(b => b.gain).join(',');
+  const thresh = document.getElementById('thresh').value;
+  const ratio  = document.getElementById('ratio').value;
+  const attack = document.getElementById('attack').value;
+  const rel    = document.getElementById('release').value;
+  const knee   = document.getElementById('knee').value;
+  const makeup = document.getElementById('makeup').value;
+  const drive  = document.getElementById('drive').value;
+  const ceil   = document.getElementById('ceiling').value;
+  const outG   = document.getElementById('out-gain').value;
+  const p = new URLSearchParams({ eq, thresh, ratio, attack, rel, knee, makeup, drive, ceil, out: outG, sat: satMode });
+  const url = location.origin + location.pathname + '?' + p.toString();
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('🔗 Réglages copiés dans le clipboard !');
+  }).catch(() => {
+    prompt('Copie ce lien :', url);
+  });
+}
+
+function loadSharedChain() {
+  const p = new URLSearchParams(location.search);
+  if (!p.get('eq')) return;
+  window.history.replaceState({}, '', location.pathname);
+
+  const eq = p.get('eq').split(',').map(Number);
+  if (eq.length === 5) eq.forEach((g,i) => { BANDS[i].gain = g; });
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+  if (p.get('thresh'))  set('thresh',   p.get('thresh'));
+  if (p.get('ratio'))   set('ratio',    p.get('ratio'));
+  if (p.get('attack'))  set('attack',   p.get('attack'));
+  if (p.get('rel'))     set('release',  p.get('rel'));
+  if (p.get('knee'))    set('knee',     p.get('knee'));
+  if (p.get('makeup'))  set('makeup',   p.get('makeup'));
+  if (p.get('drive'))   set('drive',    p.get('drive'));
+  if (p.get('ceil'))    set('ceiling',  p.get('ceil'));
+  if (p.get('out'))     set('out-gain', p.get('out'));
+
+  // satMode
+  if (p.get('sat')) {
+    satMode = p.get('sat');
+    document.querySelectorAll('.sat-mode').forEach(el => el.classList.toggle('active', el.textContent.toLowerCase().includes(satMode)));
+  }
+  showToast('🎛️ Réglages partagés chargés');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Chain is built lazily on file load, so we just parse and store params for later apply
+  const p = new URLSearchParams(location.search);
+  if (p.get('eq')) {
+    loadSharedChain();
+    // After chain build, re-apply values — override applyPreset is not needed since
+    // buildChain() reads from UI inputs via updateComp/updateSat etc.
+  }
+});
 
 // ═══════════════════════════════════════════════════
 //  INIT
