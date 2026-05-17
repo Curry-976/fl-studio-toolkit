@@ -5,39 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FL Studio — Conseils Beatmaker</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:#03050D; --bg2:#080C1A; --surface:#0D1228; --card:#0F1530;
-      --sidebar:#060A18; --panel:#0A0E20;
-      --accent:#FF6B2B;
-      --cyan:#00F0FF; --cyan2:#00C8FF; --purple:#BF5FFF; --purple2:#9B7FFF;
-      --orange:#FF6B35; --green:#00FF87; --yellow:#FFD700; --pink:#EC4899;
-      --text:#E8F0FF; --text2:rgba(180,210,255,.6); --text-muted:rgba(180,210,255,.35);
-      --muted:rgba(180,210,255,.35); --muted2:rgba(180,210,255,.18);
-      --border:rgba(0,240,255,.08); --border2:rgba(0,240,255,.15);
-      --shadow: 0 2px 24px rgba(0,240,255,.06);
-      --shadow-md: 0 6px 40px rgba(0,240,255,.1);
-      --radius: 4px;
-      --mono:'Space Mono',monospace;
-      --sidebar-w: 72px;
-    }
-
-    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; cursor:none; }
-    body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:1;
-      background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.06) 3px,rgba(0,0,0,.06) 4px); }
-    #bg-grid { position:fixed; inset:0; pointer-events:none; z-index:0;
-      background-image:linear-gradient(rgba(0,240,255,.025) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(0,240,255,.025) 1px,transparent 1px);
-      background-size:60px 60px; animation:grid-drift 20s linear infinite; }
-    @keyframes grid-drift { from{background-position:0 0;} to{background-position:60px 60px;} }
-    #c-dot { position:fixed; width:8px; height:8px; border-radius:50%; background:var(--cyan);
-      pointer-events:none; z-index:9999; transform:translate(-50%,-50%);
-      box-shadow:0 0 8px var(--cyan),0 0 16px rgba(0,240,255,.4); }
-    #c-ring { position:fixed; width:32px; height:32px; border-radius:50%;
-      border:1px solid rgba(0,240,255,.5); pointer-events:none; z-index:9998;
-      transform:translate(-50%,-50%); }
+    body { min-height: 100vh; }
     .layout { display:flex; min-height:100vh; position:relative; z-index:2; }
 
     /* ── Sidebar ── */
@@ -782,6 +752,454 @@
           <div class="fc-title">Demande du feedback</div>
           <div class="fc-text">Partage tes beats à des gens qui ne te ménageront pas. Un retour honnête accélère la progression ×5 par rapport à travailler seul.</div>
         </div>
+      </div>
+    </div>
+
+    <!-- ══ WORKFLOW — Raccourcis ══ -->
+    <div class="tip-card" data-cat="workflow" data-search="workflow raccourcis clavier shortcut productivité vitesse touches ctrl alt shift">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--orange),#FF9966);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(255,107,53,.1);">⌨️</div>
+          <div>
+            <div class="card-title">Raccourcis Indispensables</div>
+            <span class="level level-debutant"><span class="level-dot"></span>Débutant</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="292" height="72" rx="4" fill="rgba(0,0,0,.35)" stroke="rgba(255,107,53,.1)" stroke-width="1"/>
+          <g transform="translate(10,12)">
+            <rect x="0"   y="0" width="38" height="16" rx="3" fill="rgba(255,107,53,.15)" stroke="rgba(255,107,53,.35)" stroke-width="1"/>
+            <text x="19"  y="11" fill="rgba(255,107,53,.85)" font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">Ctrl+Z</text>
+            <rect x="44"  y="0" width="38" height="16" rx="3" fill="rgba(255,107,53,.15)" stroke="rgba(255,107,53,.35)" stroke-width="1"/>
+            <text x="63"  y="11" fill="rgba(255,107,53,.85)" font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">Ctrl+S</text>
+            <rect x="88"  y="0" width="50" height="16" rx="3" fill="rgba(255,107,53,.15)" stroke="rgba(255,107,53,.35)" stroke-width="1"/>
+            <text x="113" y="11" fill="rgba(255,107,53,.85)" font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">Space</text>
+            <rect x="144" y="0" width="46" height="16" rx="3" fill="rgba(255,107,53,.15)" stroke="rgba(255,107,53,.35)" stroke-width="1"/>
+            <text x="167" y="11" fill="rgba(255,107,53,.85)" font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">F5/F6</text>
+            <rect x="196" y="0" width="38" height="16" rx="3" fill="rgba(255,107,53,.15)" stroke="rgba(255,107,53,.35)" stroke-width="1"/>
+            <text x="215" y="11" fill="rgba(255,107,53,.85)" font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">F9</text>
+            <rect x="240" y="0" width="38" height="16" rx="3" fill="rgba(255,107,53,.15)" stroke="rgba(255,107,53,.35)" stroke-width="1"/>
+            <text x="259" y="11" fill="rgba(255,107,53,.85)" font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">Ctrl+R</text>
+            <text x="19"  y="26" fill="rgba(255,107,53,.4)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Annuler</text>
+            <text x="63"  y="26" fill="rgba(255,107,53,.4)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Sauver</text>
+            <text x="113" y="26" fill="rgba(255,107,53,.4)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Play/Stop</text>
+            <text x="167" y="26" fill="rgba(255,107,53,.4)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Playlist/PR</text>
+            <text x="215" y="26" fill="rgba(255,107,53,.4)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Mixer</text>
+            <text x="259" y="26" fill="rgba(255,107,53,.4)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Render</text>
+            <rect x="0"   y="34" width="60" height="16" rx="3" fill="rgba(255,107,53,.08)" stroke="rgba(255,107,53,.2)" stroke-width="1"/>
+            <text x="30"  y="45" fill="rgba(255,107,53,.7)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">Alt+clic</text>
+            <rect x="66"  y="34" width="72" height="16" rx="3" fill="rgba(255,107,53,.08)" stroke="rgba(255,107,53,.2)" stroke-width="1"/>
+            <text x="102" y="45" fill="rgba(255,107,53,.7)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">Ctrl+clic drag</text>
+            <rect x="144" y="34" width="80" height="16" rx="3" fill="rgba(255,107,53,.08)" stroke="rgba(255,107,53,.2)" stroke-width="1"/>
+            <text x="184" y="45" fill="rgba(255,107,53,.7)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">Ctrl+Shift+S</text>
+            <text x="30"  y="58" fill="rgba(255,107,53,.3)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">Reset knob</text>
+            <text x="102" y="58" fill="rgba(255,107,53,.3)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">Copier clip</text>
+            <text x="184" y="58" fill="rgba(255,107,53,.3)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">Save version</text>
+          </g>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+keyboard+shortcuts+tips+workflow+2024" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">1</div><p class="tip-text"><strong>F5/F6/F7/F8/F9</strong> : ouvre respectivement Playlist, Step Sequencer, Piano Roll, Browser, Mixer. Mémorise ces 5 touches — tu ne cliqueras plus jamais dans les menus.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">2</div><p class="tip-text"><strong>Alt+clic sur un knob</strong> : remet à zéro instantanément. <strong>Ctrl+clic drag</strong> : déplace une copie d'un clip dans la Playlist. Indispensable pour les arrangements.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">3</div><p class="tip-text"><strong>Ctrl+R</strong> : render direct sans ouvrir la boîte de dialogue si tu as déjà configuré le chemin. Utilise ça pour des exports rapides en cours de session.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span><strong>Clic molette sur un knob</strong> = entrer une valeur exacte au clavier. Pour mettre une reverb exactement à 30%, plus de tâtonnement à la souris.</span>
+      </div>
+    </div>
+
+    <!-- ══ WORKFLOW — Mixer ══ -->
+    <div class="tip-card" data-cat="workflow" data-search="workflow mixer routing bus send return channel insert organisation signal">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--orange),#FF9966);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(255,107,53,.1);">🔀</div>
+          <div>
+            <div class="card-title">Mixer &amp; Routing</div>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="292" height="72" rx="4" fill="rgba(0,0,0,.35)" stroke="rgba(255,107,53,.1)" stroke-width="1"/>
+          <!-- Channels -->
+          <rect x="12"  y="10" width="22" height="50" rx="2" fill="rgba(255,107,53,.1)" stroke="rgba(255,107,53,.25)" stroke-width=".8"/>
+          <rect x="38"  y="10" width="22" height="50" rx="2" fill="rgba(255,107,53,.1)" stroke="rgba(255,107,53,.25)" stroke-width=".8"/>
+          <rect x="64"  y="10" width="22" height="50" rx="2" fill="rgba(255,107,53,.1)" stroke="rgba(255,107,53,.25)" stroke-width=".8"/>
+          <rect x="90"  y="10" width="22" height="50" rx="2" fill="rgba(255,107,53,.1)" stroke="rgba(255,107,53,.25)" stroke-width=".8"/>
+          <!-- Faders -->
+          <rect x="20"  y="22" width="6" height="30" rx="2" fill="rgba(0,0,0,.4)"/>
+          <rect x="19"  y="36" width="8" height="5"  rx="1" fill="rgba(255,107,53,.8)"/>
+          <rect x="46"  y="22" width="6" height="30" rx="2" fill="rgba(0,0,0,.4)"/>
+          <rect x="45"  y="30" width="8" height="5"  rx="1" fill="rgba(255,107,53,.8)"/>
+          <rect x="72"  y="22" width="6" height="30" rx="2" fill="rgba(0,0,0,.4)"/>
+          <rect x="71"  y="38" width="8" height="5"  rx="1" fill="rgba(255,107,53,.8)"/>
+          <rect x="98"  y="22" width="6" height="30" rx="2" fill="rgba(0,0,0,.4)"/>
+          <rect x="97"  y="34" width="8" height="5"  rx="1" fill="rgba(255,107,53,.8)"/>
+          <text x="23"  y="68" fill="rgba(255,107,53,.45)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">KCK</text>
+          <text x="49"  y="68" fill="rgba(255,107,53,.45)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">SNR</text>
+          <text x="75"  y="68" fill="rgba(255,107,53,.45)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">808</text>
+          <text x="101" y="68" fill="rgba(255,107,53,.45)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">HAT</text>
+          <!-- Arrow to bus -->
+          <path d="M120 35 L148 35" stroke="rgba(255,107,53,.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+          <polygon points="146,32 152,35 146,38" fill="rgba(255,107,53,.6)"/>
+          <!-- Bus -->
+          <rect x="154" y="14" width="30" height="46" rx="3" fill="rgba(255,107,53,.18)" stroke="rgba(255,107,53,.45)" stroke-width="1"/>
+          <rect x="162"  y="22" width="8" height="30" rx="2" fill="rgba(0,0,0,.4)"/>
+          <rect x="161"  y="32" width="10" height="5" rx="1" fill="rgba(255,107,53,.9)"/>
+          <text x="169"  y="68" fill="rgba(255,107,53,.6)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">BUS</text>
+          <!-- Arrow to master -->
+          <path d="M186 35 L214 35" stroke="rgba(255,107,53,.4)" stroke-width="1.5"/>
+          <polygon points="212,32 218,35 212,38" fill="rgba(255,107,53,.5)"/>
+          <!-- Master -->
+          <rect x="220" y="8" width="34" height="54" rx="3" fill="rgba(255,107,53,.22)" stroke="rgba(255,107,53,.55)" stroke-width="1.2"/>
+          <rect x="229" y="16" width="9" height="36" rx="2" fill="rgba(0,0,0,.4)"/>
+          <rect x="228" y="28" width="11" height="6"  rx="1" fill="rgba(255,255,255,.9)"/>
+          <text x="237" y="70" fill="rgba(255,107,53,.7)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">MASTER</text>
+          <!-- Send label -->
+          <text x="140" y="28" fill="rgba(255,107,53,.3)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">send</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+mixer+routing+bus+send+return+tutorial" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">1</div><p class="tip-text"><strong>Un canal Mixer par instrument</strong> : assigne chaque instrument à son propre canal Insert dans le Mixer (clic droit sur le nom → "Assign to mixer"). Ne mets jamais tout sur le Master.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">2</div><p class="tip-text"><strong>Bus drums, bus mélodies, bus voix</strong> : regroupe tes canaux par famille, route-les vers un bus commun. Tu peux compresser et EQ tout un groupe d'un seul coup.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">3</div><p class="tip-text"><strong>Send/Return pour la reverb et le delay</strong> : crée un canal dédié "Reverb Bus", envoie-y tes instruments avec le bouton send. Économise du CPU et garde un espace cohérent.</p></div>
+      </div>
+    </div>
+
+    <!-- ══ DRUMS — Groove & Swing ══ -->
+    <div class="tip-card" data-cat="drums" data-search="drums groove swing humanize quantize timing micro-timing feel human shuffle">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--green),#65A30D);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(132,204,22,.1);">🎵</div>
+          <div>
+            <div class="card-title">Groove &amp; Swing</div>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="292" height="34" rx="3" fill="rgba(0,0,0,.3)" stroke="rgba(132,204,22,.1)" stroke-width="1"/>
+          <text x="10" y="15" fill="rgba(132,204,22,.4)" font-size="6" font-family="Inter,sans-serif" font-weight="600">QUANTIZE 100%</text>
+          <rect x="10" y="19" width="10" height="14" rx="1" fill="rgba(132,204,22,.7)"/>
+          <rect x="46" y="19" width="10" height="14" rx="1" fill="rgba(132,204,22,.5)"/>
+          <rect x="82" y="19" width="10" height="14" rx="1" fill="rgba(132,204,22,.7)"/>
+          <rect x="118" y="19" width="10" height="14" rx="1" fill="rgba(132,204,22,.5)"/>
+          <rect x="154" y="19" width="10" height="14" rx="1" fill="rgba(132,204,22,.7)"/>
+          <rect x="190" y="19" width="10" height="14" rx="1" fill="rgba(132,204,22,.5)"/>
+          <rect x="226" y="19" width="10" height="14" rx="1" fill="rgba(132,204,22,.7)"/>
+          <rect x="262" y="19" width="10" height="14" rx="1" fill="rgba(132,204,22,.5)"/>
+          <rect x="4" y="44" width="292" height="34" rx="3" fill="rgba(0,0,0,.3)" stroke="rgba(132,204,22,.15)" stroke-width="1"/>
+          <text x="10" y="55" fill="rgba(132,204,22,.5)" font-size="6" font-family="Inter,sans-serif" font-weight="600">SWING 60% — feel vivant</text>
+          <rect x="10"  y="59" width="10" height="14" rx="1" fill="rgba(132,204,22,.7)"/>
+          <rect x="50"  y="59" width="10" height="14" rx="1" fill="rgba(132,204,22,.5)"/>
+          <rect x="85"  y="59" width="10" height="14" rx="1" fill="rgba(132,204,22,.7)"/>
+          <rect x="125" y="59" width="10" height="14" rx="1" fill="rgba(132,204,22,.5)"/>
+          <rect x="160" y="59" width="10" height="14" rx="1" fill="rgba(132,204,22,.7)"/>
+          <rect x="200" y="59" width="10" height="14" rx="1" fill="rgba(132,204,22,.5)"/>
+          <rect x="235" y="59" width="10" height="14" rx="1" fill="rgba(132,204,22,.7)"/>
+          <rect x="275" y="59" width="10" height="14" rx="1" fill="rgba(132,204,22,.5)"/>
+          <text x="33" y="76" fill="rgba(132,204,22,.3)" font-size="5" font-family="Inter,sans-serif">+4ms</text>
+          <text x="108" y="76" fill="rgba(132,204,22,.3)" font-size="5" font-family="Inter,sans-serif">+4ms</text>
+          <text x="183" y="76" fill="rgba(132,204,22,.3)" font-size="5" font-family="Inter,sans-serif">+4ms</text>
+          <text x="258" y="76" fill="rgba(132,204,22,.3)" font-size="5" font-family="Inter,sans-serif">+4ms</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+groove+swing+humanize+drums+feel+tutorial" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">1</div><p class="tip-text"><strong>Swing dans le Step Sequencer</strong> : le bouton "Swing" dans la toolbar du Beat+Bassline décale les temps pairs (+4 à +12ms). Commence à 55–65% pour un feel naturel sans trop de sway.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">2</div><p class="tip-text"><strong>Micro-décalages manuels dans le Piano Roll</strong> : avance le snare de 5–10ms par rapport à la grille. Le snare "late" sonne plus lourd et plus humain que sur le temps exact.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">3</div><p class="tip-text"><strong>Vélocités aléatoires</strong> : sélectionne toutes les hats dans le Piano Roll → clic droit → "Randomize" → vélocité ±15. Un hat identique à 100% sur toute la mesure sonne synthétique.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Importe le groove d'un sample existant via <strong>Piano Roll → Stamp → Groove</strong>. Le timing d'une boucle MPC s'applique sur tes drums programmés en un clic.</span>
+      </div>
+    </div>
+
+    <!-- ══ MELODY — Accords ══ -->
+    <div class="tip-card" data-cat="melody" data-search="mélodie accords progressions harmonies ii V I jazz trap minor major chords voicing">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--purple),#6366F1);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(139,127,255,.1);">🎼</div>
+          <div>
+            <div class="card-title">Progressions d'Accords</div>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="292" height="72" rx="4" fill="rgba(0,0,0,.3)" stroke="rgba(139,127,255,.1)" stroke-width="1"/>
+          <text x="10" y="15" fill="rgba(139,127,255,.4)" font-size="6" font-family="Inter,sans-serif" font-weight="600">PROGRESSIONS ESSENTIELLES</text>
+          <!-- i–VI–III–VII -->
+          <rect x="10" y="20" width="38" height="16" rx="2" fill="rgba(139,127,255,.2)" stroke="rgba(139,127,255,.4)" stroke-width="1"/>
+          <rect x="52" y="20" width="38" height="16" rx="2" fill="rgba(139,127,255,.15)" stroke="rgba(139,127,255,.3)" stroke-width="1"/>
+          <rect x="94" y="20" width="38" height="16" rx="2" fill="rgba(139,127,255,.15)" stroke="rgba(139,127,255,.3)" stroke-width="1"/>
+          <rect x="136" y="20" width="38" height="16" rx="2" fill="rgba(139,127,255,.15)" stroke="rgba(139,127,255,.3)" stroke-width="1"/>
+          <text x="29"  y="31" fill="rgba(139,127,255,.9)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">Am</text>
+          <text x="71"  y="31" fill="rgba(139,127,255,.7)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">F</text>
+          <text x="113" y="31" fill="rgba(139,127,255,.7)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">C</text>
+          <text x="155" y="31" fill="rgba(139,127,255,.7)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">G</text>
+          <text x="90"  y="14" fill="rgba(139,127,255,.3)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">i — VI — III — VII (trap mélancolique)</text>
+          <!-- ii–V–I -->
+          <rect x="10"  y="44" width="38" height="16" rx="2" fill="rgba(139,127,255,.15)" stroke="rgba(139,127,255,.3)" stroke-width="1"/>
+          <rect x="52"  y="44" width="38" height="16" rx="2" fill="rgba(139,127,255,.15)" stroke="rgba(139,127,255,.3)" stroke-width="1"/>
+          <rect x="94"  y="44" width="38" height="16" rx="2" fill="rgba(139,127,255,.2)"  stroke="rgba(139,127,255,.4)" stroke-width="1"/>
+          <text x="29"  y="55" fill="rgba(139,127,255,.7)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">Dm</text>
+          <text x="71"  y="55" fill="rgba(139,127,255,.7)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">G7</text>
+          <text x="113" y="55" fill="rgba(139,127,255,.9)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">C</text>
+          <text x="78"  y="38" fill="rgba(139,127,255,.3)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">ii — V — I (résolution jazz/soul)</text>
+          <!-- voicing tip -->
+          <rect x="182" y="20" width="108" height="56" rx="3" fill="rgba(139,127,255,.06)" stroke="rgba(139,127,255,.15)" stroke-width="1"/>
+          <text x="236" y="31" fill="rgba(139,127,255,.45)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">VOICING</text>
+          <text x="236" y="42" fill="rgba(139,127,255,.3)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Spread = espace</text>
+          <text x="236" y="52" fill="rgba(139,127,255,.3)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Inversion = mouvement</text>
+          <text x="236" y="62" fill="rgba(139,127,255,.3)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">7e = émotion</text>
+          <text x="236" y="72" fill="rgba(139,127,255,.25)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">9e = modernité</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+chord+progressions+trap+melody+piano+roll+tutorial" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">1</div><p class="tip-text"><strong>i–VI–III–VII en mineur</strong> (ex: Am–F–C–G) : la progression trap/R&amp;B par excellence. Elle fonctionne à 95% des BPMs et avec n'importe quelle gamme mineure.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">2</div><p class="tip-text"><strong>Ajoute des 7e et 9e</strong> : transforme Dm en Dm7 (D–F–A–C). Ces extensions ajoutent de la profondeur émotionnelle sans complexifier la progression.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">3</div><p class="tip-text"><strong>Inversions d'accords</strong> : joue l'accord avec la tierce en basse au lieu de la fondamentale. Le mouvement mélodique entre les accords devient plus fluide et professionnel.</p></div>
+      </div>
+    </div>
+
+    <!-- ══ MELODY — Sampling ══ -->
+    <div class="tip-card" data-cat="melody" data-search="sampling sample chop vocal slice edison pitch shift harvest loop sample pack">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--purple),#6366F1);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(139,127,255,.1);">✂️</div>
+          <div>
+            <div class="card-title">Sampling &amp; Vocal Chops</div>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="292" height="72" rx="4" fill="rgba(0,0,0,.3)" stroke="rgba(139,127,255,.1)" stroke-width="1"/>
+          <text x="10" y="15" fill="rgba(139,127,255,.4)" font-size="6" font-family="Inter,sans-serif" font-weight="600">EDISON — Découpe du sample</text>
+          <!-- Waveform -->
+          <path d="M8 42 Q20 38 28 25 Q32 15 36 30 Q40 44 44 38 Q52 28 56 42 Q60 55 64 42 Q68 30 72 38 Q76 46 80 38 Q88 28 96 42 Q100 55 104 42 Q108 30 112 36 Q116 42 120 35 Q128 20 136 35 Q140 48 144 38 Q148 30 152 42 Q156 52 160 42 Q168 28 176 38 Q180 48 184 42 Q188 36 192 42 Q200 55 204 42 Q208 30 212 38 Q216 46 220 42 Q228 35 236 42 Q240 48 244 42 Q252 35 256 42 Q260 48 264 42" fill="none" stroke="rgba(139,127,255,.5)" stroke-width="1.5"/>
+          <!-- Slice markers -->
+          <line x1="56"  y1="14" x2="56"  y2="66" stroke="rgba(139,127,255,.7)" stroke-width="1" stroke-dasharray="3,2"/>
+          <line x1="120" y1="14" x2="120" y2="66" stroke="rgba(139,127,255,.7)" stroke-width="1" stroke-dasharray="3,2"/>
+          <line x1="184" y1="14" x2="184" y2="66" stroke="rgba(139,127,255,.7)" stroke-width="1" stroke-dasharray="3,2"/>
+          <!-- Chops -->
+          <rect x="8"   y="58" width="44" height="8" rx="1" fill="rgba(139,127,255,.3)" stroke="rgba(139,127,255,.4)" stroke-width=".6"/>
+          <rect x="60"  y="58" width="56" height="8" rx="1" fill="rgba(139,127,255,.25)" stroke="rgba(139,127,255,.35)" stroke-width=".6"/>
+          <rect x="124" y="58" width="56" height="8" rx="1" fill="rgba(139,127,255,.3)" stroke="rgba(139,127,255,.4)" stroke-width=".6"/>
+          <rect x="188" y="58" width="76" height="8" rx="1" fill="rgba(139,127,255,.2)" stroke="rgba(139,127,255,.3)" stroke-width=".6"/>
+          <text x="30"  y="64" fill="rgba(139,127,255,.7)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">C3</text>
+          <text x="88"  y="64" fill="rgba(139,127,255,.7)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">D3</text>
+          <text x="152" y="64" fill="rgba(139,127,255,.7)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">E3</text>
+          <text x="226" y="64" fill="rgba(139,127,255,.7)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">F3</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+sampling+vocal+chop+Edison+slice+tutorial" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">1</div><p class="tip-text"><strong>Edison → chop auto</strong> : ouvre ton sample dans Edison, clic droit → "Detect beats" → "Send all regions to playlist". Chaque découpe devient un sample jouable sur le piano roll.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">2</div><p class="tip-text"><strong>Détection du pitch</strong> : dans les propriétés du sample (Channel Rack), active "Pitch Correction" et entre la note de base. Le sample se joue toujours dans la bonne tonalité.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">3</div><p class="tip-text"><strong>Reverse + reverb = atmosphère</strong> : retourne un vocal dans Edison (Ctrl+R), ajoute beaucoup de reverb, place-le avant le beat original. Technique signature d'A$AP Rocky / Travis Scott.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Enregistre un "ghost sample" : chante une mélodie simple dans Edison, dégrade-la avec de la bitcrushing et utilise-la comme pad de fond. Personne n'identifiera la source, mais ça sonne unique.</span>
+      </div>
+    </div>
+
+    <!-- ══ MIXING — Compression ══ -->
+    <div class="tip-card" data-cat="mixing" data-search="mixage compression compresseur attack release ratio threshold transient punch glue">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--cyan),#0369A1);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(14,165,233,.1);">📊</div>
+          <div>
+            <div class="card-title">Compression Efficace</div>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="292" height="72" rx="4" fill="rgba(0,0,0,.35)" stroke="rgba(0,200,255,.08)" stroke-width="1"/>
+          <!-- Signal before -->
+          <text x="10" y="15" fill="rgba(0,200,255,.4)" font-size="6" font-family="Inter,sans-serif" font-weight="600">AVANT COMPRESSION</text>
+          <rect x="10" y="20" width="8"  height="34" rx="1" fill="rgba(0,200,255,.7)"/>
+          <rect x="20" y="28" width="8"  height="26" rx="1" fill="rgba(0,200,255,.55)"/>
+          <rect x="30" y="18" width="8"  height="36" rx="1" fill="rgba(0,200,255,.8)"/>
+          <rect x="40" y="24" width="8"  height="30" rx="1" fill="rgba(0,200,255,.5)"/>
+          <rect x="50" y="12" width="8"  height="42" rx="1" fill="rgba(255,100,100,.85)"/>
+          <rect x="60" y="26" width="8"  height="28" rx="1" fill="rgba(0,200,255,.55)"/>
+          <rect x="70" y="22" width="8"  height="32" rx="1" fill="rgba(0,200,255,.65)"/>
+          <line x1="10" y1="20" x2="82" y2="20" stroke="rgba(255,100,100,.5)" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="86" y="23" fill="rgba(255,100,100,.5)" font-size="5.5" font-family="Inter,sans-serif">Threshold</text>
+          <!-- Arrow -->
+          <text x="143" y="38" fill="rgba(0,200,255,.4)" font-size="18" font-family="sans-serif">→</text>
+          <!-- Signal after -->
+          <text x="168" y="15" fill="rgba(0,200,255,.4)" font-size="6" font-family="Inter,sans-serif" font-weight="600">APRÈS (4:1 ratio)</text>
+          <rect x="168" y="24" width="8"  height="30" rx="1" fill="rgba(0,200,255,.7)"/>
+          <rect x="178" y="28" width="8"  height="26" rx="1" fill="rgba(0,200,255,.55)"/>
+          <rect x="188" y="22" width="8"  height="32" rx="1" fill="rgba(0,200,255,.8)"/>
+          <rect x="198" y="26" width="8"  height="28" rx="1" fill="rgba(0,200,255,.5)"/>
+          <rect x="208" y="20" width="8"  height="34" rx="1" fill="rgba(0,200,255,.65)"/>
+          <rect x="218" y="28" width="8"  height="26" rx="1" fill="rgba(0,200,255,.55)"/>
+          <rect x="228" y="24" width="8"  height="30" rx="1" fill="rgba(0,200,255,.65)"/>
+          <line x1="168" y1="20" x2="240" y2="20" stroke="rgba(0,200,255,.2)" stroke-width="1" stroke-dasharray="3,2"/>
+          <!-- Settings hint -->
+          <rect x="248" y="14" width="44" height="60" rx="3" fill="rgba(0,200,255,.06)" stroke="rgba(0,200,255,.12)" stroke-width="1"/>
+          <text x="270" y="24" fill="rgba(0,200,255,.45)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">Kick</text>
+          <text x="270" y="34" fill="rgba(0,200,255,.3)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">Att: 5ms</text>
+          <text x="270" y="43" fill="rgba(0,200,255,.3)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">Rel: 80ms</text>
+          <text x="270" y="52" fill="rgba(0,200,255,.3)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">Ratio: 4:1</text>
+          <text x="270" y="61" fill="rgba(0,200,255,.3)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">MakeUp +3</text>
+          <text x="270" y="70" fill="rgba(0,200,255,.25)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">GR: 3–5dB</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+compression+tutorial+attack+release+ratio+beatmaking" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(14,165,233,.1);color:#0369A1;">1</div><p class="tip-text"><strong>Attack = transient, Release = groove.</strong> Attack lente (10–30ms) laisse passer le punch du kick. Release rapide (50–100ms) pompe avec le beat. Tu contrôles l'énergie, pas juste le volume.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(14,165,233,.1);color:#0369A1;">2</div><p class="tip-text"><strong>Ratio 2:1 à 4:1</strong> pour du "glue" sur tes bus drums : ton bus drums compressé avec un ratio léger colle tous les éléments ensemble et sonne comme un kit cohérent.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(14,165,233,.1);color:#0369A1;">3</div><p class="tip-text"><strong>Vise 3–5 dB de Gain Reduction</strong> : si ton VU-mètre de GR descend plus bas, tu sur-compresses. Le son perd sa dynamique et devient fatigant à l'oreille après 30 secondes.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span><strong>Parallel compression (New York style)</strong> : duplique le bus drums, compresse fort l'un, laisse l'autre à l'état brut, mélange 30/70. Punch + dynamique sans compromis.</span>
+      </div>
+    </div>
+
+    <!-- ══ PRODUCTION — Reverb & Espace ══ -->
+    <div class="tip-card" data-cat="production" data-search="production reverb delay espace profondeur wet dry room hall spring ambiance 3D stéréo">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--yellow),#D97706);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(245,158,11,.1);">🌊</div>
+          <div>
+            <div class="card-title">Reverb &amp; Profondeur</div>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="292" height="72" rx="4" fill="rgba(0,0,0,.3)" stroke="rgba(245,158,11,.1)" stroke-width="1"/>
+          <!-- Depth diagram -->
+          <text x="150" y="14" fill="rgba(245,158,11,.4)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">PLAN SONORE</text>
+          <!-- Foreground (dry) -->
+          <ellipse cx="150" cy="55" rx="90" ry="18" fill="rgba(245,158,11,.05)" stroke="rgba(245,158,11,.4)" stroke-width="1.2"/>
+          <text x="150" y="58" fill="rgba(245,158,11,.6)" font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">KICK · 808 · VOCALS (dry)</text>
+          <!-- Mid -->
+          <ellipse cx="150" cy="45" rx="70" ry="14" fill="rgba(245,158,11,.04)" stroke="rgba(245,158,11,.3)" stroke-width="1"/>
+          <text x="150" y="48" fill="rgba(245,158,11,.45)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle">MÉLODIES (short reverb)</text>
+          <!-- Background -->
+          <ellipse cx="150" cy="35" rx="50" ry="10" fill="rgba(245,158,11,.03)" stroke="rgba(245,158,11,.2)" stroke-width="1"/>
+          <text x="150" y="38" fill="rgba(245,158,11,.35)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">PADS (long reverb)</text>
+          <!-- Ambient -->
+          <ellipse cx="150" cy="26" rx="30" ry="7" fill="rgba(245,158,11,.02)" stroke="rgba(245,158,11,.12)" stroke-width="1"/>
+          <text x="150" y="29" fill="rgba(245,158,11,.25)" font-size="5" font-family="Inter,sans-serif" text-anchor="middle">ATMOS (très wet)</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+reverb+delay+depth+mixing+tutorial+beatmaker" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(245,158,11,.1);color:#92400E;">1</div><p class="tip-text"><strong>Kick et 808 = toujours dry</strong> : pas de reverb sur le kick ou le sub. La reverb dans les basses pollue le spectre et détruit le punch. Ce qui est en avant reste sec.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(245,158,11,.1);color:#92400E;">2</div><p class="tip-text"><strong>Pre-delay de 20–40ms</strong> : le signal arrive à l'oreille avant sa reverb. Cela garde la présence de l'instrument tout en créant de la profondeur. Essentiel sur les voix.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(245,158,11,.1);color:#92400E;">3</div><p class="tip-text"><strong>Delay à la place de la reverb</strong> : un delay quart de temps synchronisé au BPM (ex: 1/4 à 120 BPM = 500ms) donne de l'espace sans noyer le son dans le brouillard.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span><strong>HPF à 200Hz sur le bus reverb</strong> : coupe les basses de ta reverb. Sans ça, les queues de reverb accumulent de l'énergie grave qui bouche le mix. Un EQ sur le return reverb règle le problème.</span>
+      </div>
+    </div>
+
+    <!-- ══ SOUND DESIGN — Resampling ══ -->
+    <div class="tip-card" data-cat="sound" data-search="sound design resampling bounce audio export stem render layer Edison récupérer bus">
+      <div class="card-strip" style="background:linear-gradient(90deg,var(--pink),#BE185D);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(236,72,153,.1);">🔁</div>
+          <div>
+            <div class="card-title">Resampling</div>
+            <span class="level level-avance"><span class="level-dot"></span>Avancé</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <rect x="4" y="4" width="292" height="72" rx="4" fill="rgba(0,0,0,.3)" stroke="rgba(236,72,153,.1)" stroke-width="1"/>
+          <!-- Step 1 -->
+          <rect x="10" y="14" width="54" height="24" rx="3" fill="rgba(236,72,153,.12)" stroke="rgba(236,72,153,.35)" stroke-width="1"/>
+          <text x="37" y="25" fill="rgba(236,72,153,.7)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">SYNTH</text>
+          <text x="37" y="34" fill="rgba(236,72,153,.4)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">+ effets</text>
+          <!-- Arrow -->
+          <polygon points="66,26 74,23 74,29" fill="rgba(236,72,153,.5)"/>
+          <line x1="64" y1="26" x2="74" y2="26" stroke="rgba(236,72,153,.4)" stroke-width="1.2"/>
+          <!-- Step 2 -->
+          <rect x="76" y="14" width="60" height="24" rx="3" fill="rgba(236,72,153,.12)" stroke="rgba(236,72,153,.35)" stroke-width="1"/>
+          <text x="106" y="25" fill="rgba(236,72,153,.7)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">BOUNCE</text>
+          <text x="106" y="34" fill="rgba(236,72,153,.4)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Edison / Export</text>
+          <!-- Arrow -->
+          <polygon points="138,26 146,23 146,29" fill="rgba(236,72,153,.5)"/>
+          <line x1="136" y1="26" x2="146" y2="26" stroke="rgba(236,72,153,.4)" stroke-width="1.2"/>
+          <!-- Step 3 -->
+          <rect x="148" y="14" width="60" height="24" rx="3" fill="rgba(236,72,153,.18)" stroke="rgba(236,72,153,.5)" stroke-width="1.2"/>
+          <text x="178" y="25" fill="rgba(236,72,153,.85)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">SAMPLE</text>
+          <text x="178" y="34" fill="rgba(236,72,153,.5)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">audio brut</text>
+          <!-- Arrow -->
+          <polygon points="210,26 218,23 218,29" fill="rgba(236,72,153,.5)"/>
+          <line x1="208" y1="26" x2="218" y2="26" stroke="rgba(236,72,153,.4)" stroke-width="1.2"/>
+          <!-- Step 4 -->
+          <rect x="220" y="14" width="72" height="24" rx="3" fill="rgba(236,72,153,.12)" stroke="rgba(236,72,153,.35)" stroke-width="1"/>
+          <text x="256" y="25" fill="rgba(236,72,153,.7)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">GRANULAIRE</text>
+          <text x="256" y="34" fill="rgba(236,72,153,.4)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Pitcher · Chop</text>
+          <!-- Below: CPU tip -->
+          <rect x="10" y="46" width="280" height="24" rx="3" fill="rgba(236,72,153,.05)" stroke="rgba(236,72,153,.12)" stroke-width="1"/>
+          <text x="150" y="57" fill="rgba(236,72,153,.45)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">Avantage : zéro CPU · timestretching libre · aucune latence plugin</text>
+          <text x="150" y="66" fill="rgba(236,72,153,.3)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">Bounce avant mastering = session plus légère + export plus propre</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=FL+Studio+resampling+bounce+audio+Edison+sound+design+tutorial" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#9D174D;">1</div><p class="tip-text"><strong>Bouncer = libérer du CPU</strong> : une fois ton pad ou ton synth finalisé, exporte-le en audio dans Edison. Tu économises la puissance CPU du plugin tout en gardant le son identique.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#9D174D;">2</div><p class="tip-text"><strong>Timestretching libre</strong> : un sample audio bouncé peut être étiré sans toucher au pitch. Dans le Channel Rack, active "Stretch" et change le tempo du clip indépendamment du projet.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#9D174D;">3</div><p class="tip-text"><strong>Resample → chop granulaire</strong> : bounce ton pad, découpe-le en micro-tranches dans Edison (10–50ms), remets chaque tranche sur une touche du piano. Tu crées un instrument granulaire custom.</p></div>
       </div>
     </div>
 
