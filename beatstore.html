@@ -1775,6 +1775,8 @@ async function connectStripe() {
   const params = new URLSearchParams(window.location.search);
   const payment = params.get('payment');
   const stripe  = params.get('stripe');
+  // Ne pas nettoyer l'URL si c'est un retour OAuth (code=) — checkAuth en a besoin
+  if (params.get('code')) return;
 
   // Nettoie l'URL
   const clean = window.location.pathname;
