@@ -1332,36 +1332,57 @@ async function checkAuth() {
 
   const STORAGE_KEY = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
 
-  // ── 1. Retour OAuth Google : parse le hash de l'URL manuellement
-  // (le SDK est bloqué par navigator.locks et ne peut pas le faire)
-  if (location.hash && location.hash.includes('access_token')) {
+  // ── 1. Retour OAuth Google : échange le code PKCE manuellement
+  const urlParams = new URLSearchParams(location.search);
+  const oauthCode = urlParams.get('code');
+
+  // Cas implicit (hash) — au cas où
+  const hashParams = new URLSearchParams(location.hash.slice(1));
+  const hashToken  = hashParams.get('access_token');
+
+  if (oauthCode || hashToken) {
     try {
-      const params = new URLSearchParams(location.hash.slice(1));
-      const access_token  = params.get('access_token');
-      const refresh_token = params.get('refresh_token');
-      const expires_in    = parseInt(params.get('expires_in') || '3600');
-      if (access_token) {
-        // Récupère le user depuis l'API auth
-        const resp = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      let access_token, refresh_token, expires_in, user;
+
+      if (oauthCode) {
+        // PKCE : échange code + verifier contre les tokens
+        const codeVerifier = localStorage.getItem('supabase_pkce_verifier');
+        localStorage.removeItem('supabase_pkce_verifier');
+        const resp = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=pkce`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON },
+          body: JSON.stringify({ auth_code: oauthCode, code_verifier: codeVerifier })
+        });
+        const data = await resp.json();
+        if (data.error) throw new Error(data.error_description || data.error);
+        access_token  = data.access_token;
+        refresh_token = data.refresh_token;
+        expires_in    = data.expires_in || 3600;
+        user          = data.user;
+      } else {
+        // Implicit : token direct dans le hash
+        access_token  = hashToken;
+        refresh_token = hashParams.get('refresh_token');
+        expires_in    = parseInt(hashParams.get('expires_in') || '3600');
+        const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
           headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${access_token}` }
         });
-        const user = await resp.json();
-        if (user?.id) {
-          // Stocke la session en localStorage
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({
-            access_token, refresh_token,
-            expires_at: Math.floor(Date.now() / 1000) + expires_in,
-            user
-          }));
-          // Nettoie le hash de l'URL
-          history.replaceState(null, '', location.pathname + location.search);
-          console.log('[Auth] OAuth Google capté manuellement:', user.email);
-          await onAuthChange(user);
-          return; // session établie, pas besoin d'aller plus loin
-        }
+        user = await r.json();
+      }
+
+      if (user?.id) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          access_token, refresh_token,
+          expires_at: Math.floor(Date.now() / 1000) + expires_in,
+          user
+        }));
+        history.replaceState(null, '', location.pathname);
+        console.log('[Auth] OAuth Google OK:', user.email);
+        await onAuthChange(user);
+        return;
       }
     } catch(e) {
-      console.warn('[Auth] Parse hash OAuth échoué:', e.message);
+      console.warn('[Auth] Échange OAuth échoué:', e.message);
     }
   }
 
@@ -1542,11 +1563,29 @@ async function doSignup() {
   else { okEl.textContent = '✓ Compte créé ! Vérifie ton email pour confirmer.'; okEl.className += ' show'; }
 }
 
-function doLoginGoogle() {
-  // Bypass SDK — construit l'URL OAuth directement avec flow_type=implicit
-  // pour recevoir #access_token dans le hash au retour (pas de PKCE ?code=)
+async function doLoginGoogle() {
+  // PKCE manuel — bypass total du SDK (navigator.locks cassé)
+  // 1. Génère code_verifier (random 64 bytes → base64url)
+  const array = new Uint8Array(64);
+  crypto.getRandomValues(array);
+  const codeVerifier = btoa(String.fromCharCode(...array))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+  // 2. code_challenge = SHA-256(code_verifier) → base64url
+  const msgBuffer = new TextEncoder().encode(codeVerifier);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const codeChallenge = btoa(String.fromCharCode(...new Uint8Array(hashBuffer)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+  // 3. Stocke le verifier pour l'échange au retour
+  localStorage.setItem('supabase_pkce_verifier', codeVerifier);
+
+  // 4. Redirige vers Supabase OAuth
   const redirectTo = encodeURIComponent('https://mayanabeat.fr/beatstore.html');
-  const url = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${redirectTo}&flow_type=implicit`;
+  const url = `${SUPABASE_URL}/auth/v1/authorize?provider=google` +
+    `&redirect_to=${redirectTo}` +
+    `&code_challenge=${codeChallenge}` +
+    `&code_challenge_method=s256`;
   window.location.href = url;
 }
 
