@@ -719,7 +719,8 @@ async function init() {
 
   // Show upload link if logged in
   if (currentUser) {
-    document.getElementById('sb-upload').style.display = 'flex';
+    const sbUpload = document.getElementById('sb-upload');
+    if (sbUpload) sbUpload.style.display = 'flex';
   }
 
   let producer = null;
