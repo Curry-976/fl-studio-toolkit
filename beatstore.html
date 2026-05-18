@@ -811,9 +811,15 @@
     <!-- Drop zone audio -->
     <div class="form-group full" style="margin-bottom:16px;">
       <div class="form-label">Fichier audio (WAV ou MP3) *</div>
-      <div class="drop-zone" id="drop-audio" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event,'audio')">
+      <input type="file" id="upload-audio-input" accept=".mp3,.wav,.flac,.ogg,audio/*" style="display:none" onchange="pickAudioFile(this.files)">
+      <div class="drop-zone" id="drop-audio"
+        onclick="document.getElementById('upload-audio-input').click()"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="handleDrop(event,'audio')"
+        style="cursor:pointer;">
         <div class="drop-icon">🎵</div>
-        <div class="drop-text">Glisse ton fichier ici ou <span style="color:var(--cyan);">parcourir</span></div>
+        <div class="drop-text">Glisse ton fichier ici ou <span style="color:var(--cyan);text-decoration:underline;">parcourir</span></div>
         <div class="drop-sub">WAV, MP3 — max 100 MB</div>
         <div id="audio-name" style="font-family:var(--mono);font-size:10px;color:var(--cyan);margin-top:4px;"></div>
       </div>
@@ -1616,6 +1622,12 @@ function onSellClick() {
 // ══════════════════════════════════════════════════════════════
 
 let uploadedAudioFile = null;
+
+function pickAudioFile(files) {
+  if (!files || files.length === 0) return;
+  uploadedAudioFile = files[0];
+  document.getElementById('audio-name').textContent = '✓ ' + files[0].name;
+}
 
 // Override handleDrop pour stocker le fichier
 function handleDrop(e, type) {
