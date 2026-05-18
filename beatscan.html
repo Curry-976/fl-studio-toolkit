@@ -2031,9 +2031,10 @@ async function fetchSuggestions(query) {
     // Abort if input changed while we were fetching
     if ((document.getElementById('search-title')?.value || '').trim() !== query) return;
 
+    console.log('[BeatScan API response]', JSON.stringify(data));
     const songs = extractSongs(data);
     if (!songs || songs.length === 0) {
-      dd.innerHTML = `<div class="dropdown-empty">Aucun résultat pour « ${query} »</div>`;
+      dd.innerHTML = `<div class="dropdown-empty">Aucun résultat pour « ${query} »<br><small style="opacity:.5;font-size:9px;">Structure: ${Object.keys(data||{}).join(', ')}</small></div>`;
       return;
     }
 
