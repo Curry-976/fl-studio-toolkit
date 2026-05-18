@@ -1870,8 +1870,9 @@ showState('drop');
 //  GETSONGKEY / GETSONGBPM API — SEARCH MODE
 // ═══════════════════════════════════════════════════════════
 
-// ⚠️  Remplace par ta clé gratuite obtenue sur getsongbpm.com/api
-const GETSONG_API_KEY = '134a169c438523287e75ddaf66268b22';
+// Appels via Supabase Edge Function proxy (évite le blocage CORS)
+// La clé API GetSongBPM est stockée côté serveur dans les secrets Supabase
+const GETSONG_PROXY = 'https://fjwftrucqerwshhpmezl.supabase.co/functions/v1/getsong-proxy';
 
 function switchMode(mode) {
   currentMode = mode;
@@ -1947,13 +1948,6 @@ async function searchSong() {
   const title = (document.getElementById('search-title').value || '').trim();
   if (!title) { showToast('✏️ Saisis un titre de chanson'); return; }
 
-  if (GETSONG_API_KEY === 'YOUR_API_KEY_HERE') {
-    document.getElementById('search-error').textContent =
-      '⚠️ Clé API non configurée. Obtiens ta clé gratuite sur getsongbpm.com/api et remplace YOUR_API_KEY_HERE dans le code.';
-    document.getElementById('search-error').style.display = 'block';
-    return;
-  }
-
   const artist = (document.getElementById('search-artist').value || '').trim();
   const lookup = artist ? `${title} ${artist}` : title;
 
@@ -1966,7 +1960,7 @@ async function searchSong() {
   document.getElementById('search-suggestions').style.display = 'none';
 
   try {
-    const url = `https://api.getsong.co/search/?api_key=${GETSONG_API_KEY}&type=song&lookup=${encodeURIComponent(lookup)}`;
+    const url = `${GETSONG_PROXY}?lookup=${encodeURIComponent(lookup)}`;
     const res  = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
@@ -1996,7 +1990,7 @@ async function searchSong() {
 // ── Load full song details ──────────────────────────────────
 async function loadSongDetail(songId, fallback) {
   try {
-    const url = `https://api.getsong.co/song/?api_key=${GETSONG_API_KEY}&id=${songId}`;
+    const url = `${GETSONG_PROXY}?type=song&id=${encodeURIComponent(songId)}`;
     const res  = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
