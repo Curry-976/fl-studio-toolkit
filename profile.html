@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="shared.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
-  <script src="navbar.js"></script>
+  <script defer src="navbar.js"></script>
   <style>
     :root {
       --bg:#03050D; --bg2:#080C1A; --surface:#0D1228; --card:#0F1530;
@@ -542,7 +542,7 @@
             <input type="file" id="avatar-input" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" onchange="uploadAvatar(this)" />
           </div>
           <div class="hero-info">
-            <div class="hero-username" id="hero-username"></div>
+            <h1 class="hero-username" id="hero-username"></h1>
             <div id="bio-display" class="hero-bio" id="hero-bio"></div>
             <div class="hero-tags" id="hero-tags"></div>
             <div class="hero-stats" id="hero-stats"></div>

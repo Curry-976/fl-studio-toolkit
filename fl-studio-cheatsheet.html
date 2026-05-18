@@ -27,10 +27,35 @@
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Raccourcis FL Studio 2025",
-  "description": "Guide complet des raccourcis clavier FL Studio",
-  "url": "https://mayanabeat.fr/fl-studio-cheatsheet.html"
+  "name": "Maîtriser les raccourcis FL Studio",
+  "description": "Guide complet des raccourcis clavier FL Studio pour accélérer votre workflow de beatmaking",
+  "url": "https://mayanabeat.fr/fl-studio-cheatsheet.html",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Navigation Générale",
+      "text": "F5 ouvre la Playlist, F6 le Step Sequencer, F7 le Piano Roll, F9 le Mixer. Espace pour Play/Stop."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Édition dans la Playlist",
+      "text": "Ctrl+A sélectionne tout, Ctrl+C/V copie-colle, Ctrl+Z annule. Clic droit supprime un clip."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Piano Roll",
+      "text": "Ctrl+A sélectionne toutes les notes, Shift+Scroll transpose d'une octave, Alt+U quantize les notes."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Mixer",
+      "text": "Clic sur une piste pour la sélectionner, F9 ouvre le mixer, Ctrl+Clic pour reset un fader à 0dB."
+    }
+  ]
 }
+  </script>
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://mayanabeat.fr/"},{"@type":"ListItem","position":2,"name":"Raccourcis FL Studio","item":"https://mayanabeat.fr/fl-studio-cheatsheet.html"}]}
   </script>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta name="theme-color" content="#03050D">
@@ -209,7 +234,7 @@
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
-  <script src="navbar.js"></script>
+  <script defer src="navbar.js"></script>
 </head>
 <body>
 <div id="bg-grid"></div>
@@ -258,7 +283,7 @@
 <!-- ══ MAIN ══ -->
 <main class="main">
   <div class="topbar">
-    <div class="topbar-title"><em>Raccourcis</em> Clavier</div>
+    <h1 class="topbar-title"><em>Raccourcis</em> Clavier</h1>
     <div class="search-wrap">
       <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
       <input id="search" type="text" class="search-input" placeholder="Rechercher… (/ pour focus)" autocomplete="off" spellcheck="false"/>
@@ -281,7 +306,7 @@
     <div class="cat-card category-section" data-cat="general">
       <div class="cc-head">
         <div class="cc-bar" style="background:linear-gradient(180deg,#FF6B35,#FF4500);box-shadow:0 0 8px #FF6B35;"></div>
-        <div><div class="cc-title">Navigation Générale</div><div class="cc-sub">Fenêtres, lecture, projet</div></div>
+        <div><h2 class="cc-title">Navigation Générale</h2><div class="cc-sub">Fenêtres, lecture, projet</div></div>
         <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><rect x="2" y="6" width="20" height="14" rx="2.5" stroke-width="1.5"/><path stroke-linecap="round" d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M10 14h4M18 14h.01"/></svg></div>
       </div>
       <div class="commands-list">
@@ -310,7 +335,7 @@
     <div class="cat-card category-section" data-cat="playlist">
       <div class="cc-head">
         <div class="cc-bar" style="background:linear-gradient(180deg,#84CC16,#4D7C0F);box-shadow:0 0 8px #84CC16;"></div>
-        <div><div class="cc-title">Playlist</div><div class="cc-sub">Arrangement &amp; clips</div></div>
+        <div><h2 class="cc-title">Playlist</h2><div class="cc-sub">Arrangement &amp; clips</div></div>
         <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg></div>
       </div>
       <div class="commands-list">
@@ -334,7 +359,7 @@
     <div class="cat-card category-section" data-cat="pianoroll">
       <div class="cc-head">
         <div class="cc-bar" style="background:linear-gradient(180deg,#8B7FFF,#5B50CC);box-shadow:0 0 8px #8B7FFF;"></div>
-        <div><div class="cc-title">Piano Roll</div><div class="cc-sub">Édition MIDI &amp; notes</div></div>
+        <div><h2 class="cc-title">Piano Roll</h2><div class="cc-sub">Édition MIDI &amp; notes</div></div>
         <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2z"/></svg></div>
       </div>
       <div class="commands-list">
@@ -357,7 +382,7 @@
     <div class="cat-card category-section" data-cat="mixer">
       <div class="cc-head">
         <div class="cc-bar" style="background:linear-gradient(180deg,#0EA5E9,#0369A1);box-shadow:0 0 8px #0EA5E9;"></div>
-        <div><div class="cc-title">Mixer</div><div class="cc-sub">Pistes, effets, routage</div></div>
+        <div><h2 class="cc-title">Mixer</h2><div class="cc-sub">Pistes, effets, routage</div></div>
         <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg></div>
       </div>
       <div class="commands-list">
@@ -379,7 +404,7 @@
     <div class="cat-card category-section full" data-cat="stepseq">
       <div class="cc-head">
         <div class="cc-bar" style="background:linear-gradient(180deg,#EC4899,#BE185D);box-shadow:0 0 8px #EC4899;"></div>
-        <div><div class="cc-title">Step Sequencer</div><div class="cc-sub">Patterns rythmiques &amp; beats</div></div>
+        <div><h2 class="cc-title">Step Sequencer</h2><div class="cc-sub">Patterns rythmiques &amp; beats</div></div>
         <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3"/></svg></div>
       </div>
       <div class="commands-list ss-grid">
