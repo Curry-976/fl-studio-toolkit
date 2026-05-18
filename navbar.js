@@ -29,19 +29,20 @@
     #shared-sidebar .sidebar-logo {
       width: 40px;
       height: 40px;
-      clip-path: polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
-      background: linear-gradient(135deg, var(--cyan2,#00C8FF), var(--purple2,#9B7FFF));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--mono, 'Space Mono', monospace);
-      font-weight: 700;
-      font-size: 13px;
-      color: #000;
       margin-bottom: 24px;
-      box-shadow: 0 0 20px rgba(0,240,255,.3);
       flex-shrink: 0;
       text-decoration: none !important;
+      transition: filter .2s;
+    }
+    #shared-sidebar .sidebar-logo:hover {
+      filter: drop-shadow(0 0 8px rgba(0,240,255,.5));
+    }
+    #shared-sidebar .sidebar-logo img {
+      width: 40px;
+      height: 40px;
     }
 
     /* ── Nav list ── */
@@ -230,7 +231,7 @@
 
   const sidebarHTML = `
     <aside class="sidebar" id="shared-sidebar">
-      <a href="index.html" class="sidebar-logo" style="text-decoration:none"><span>MB</span></a>
+      <a href="index.html" class="sidebar-logo" style="text-decoration:none"><img src="mayanabeat-icon.svg" alt="MayanaBeat" /></a>
       <nav class="sidebar-nav">${navHTML}</nav>
       <button class="sb-logout" id="sb-logout-btn" data-tip="Déconnexion" style="display:none" onclick="sbLogout()">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
