@@ -1870,9 +1870,7 @@ showState('drop');
 //  GETSONGKEY / GETSONGBPM API — SEARCH MODE
 // ═══════════════════════════════════════════════════════════
 
-// Appels via Supabase Edge Function proxy (évite le blocage CORS)
-// La clé API GetSongBPM est stockée côté serveur dans les secrets Supabase
-const GETSONG_PROXY = 'https://fjwftrucqerwshhpmezl.supabase.co/functions/v1/getsong-proxy';
+const GETSONG_API_KEY = '134a169c438523287e75ddaf66268b22';
 
 function switchMode(mode) {
   currentMode = mode;
@@ -1960,7 +1958,7 @@ async function searchSong() {
   document.getElementById('search-suggestions').style.display = 'none';
 
   try {
-    const url = `${GETSONG_PROXY}?lookup=${encodeURIComponent(lookup)}`;
+    const url = `https://api.getsong.co/search/?api_key=${GETSONG_API_KEY}&type=song&lookup=${encodeURIComponent(lookup)}`;
     const res  = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
@@ -1990,7 +1988,7 @@ async function searchSong() {
 // ── Load full song details ──────────────────────────────────
 async function loadSongDetail(songId, fallback) {
   try {
-    const url = `${GETSONG_PROXY}?type=song&id=${encodeURIComponent(songId)}`;
+    const url = `https://api.getsong.co/song/?api_key=${GETSONG_API_KEY}&id=${encodeURIComponent(songId)}`;
     const res  = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
