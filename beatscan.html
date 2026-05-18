@@ -360,42 +360,53 @@
     .search-hero { text-align: center; padding: 24px 0 28px; }
     .search-hero-title { font-size: 20px; font-weight: 800; font-family: var(--mono); text-transform: uppercase; color: #E8F0FF; margin-bottom: 6px; }
     .search-hero-sub { font-size: 13px; color: rgba(180,210,255,.35); }
-    .search-row { display: flex; gap: 10px; max-width: 600px; margin: 0 auto 12px; }
-    .search-input {
-      flex: 1; background: #0D1228; border: 1.5px solid rgba(0,240,255,.1);
-      border-radius: 12px; padding: 13px 16px; font-family: var(--mono); font-size: 14px;
-      color: #E8F0FF; outline: none; transition: border-color .15s;
-    }
-    .search-input::placeholder { color: rgba(180,210,255,.22); }
-    .search-input:focus { border-color: rgba(0,200,255,.4); }
-    .search-input.artist { max-width: 190px; flex: none; }
-    .search-btn {
-      padding: 13px 22px; background: linear-gradient(135deg,#00C8FF,#9B7FFF);
-      border: none; border-radius: 12px; font-family: var(--mono); font-size: 12px;
-      font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #000;
-      cursor: pointer; display: flex; align-items: center; gap: 8px;
-      white-space: nowrap; transition: opacity .15s, transform .1s;
-      flex-shrink: 0;
-    }
-    .search-btn:hover { opacity: .85; }
-    .search-btn:active { transform: scale(.96); }
-    .search-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
-    .search-error { text-align: center; color: #F87171; font-size: 13px; font-family: var(--mono); padding: 12px; display: none; }
+    .search-error { text-align: center; color: #F87171; font-size: 12px; font-family: var(--mono); padding: 10px; display: none; margin-top: 8px; }
 
-    /* ── Suggestions ── */
-    .search-suggestions { max-width: 600px; margin: 16px auto 0; display: none; }
-    .sug-header { font-size: 10px; font-weight: 700; color: rgba(180,210,255,.3); text-transform: uppercase; letter-spacing: .06em; font-family: var(--mono); margin-bottom: 8px; }
-    .sug-list { display: flex; flex-direction: column; gap: 5px; max-height: 210px; overflow-y: auto; }
-    .sug-item {
-      display: flex; align-items: center; gap: 12px; padding: 10px 14px;
-      background: #0D1228; border: 1.5px solid rgba(0,240,255,.06); border-radius: 10px;
-      cursor: pointer; transition: border-color .15s, background .15s;
+    /* ── Autocomplete searchbar ── */
+    .search-container { max-width: 540px; margin: 0 auto; position: relative; }
+    .search-field-wrap {
+      display: flex; align-items: center; gap: 0;
+      background: #0D1228; border: 1.5px solid rgba(0,240,255,.12);
+      border-radius: 14px; padding: 0 14px; transition: border-color .2s;
+      position: relative;
     }
-    .sug-item:hover { border-color: rgba(0,200,255,.2); background: rgba(0,200,255,.04); }
-    .sug-item.active { border-color: rgba(0,200,255,.35); background: rgba(0,200,255,.07); }
-    .sug-title { font-size: 13px; font-weight: 700; color: #E8F0FF; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .sug-artist { font-size: 11px; color: rgba(180,210,255,.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
-    .sug-bpm { font-size: 12px; font-weight: 700; color: #00C8FF; font-family: var(--mono); flex-shrink: 0; }
+    .search-field-wrap:focus-within { border-color: rgba(0,200,255,.45); box-shadow: 0 0 0 3px rgba(0,200,255,.07); }
+    .search-field-icon { color: rgba(180,210,255,.3); flex-shrink: 0; display: flex; align-items: center; }
+    .search-input-main {
+      flex: 1; background: transparent; border: none; outline: none;
+      padding: 15px 12px; font-family: var(--mono); font-size: 14px; color: #E8F0FF;
+    }
+    .search-input-main::placeholder { color: rgba(180,210,255,.22); }
+    .search-spinner { color: rgba(0,200,255,.6); flex-shrink: 0; display: flex; align-items: center; }
+    .search-clear-btn {
+      background: none; border: none; cursor: pointer; padding: 4px;
+      color: rgba(180,210,255,.35); display: flex; align-items: center;
+      border-radius: 6px; transition: color .15s; flex-shrink: 0;
+    }
+    .search-clear-btn:hover { color: rgba(180,210,255,.8); }
+
+    /* ── Dropdown ── */
+    .search-dropdown {
+      position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 50;
+      background: #0D1228; border: 1.5px solid rgba(0,240,255,.12);
+      border-radius: 14px; overflow: hidden;
+      box-shadow: 0 16px 48px rgba(0,0,0,.5); display: none;
+    }
+    .dropdown-item {
+      display: flex; align-items: center; gap: 12px; padding: 11px 16px;
+      cursor: pointer; transition: background .12s; border-bottom: 1px solid rgba(0,240,255,.04);
+    }
+    .dropdown-item:last-child { border-bottom: none; }
+    .dropdown-item:hover, .dropdown-item.kfocus { background: rgba(0,200,255,.07); }
+    .dropdown-item.kfocus { border-left: 2px solid #00C8FF; }
+    .di-num { font-size: 10px; font-weight: 700; color: rgba(180,210,255,.2); font-family: var(--mono); min-width: 16px; }
+    .di-info { flex: 1; min-width: 0; }
+    .di-title { font-size: 13px; font-weight: 700; color: #E8F0FF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .di-artist { font-size: 11px; color: rgba(180,210,255,.38); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .di-bpm { font-size: 11px; font-weight: 800; color: #00C8FF; font-family: var(--mono); flex-shrink: 0; background: rgba(0,200,255,.08); padding: 2px 7px; border-radius: 6px; }
+    .di-key { font-size: 11px; font-weight: 700; color: #A78BFA; font-family: var(--mono); flex-shrink: 0; }
+    .dropdown-empty { padding: 18px 16px; text-align: center; font-size: 13px; color: rgba(180,210,255,.3); font-family: var(--mono); }
+    .dropdown-hint { padding: 8px 16px; text-align: center; font-size: 10px; color: rgba(180,210,255,.2); font-family: var(--mono); border-top: 1px solid rgba(0,240,255,.05); }
 
     /* ── Search result cards ── */
     .sr-song-header { max-width: 600px; margin: 0 auto 20px; display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: #0D1228; border: 1.5px solid rgba(0,240,255,.08); border-radius: 14px; }
@@ -782,27 +793,29 @@
     ══════════════════════════════════════════════ -->
     <div id="state-search">
 
-      <!-- Hero + form -->
+      <!-- Hero -->
       <div class="search-hero">
         <div class="search-hero-title">Recherche par titre</div>
         <div class="search-hero-sub">BPM exact · Tonalité · Camelot · Genre — données GetSongKey</div>
       </div>
 
-      <div class="search-row">
-        <input type="text" id="search-title" class="search-input" placeholder="Titre de la chanson…" onkeydown="if(event.key==='Enter')searchSong()">
-        <input type="text" id="search-artist" class="search-input artist" placeholder="Artiste…" onkeydown="if(event.key==='Enter')searchSong()">
-        <button id="search-btn" class="search-btn" onclick="searchSong()">
-          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Analyser
-        </button>
-      </div>
-
-      <div id="search-error" class="search-error"></div>
-
-      <!-- Suggestions (multiple results) -->
-      <div id="search-suggestions" class="search-suggestions">
-        <div class="sug-header">Sélectionne la bonne version</div>
-        <div id="search-sug-list" class="sug-list"></div>
+      <!-- Autocomplete searchbar -->
+      <div class="search-container">
+        <div class="search-field-wrap" id="search-field-wrap">
+          <span class="search-field-icon">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </span>
+          <input id="search-title" class="search-input-main" placeholder="Titre ou artiste…" autocomplete="off" spellcheck="false">
+          <span class="search-spinner" id="search-spinner" style="display:none;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="animation:spin .7s linear infinite"><circle cx="12" cy="12" r="10" stroke-dasharray="28" stroke-dashoffset="10"/></svg>
+          </span>
+          <button class="search-clear-btn" id="search-clear" onclick="clearSearch()" style="display:none;" title="Effacer">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <!-- Live dropdown -->
+        <div id="search-dropdown" class="search-dropdown"></div>
+        <div id="search-error" class="search-error"></div>
       </div>
 
       <!-- Results section -->
@@ -1941,48 +1954,130 @@ function extractSong(data) {
   return data?.song || data;
 }
 
-// ── Main search function ────────────────────────────────────
-async function searchSong() {
-  const title = (document.getElementById('search-title').value || '').trim();
-  if (!title) { showToast('✏️ Saisis un titre de chanson'); return; }
+// ── Autocomplete state ──────────────────────────────────────
+let _searchTimer  = null;
+let _dropFocusIdx = -1;
+let _dropSongs    = [];
 
-  const artist = (document.getElementById('search-artist').value || '').trim();
-  const lookup = artist ? `${title} ${artist}` : title;
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('search-title');
+  if (!input) return;
 
-  const btn = document.getElementById('search-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="animation:spin .8s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Recherche…';
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    document.getElementById('search-clear').style.display = q ? 'flex' : 'none';
+    document.getElementById('search-error').style.display = 'none';
+    clearTimeout(_searchTimer);
+    if (q.length < 2) { closeDropdown(); return; }
+    _searchTimer = setTimeout(() => fetchSuggestions(q), 400);
+  });
 
+  input.addEventListener('keydown', e => {
+    const items = document.querySelectorAll('.dropdown-item');
+    if (e.key === 'ArrowDown')  { e.preventDefault(); moveFocus(items,  1); }
+    if (e.key === 'ArrowUp')    { e.preventDefault(); moveFocus(items, -1); }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const song = _dropSongs[_dropFocusIdx] || _dropSongs[0];
+      if (song) selectSong(song);
+    }
+    if (e.key === 'Escape') closeDropdown();
+  });
+
+  document.addEventListener('mousedown', e => {
+    if (!document.getElementById('search-field-wrap')?.contains(e.target) &&
+        !document.getElementById('search-dropdown')?.contains(e.target)) {
+      closeDropdown();
+    }
+  });
+});
+
+function moveFocus(items, dir) {
+  items.forEach(i => i.classList.remove('kfocus'));
+  _dropFocusIdx = Math.max(0, Math.min(items.length - 1, _dropFocusIdx + dir));
+  if (items[_dropFocusIdx]) items[_dropFocusIdx].classList.add('kfocus');
+}
+
+function closeDropdown() {
+  const dd = document.getElementById('search-dropdown');
+  if (dd) { dd.style.display = 'none'; dd.innerHTML = ''; }
+  _dropFocusIdx = -1; _dropSongs = [];
+}
+
+function clearSearch() {
+  const input = document.getElementById('search-title');
+  if (!input) return;
+  input.value = '';
+  input.focus();
+  document.getElementById('search-clear').style.display = 'none';
   document.getElementById('search-error').style.display = 'none';
-  document.getElementById('search-results-section').style.display = 'none';
-  document.getElementById('search-suggestions').style.display = 'none';
+  closeDropdown();
+}
+
+// ── Fetch suggestions as user types ────────────────────────
+async function fetchSuggestions(query) {
+  const spinner = document.getElementById('search-spinner');
+  const dd      = document.getElementById('search-dropdown');
+  spinner.style.display = 'flex';
+  dd.style.display = 'block';
+  dd.innerHTML = '';
 
   try {
-    const url = `https://api.getsong.co/search/?api_key=${GETSONG_API_KEY}&type=song&lookup=${encodeURIComponent(lookup)}`;
+    const url  = `https://api.getsong.co/search/?api_key=${GETSONG_API_KEY}&type=song&lookup=${encodeURIComponent(query)}`;
     const res  = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
 
+    // Abort if input changed while we were fetching
+    if ((document.getElementById('search-title')?.value || '').trim() !== query) return;
+
     const songs = extractSongs(data);
     if (!songs || songs.length === 0) {
-      document.getElementById('search-error').textContent = `Aucun résultat pour "${title}". Essaie un autre titre ou ajoute l'artiste.`;
-      document.getElementById('search-error').style.display = 'block';
+      dd.innerHTML = `<div class="dropdown-empty">Aucun résultat pour « ${query} »</div>`;
       return;
     }
 
-    renderSuggestions(songs);
-    // Auto-load the first result
-    await loadSongDetail(songs[0].id, songs[0]);
+    _dropSongs = songs.slice(0, 8); _dropFocusIdx = -1;
+    dd.innerHTML = '';
+    _dropSongs.forEach((s, idx) => {
+      const item = document.createElement('div');
+      item.className = 'dropdown-item';
+      item.innerHTML = `
+        <span class="di-num">${idx + 1}</span>
+        <div class="di-info">
+          <div class="di-title">${s.title || '—'}</div>
+          <div class="di-artist">${s.artist?.name || '—'}</div>
+        </div>
+        ${s.key_of  ? `<span class="di-key">${s.key_of}</span>` : ''}
+        ${s.tempo   ? `<span class="di-bpm">${Math.round(s.tempo)}</span>` : ''}
+      `;
+      item.addEventListener('mousedown', e => { e.preventDefault(); selectSong(s); });
+      dd.appendChild(item);
+    });
+    dd.innerHTML += `<div class="dropdown-hint">↑↓ naviguer · Entrée pour sélectionner</div>`;
 
   } catch (err) {
-    console.error('[BeatScan Search]', err);
-    document.getElementById('search-error').textContent =
-      'Erreur de connexion à l\'API. Vérifie ta clé et ta connexion internet.';
-    document.getElementById('search-error').style.display = 'block';
+    dd.innerHTML = `<div class="dropdown-empty" style="color:#F87171;">Erreur de connexion</div>`;
+    console.error('[BeatScan]', err);
   } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Analyser';
+    spinner.style.display = 'none';
   }
+}
+
+// ── Select song from dropdown ───────────────────────────────
+async function selectSong(song) {
+  closeDropdown();
+  const input = document.getElementById('search-title');
+  input.value = `${song.title || ''} — ${song.artist?.name || ''}`;
+  document.getElementById('search-clear').style.display = 'flex';
+  // Show placeholder in result cards while loading
+  const rs = document.getElementById('search-results-section');
+  rs.style.display = 'block';
+  document.getElementById('sr-title').textContent  = song.title       || '—';
+  document.getElementById('sr-artist').textContent = song.artist?.name || '—';
+  document.getElementById('sr-bpm').textContent = '…';
+  document.getElementById('sr-key').textContent = '…';
+  await loadSongDetail(song.id, song);
 }
 
 // ── Load full song details ──────────────────────────────────
@@ -1994,35 +2089,8 @@ async function loadSongDetail(songId, fallback) {
     const data = await res.json();
     renderSearchResults(extractSong(data));
   } catch (_) {
-    // Fallback to partial data from search list
     if (fallback) renderSearchResults(fallback);
   }
-}
-
-// ── Render suggestion pills ─────────────────────────────────
-function renderSuggestions(songs) {
-  const list = document.getElementById('search-sug-list');
-  list.innerHTML = '';
-  songs.slice(0, 7).forEach((s, idx) => {
-    const item = document.createElement('div');
-    item.className = 'sug-item' + (idx === 0 ? ' active' : '');
-    item.innerHTML = `
-      <div style="flex:1;min-width:0;">
-        <div class="sug-title">${s.title || '—'}</div>
-        <div class="sug-artist">${s.artist?.name || '—'}</div>
-      </div>
-      ${s.tempo ? `<div class="sug-bpm">${Math.round(s.tempo)} BPM</div>` : ''}
-    `;
-    item.onclick = () => {
-      document.querySelectorAll('.sug-item').forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-      loadSongDetail(s.id, s);
-    };
-    list.appendChild(item);
-  });
-  // Only show the suggestions block if there's more than one result
-  document.getElementById('search-suggestions').style.display =
-    songs.length > 1 ? 'block' : 'none';
 }
 
 // ── Render the result cards ─────────────────────────────────
