@@ -1931,27 +1931,48 @@ const CAMELOT_MAP = {
   'Abm':'1A','Am':'8A','A#m':'3A','Bbm':'3A','Bm':'10A',
 };
 
-function parseSongKey(keyOf) {
+function parseSongKey(keyOf, openKey) {
   if (!keyOf) return { note:'—', modeFr:'', camelot:'—', isMinor:false };
-  const isMinor = keyOf.endsWith('m');
-  const note = isMinor ? keyOf.slice(0,-1) : keyOf;
-  const camelot = CAMELOT_MAP[keyOf] || '—';
+  const k       = normalizeKey(keyOf);
+  const isMinor = k.endsWith('m');
+  const note    = isMinor ? k.slice(0,-1) : k;
   const modeFr  = isMinor ? 'Mineur' : 'Majeur';
+
+  // Préférer open_key de l'API (format "11d", "4m"…) converti en Camelot
+  let camelot = '—';
+  if (openKey && openKey !== 'null') {
+    const match = openKey.match(/^(\d+)([dm])$/);
+    if (match) {
+      const num    = parseInt(match[1]);
+      const isMaj  = match[2] === 'd';
+      const cNum   = ((num + 6) % 12) + 1;  // Open Key → Camelot number
+      camelot = cNum + (isMaj ? 'B' : 'A');
+    }
+  } else {
+    camelot = CAMELOT_MAP[k] || '—';
+  }
+
   return { note, modeFr, camelot, isMinor };
 }
 
 // ── Robust response parser (API may vary slightly) ──────────
 function extractSongs(data) {
-  // Possible structures encountered in the wild:
-  return data?.search?.data?.songs?.data    // most common
+  return (Array.isArray(data?.search)        ? data.search          : null)  // ← format réel
+      || data?.search?.data?.songs?.data
       || data?.search?.songs?.data
       || data?.songs?.data
       || data?.data?.songs
-      || (Array.isArray(data?.songs) ? data.songs : null)
+      || (Array.isArray(data?.songs)         ? data.songs           : null)
       || null;
 }
 function extractSong(data) {
   return data?.song || data;
+}
+
+// Normalise les caractères Unicode musicaux → ASCII
+function normalizeKey(k) {
+  if (!k) return '';
+  return k.replace(/♯/g, '#').replace(/♭/g, 'b');
 }
 
 // ── Autocomplete state ──────────────────────────────────────
@@ -2031,10 +2052,9 @@ async function fetchSuggestions(query) {
     // Abort if input changed while we were fetching
     if ((document.getElementById('search-title')?.value || '').trim() !== query) return;
 
-    console.log('[BeatScan API response]', JSON.stringify(data));
     const songs = extractSongs(data);
     if (!songs || songs.length === 0) {
-      dd.innerHTML = `<div class="dropdown-empty">Aucun résultat pour « ${query} »<br><small style="opacity:.5;font-size:9px;">Structure: ${Object.keys(data||{}).join(', ')}</small></div>`;
+      dd.innerHTML = `<div class="dropdown-empty">Aucun résultat pour « ${query} »</div>`;
       return;
     }
 
@@ -2049,7 +2069,7 @@ async function fetchSuggestions(query) {
           <div class="di-title">${s.title || '—'}</div>
           <div class="di-artist">${s.artist?.name || '—'}</div>
         </div>
-        ${s.key_of  ? `<span class="di-key">${s.key_of}</span>` : ''}
+        ${s.key_of  ? `<span class="di-key">${normalizeKey(s.key_of)}</span>` : ''}
         ${s.tempo   ? `<span class="di-bpm">${Math.round(s.tempo)}</span>` : ''}
       `;
       item.addEventListener('mousedown', e => { e.preventDefault(); selectSong(s); });
@@ -2106,7 +2126,7 @@ function renderSearchResults(song) {
   document.getElementById('sr-time-sig').textContent = song.time_sig || '—';
 
   // Key + Camelot
-  const k = parseSongKey(song.key_of);
+  const k = parseSongKey(song.key_of, song.open_key);
   const keyColor    = k.isMinor ? '#8B5CF6' : '#3B82F6';
   const keyColorRgb = k.isMinor ? '139,92,246' : '59,130,246';
   document.getElementById('sr-key-strip').style.background =
