@@ -454,20 +454,29 @@
 
     /* ── Responsive ── */
     @media (max-width:768px) {
-      main { padding:0 0 60px; }
+      body { cursor:auto; }
+      #c-dot, #c-ring { display:none; }
+      main { padding:0 0 80px; margin-left:0 !important; }
       .profile-hero { padding:32px 20px 24px; }
-      .hero-inner { gap:20px; }
+      .hero-inner { gap:20px; flex-wrap:wrap; }
       .avatar-ring { width:72px; height:72px; }
       .avatar-inner { font-size:26px; }
       .hero-username { font-size:20px; }
+      .hero-info { min-width:0; }
       .stats-section, .beats-section, .settings-section { padding-left:20px; padding-right:20px; }
       .stats-grid { grid-template-columns:repeat(2,1fr); }
       .form-row { grid-template-columns:1fr; }
+      .hero-actions { flex-wrap:wrap; gap:8px; }
+      .beat-grid { grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
+      .settings-body { padding:16px; }
     }
     @media (max-width:480px) {
       .stats-grid { grid-template-columns:1fr 1fr; }
       .hero-stats { gap:6px; }
       .stat-chip { padding:6px 10px; }
+      .hero-inner { justify-content:center; text-align:center; }
+      .hero-tags, .hero-stats, .hero-badges, .hero-actions { justify-content:center; }
+      .beat-grid { grid-template-columns:1fr 1fr; }
     }
   </style>
 </head>

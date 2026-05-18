@@ -75,3 +75,20 @@ body::after {
 /* Common keyframes */
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
 @keyframes blink  { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  :root { --sidebar-w: 0px; }
+  .layout > main,
+  .layout > .main-content,
+  .layout > section,
+  .layout > .page-content {
+    margin-left: 0 !important;
+    padding-bottom: 60px;
+  }
+  body {
+    padding-bottom: 60px;
+    cursor: auto !important;
+  }
+  #c-dot, #c-ring { display: none !important; }
+}

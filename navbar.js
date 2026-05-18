@@ -175,6 +175,66 @@
       flex: 1;
       min-width: 0;
     }
+
+    /* ── Mobile: bottom nav ── */
+    @media (max-width: 768px) {
+      :root { --sidebar-w: 0px; }
+
+      #shared-sidebar {
+        width: 100% !important;
+        height: 60px !important;
+        top: auto !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        padding: 0 8px !important;
+        gap: 0 !important;
+        border-right: none !important;
+        border-top: 1px solid var(--border2, rgba(0,240,255,.15)) !important;
+        z-index: 1000 !important;
+      }
+
+      /* Hide logo on mobile */
+      #shared-sidebar .sidebar-logo { display: none !important; }
+
+      /* Nav becomes a row */
+      #shared-sidebar .sidebar-nav {
+        flex-direction: row !important;
+        gap: 0 !important;
+        flex: 1 !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+      }
+
+      #shared-sidebar .sb-item {
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 8px !important;
+        border-left: none !important;
+        border-bottom: 2px solid transparent !important;
+      }
+      #shared-sidebar .sb-item.active {
+        border-left: none !important;
+        border-bottom: 2px solid var(--cyan, #00F0FF) !important;
+      }
+
+      /* Hide tooltips on mobile */
+      #shared-sidebar .sb-item::after,
+      #shared-sidebar .sb-logout::after { display: none !important; }
+
+      /* Logout at end of row */
+      #shared-sidebar .sb-logout {
+        margin-top: 0 !important;
+        width: 44px !important;
+        height: 44px !important;
+        flex-shrink: 0 !important;
+      }
+
+      body { padding-bottom: 60px; }
+    }
   `;
   document.head.appendChild(style);
 

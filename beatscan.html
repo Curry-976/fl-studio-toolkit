@@ -300,7 +300,19 @@
     @media (max-width: 1100px) { .result-cards { grid-template-columns: repeat(2,1fr); } .meta-row { grid-template-columns: repeat(2,1fr); } }
     @media (max-width: 900px)  { .analyzer-panel { width: 300px; min-width: 300px; } }
     @media (max-width: 720px)  { .analyzer-panel { display: none; } .result-cards { grid-template-columns: 1fr; } }
-    @media (max-width: 580px)  { }
+    @media (max-width: 768px) {
+      body { cursor: auto; overflow: auto; }
+      #c-dot, #c-ring { display: none; }
+      .analyzer-panel { display: none; }
+      /* Main content fills full width */
+      body > div:not(#bg-grid):not(#c-dot):not(#c-ring) { margin-left: 0 !important; }
+      .result-cards { grid-template-columns: 1fr; }
+      .meta-row { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 480px) {
+      .meta-row { grid-template-columns: 1fr 1fr; }
+      .result-cards { grid-template-columns: 1fr; }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>

@@ -477,10 +477,39 @@
     .db-dot.live { background:var(--green); box-shadow:0 0 6px var(--green); animation:blink 2s infinite; }
     .db-dot.demo { background:var(--yellow); }
 
-    @media (max-width:600px) {
-      main { padding:20px 16px 120px; }
+    @media (max-width:1024px) {
+      main { padding:24px 20px 140px; }
+      .beat-grid { grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); }
+    }
+    @media (max-width:768px) {
+      body { cursor:auto; }
+      #c-dot, #c-ring { display:none; }
+      main { padding:20px 16px 80px; }
+      .store-hd-top { flex-direction:column; align-items:flex-start; gap:12px; }
+      .store-title { font-size:18px; }
+      .hud-stats { gap:8px; }
+      .stat-chip { padding:6px 10px; }
+      .filter-bar { gap:8px; }
+      .search-wrap { max-width:100%; }
+      .genre-pills { gap:4px; }
+      .genre-pill { padding:5px 9px; font-size:8px; }
+      .beat-grid { grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
+      /* Player bar stays accessible above bottom nav */
+      #player-bar { left:0; bottom:60px; padding:10px 14px; gap:10px; }
+      .player-info { min-width:120px; }
+      .player-beat-title { max-width:120px; font-size:11px; }
+      .player-license { gap:6px; }
+      .btn-pl { padding:6px 10px; font-size:8px; }
       .license-grid { grid-template-columns:1fr; }
       .form-grid { grid-template-columns:1fr; }
+      .modal { padding:20px; }
+    }
+    @media (max-width:480px) {
+      .beat-grid { grid-template-columns:1fr 1fr; gap:10px; }
+      .player-wave-wrap { display:none; }
+      .player-time { display:none; }
+      #player-bar { gap:8px; }
+      .stat-chip-val { font-size:13px; }
     }
   </style>
 </head>

@@ -177,7 +177,18 @@
 
     @media(max-width:1100px){.master-panel{width:260px;min-width:260px;}}
     @media(max-width:800px){.master-panel{display:none;}}
-    @media(max-width:580px){}
+    @media(max-width:768px){
+      body{cursor:auto;}
+      #c-dot,#c-ring{display:none;}
+      .master-panel{display:none;}
+      /* main content fills viewport */
+      .master-main,main,.main-content{margin-left:0!important;padding:16px 16px 80px!important;}
+      .section-title{font-size:16px;}
+      .controls-grid,.eq-grid{grid-template-columns:1fr 1fr!important;}
+    }
+    @media(max-width:480px){
+      .controls-grid,.eq-grid{grid-template-columns:1fr!important;}
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>

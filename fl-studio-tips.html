@@ -142,8 +142,18 @@
     }
 
     @media(max-width:1100px){ .cards-grid { grid-template-columns:1fr 1fr; } .featured-grid { grid-template-columns:1fr 1fr; } }
-    @media(max-width:700px){ .cards-grid { grid-template-columns:1fr; } .main { padding:16px 12px 40px; margin-left:0; } .featured-grid { grid-template-columns:1fr 1fr; } }
-    @media(max-width:480px){ .featured-grid { grid-template-columns:1fr; } }
+    @media(max-width:768px){
+      body { cursor:auto; }
+      #c-dot,#c-ring { display:none; }
+      .main { padding:16px 16px 80px !important; margin-left:0 !important; }
+      .cards-grid { grid-template-columns:1fr; }
+      .featured-grid { grid-template-columns:1fr 1fr; }
+      .page-title { font-size:18px; }
+      .filter-bar { gap:8px; }
+      .search-wrap { max-width:100%; }
+    }
+    @media(max-width:700px){ .cards-grid { grid-template-columns:1fr; } .main { padding:16px 12px 80px; margin-left:0; } .featured-grid { grid-template-columns:1fr 1fr; } }
+    @media(max-width:480px){ .featured-grid { grid-template-columns:1fr; } .cards-grid { grid-template-columns:1fr; } }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
