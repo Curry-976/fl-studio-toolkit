@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════
-//  FL STUDIO TOOLKIT — Supabase Configuration
+//  Mayanabeat — Supabase Configuration
 //
 //  SETUP (5 min) :
 //  1. Va sur https://supabase.com/dashboard → New Project
