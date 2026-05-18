@@ -316,14 +316,14 @@
     .chroma-labels { display: flex; gap: 3px; }
     .chroma-label { flex: 1; text-align: center; font-size: 8px; font-weight: 600; color: var(--muted); }
 
-    .meta-row  { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .meta-row  { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
     .meta-cell { background: #0D1228; border: 1.5px solid rgba(0,240,255,.08); border-radius: 12px; padding: 14px 12px; text-align: center; box-shadow: 0 1px 16px rgba(0,240,255,.04); }
     .meta-cell-label { font-size: 11px; color: rgba(180,210,255,.35); margin-bottom: 4px; font-family: var(--mono); text-transform: uppercase; }
     .meta-cell-val   { font-size: 14px; font-weight: 700; color: #E8F0FF; font-family: var(--mono); }
 
-    @media (max-width: 1100px) { .result-cards { grid-template-columns: repeat(2,1fr); } .meta-row { grid-template-columns: repeat(2,1fr); } }
-    @media (max-width: 900px)  { .analyzer-panel { width: 300px; min-width: 300px; } }
-    @media (max-width: 720px)  { .analyzer-panel { display: none; } .result-cards { grid-template-columns: 1fr; } }
+    @media (max-width: 1100px) { .result-cards { grid-template-columns: repeat(2,1fr); } .meta-row { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 900px)  { .analyzer-panel { width: 300px; min-width: 300px; } .meta-row { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 720px)  { .analyzer-panel { display: none; } .result-cards { grid-template-columns: 1fr; } .meta-row { grid-template-columns: repeat(3,1fr); } }
     @media (max-width: 768px) {
       body { cursor: auto; overflow: auto; }
       #c-dot, #c-ring { display: none; }
@@ -334,9 +334,53 @@
       .meta-row { grid-template-columns: repeat(2,1fr); }
     }
     @media (max-width: 480px) {
-      .meta-row { grid-template-columns: 1fr 1fr; }
+      .meta-row { grid-template-columns: repeat(2, 1fr); }
       .result-cards { grid-template-columns: 1fr; }
+      .results-topbar { padding: 14px 16px 0; }
+      .results-body { padding: 18px 16px; }
     }
+
+    /* ── Scale notes ── */
+    .scale-notes-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+    .scale-note-chip {
+      padding: 3px 8px; border-radius: 20px; font-size: 9px; font-weight: 700;
+      font-family: var(--mono); text-transform: uppercase; letter-spacing: .04em;
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); color: rgba(180,210,255,.45);
+    }
+    .scale-note-chip.root {
+      background: rgba(139,92,246,.16); border-color: rgba(139,92,246,.4); color: #C4B5FD;
+    }
+
+    /* ── Mobile upload CTA ── */
+    .mobile-upload-cta { display: none; flex-direction: column; align-items: center; gap: 12px; width: 100%; margin-top: 8px; }
+    @media (max-width: 768px) {
+      .mobile-upload-cta { display: flex; }
+      .mobile-upload-fab {
+        width: 100%; max-width: 300px; padding: 16px 24px;
+        background: linear-gradient(135deg, #00C8FF, #9B7FFF);
+        border: none; border-radius: 14px; cursor: pointer;
+        color: #000; font-family: var(--mono); font-size: 14px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: .06em;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+        box-shadow: 0 4px 24px rgba(0,200,255,.3);
+        transition: opacity .15s, transform .1s;
+      }
+      .mobile-upload-fab:active { transform: scale(.96); opacity: .85; }
+      .mobile-upload-cta-sub { font-size: 11px; color: rgba(180,210,255,.3); font-family: var(--mono); }
+      .results-topbar { padding: 16px 18px 0; }
+      .results-body { padding: 20px 18px; }
+    }
+
+    /* ── Mobile re-analyze FAB ── */
+    #mobile-reanalyze-fab {
+      display: none; position: fixed; bottom: 80px; right: 16px; z-index: 60;
+      background: linear-gradient(135deg, #00C8FF, #9B7FFF);
+      border: none; border-radius: 50%; width: 50px; height: 50px;
+      align-items: center; justify-content: center; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,200,255,.45); transition: transform .1s, opacity .2s;
+    }
+    #mobile-reanalyze-fab:active { transform: scale(.88); }
+    @media (max-width: 768px) { #mobile-reanalyze-fab.visible { display: flex; } }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
@@ -548,13 +592,21 @@
       </div>
       <div>
         <div class="state-title">Dépose ton fichier audio</div>
-        <div class="state-sub" style="margin-top:6px;">Glisse un MP3, WAV, OGG ou FLAC dans le panneau de gauche. L'analyse BPM et la tonalité sont calculées directement sur le signal audio.</div>
+        <div class="state-sub" style="margin-top:6px;">Glisse un MP3, WAV, OGG ou FLAC dans le panneau de gauche — ou sélectionne un fichier depuis ton appareil. L'analyse BPM et la tonalité sont calculées directement sur le signal audio.</div>
       </div>
       <div class="state-features">
         <div class="state-feat"><div class="sf-dot" style="background:#00C8FF;"></div>Tempo réel</div>
         <div class="state-feat"><div class="sf-dot" style="background:#9B7FFF;"></div>Gamme détectée</div>
         <div class="state-feat"><div class="sf-dot" style="background:#FF6B2B;"></div>Genre estimé</div>
         <div class="state-feat"><div class="sf-dot" style="background:#6EE7A0;"></div>Spectre live</div>
+      </div>
+      <!-- Mobile-only upload CTA (desktop uses drag & drop in left panel) -->
+      <div class="mobile-upload-cta">
+        <button class="mobile-upload-fab" onclick="document.getElementById('file-input').click()">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          Choisir un fichier
+        </button>
+        <div class="mobile-upload-cta-sub">MP3 · WAV · OGG · FLAC</div>
       </div>
     </div>
 
@@ -609,6 +661,7 @@
           <div id="key-root" class="res-card-val" style="font-size:52px;">—</div>
           <div id="key-mode-badge" class="key-mode-badge"></div>
           <div id="key-fr" class="key-fr"></div>
+          <div id="key-scale-notes" class="scale-notes-row"></div>
           <div class="real-tag"><div class="real-dot"></div>DÉTECTION RÉELLE</div>
           <div class="conf-row"><span>Confiance</span><span id="key-conf">—</span></div>
           <div class="conf-track"><div id="key-conf-bar" class="conf-fill" style="width:0%;"></div></div>
@@ -624,7 +677,7 @@
           <div id="genre-name" class="genre-name-tag" style="background:rgba(255,107,43,.08);border:1px solid rgba(255,107,43,.2);color:#C44000;">—</div>
           <div id="genre-desc" class="genre-sub"></div>
           <div style="display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:700;background:rgba(255,107,43,.06);border:1px solid rgba(255,107,43,.15);color:#EA580C;margin-bottom:10px;">
-            <div style="width:5px;height:5px;border-radius:50%;background:#EA580C;"></div>ESTIMÉ PAR BPM
+            <div style="width:5px;height:5px;border-radius:50%;background:#EA580C;"></div>ESTIMÉ PAR BPM + ÉNERGIE
           </div>
           <div class="conf-row"><span>Confiance</span><span id="genre-conf">—</span></div>
           <div class="conf-track"><div id="genre-conf-bar" class="conf-fill" style="background:linear-gradient(90deg,#FF6B2B,#FF47B5);width:0%;"></div></div>
@@ -634,13 +687,20 @@
       <div class="meta-row">
         <div class="meta-cell"><div class="meta-cell-label">Durée</div><div id="meta-duration" class="meta-cell-val">—</div></div>
         <div class="meta-cell"><div class="meta-cell-label">Format</div><div id="meta-format" class="meta-cell-val">—</div></div>
-        <div class="meta-cell"><div class="meta-cell-label">Énergie RMS</div><div id="meta-energy" class="meta-cell-val" style="color:#16A34A;">—</div></div>
+        <div class="meta-cell"><div class="meta-cell-label">Loudness</div><div id="meta-energy" class="meta-cell-val" style="color:#16A34A;">—</div></div>
         <div class="meta-cell"><div class="meta-cell-label">Danceability</div><div id="meta-dance" class="meta-cell-val" style="color:#0EA5E9;">—</div></div>
+        <div class="meta-cell"><div class="meta-cell-label">Mesures</div><div id="meta-bars" class="meta-cell-val" style="color:#A78BFA;">—</div></div>
+        <div class="meta-cell"><div class="meta-cell-label">Canaux</div><div id="meta-channels" class="meta-cell-val" style="color:#F59E0B;">—</div></div>
       </div>
     </div>
 
   </div>
 </div>
+
+<!-- Mobile re-analyze FAB -->
+<button id="mobile-reanalyze-fab" onclick="resetApp()" title="Analyser un autre fichier">
+  <svg width="22" height="22" fill="none" stroke="#000" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+</button>
 
 <audio id="audio-fallback" style="display:none;"></audio>
 
@@ -693,6 +753,9 @@ function showState(state) {
   document.getElementById('drop-zone-section').style.display = state==='drop'    ? 'flex' : 'none';
   document.getElementById('loading-section').style.display   = state==='loading' ? 'flex' : 'none';
   document.getElementById('player-section').style.display    = state==='results' ? 'flex' : 'none';
+  // Mobile re-analyze FAB
+  const fab = document.getElementById('mobile-reanalyze-fab');
+  if (fab) fab.classList.toggle('visible', state === 'results');
 }
 
 function setProgress(pct, label) {
@@ -991,14 +1054,31 @@ function pearson(a, b) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  GENRE ESTIMATION (BPM-informed)
+//  GENRE ESTIMATION (BPM + energy — deterministic)
 // ═══════════════════════════════════════════════════════════
-function estimateGenre(bpm) {
-  const candidates = GENRES.filter(g => bpm >= g.bpm[0]-5 && bpm <= g.bpm[1]+5);
-  if (candidates.length === 0) return GENRES[Math.floor(Math.random()*GENRES.length)];
-  const g = candidates[Math.floor(Math.random()*candidates.length)];
-  const conf = 55 + Math.floor(Math.random()*28);
-  return { ...g, conf };
+function estimateGenre(bpm, rmsEnergy) {
+  // Score each genre: BPM proximity + energy match
+  const energyLevel = rmsEnergy > 0.15 ? 'Élevée' : rmsEnergy > 0.06 ? 'Moyenne' : 'Faible';
+
+  let bestGenre = GENRES[0], bestScore = -Infinity;
+  for (const g of GENRES) {
+    const mid    = (g.bpm[0] + g.bpm[1]) / 2;
+    const range  = (g.bpm[1] - g.bpm[0]) / 2 + 10; // tolerance
+    // Gaussian proximity to genre BPM center
+    const bpmScore = Math.exp(-Math.pow(bpm - mid, 2) / (2 * range * range));
+    // Energy bonus
+    const energyBonus = g.energy === energyLevel ? 0.3 : 0;
+    const total = bpmScore + energyBonus;
+    if (total > bestScore) { bestScore = total; bestGenre = g; }
+  }
+
+  // Confidence: how well does BPM fit the genre range?
+  const mid   = (bestGenre.bpm[0] + bestGenre.bpm[1]) / 2;
+  const range = (bestGenre.bpm[1] - bestGenre.bpm[0]) / 2;
+  const dist  = Math.abs(bpm - mid);
+  const conf  = Math.min(94, Math.max(52, Math.round(92 - (dist / (range + 1)) * 18)));
+
+  return { ...bestGenre, conf };
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1044,32 +1124,55 @@ function showResults(file, bpmResult, chroma, keyResult) {
   document.getElementById('key-conf-bar').style.width = keyResult.confidence + '%';
   document.getElementById('key-conf-bar').style.background = `linear-gradient(90deg,${keyColor},${isMajor?'#06B6D4':'#EC4899'})`;
 
-  // Genre
-  const genre = estimateGenre(bpmResult.bpm);
-  document.getElementById('genre-emoji').textContent = genre.emoji;
-  document.getElementById('genre-name').textContent  = genre.name;
+  // Meta format
+  document.getElementById('meta-format').textContent = ext;
 
-  // Store share data + show button
-  _shareData = { bpm: bpmResult.bpm, confBpm: bpmResult.confidence, noteEn, isMinor: keyResult.isMinor, confKey: keyResult.confidence, genre: genre.name };
+  // Store share data + show share button
+  // (genre, dance, energy computed below after RMS calc)
   const shareBtn = document.getElementById('share-btn');
   if (shareBtn) shareBtn.style.display = 'inline-flex';
-  document.getElementById('genre-desc').textContent  = genre.desc;
-  document.getElementById('genre-conf').textContent  = genre.conf + '%';
-  document.getElementById('genre-conf-bar').style.width = genre.conf + '%';
 
-  // Meta
-  document.getElementById('meta-format').textContent = ext;
-  document.getElementById('meta-dance').textContent  = genre.dance;
-
-  // Compute RMS energy
+  // Compute RMS energy (sampled)
   const rawData = audioBuffer.getChannelData(0);
   let sumSq = 0;
   const step = Math.max(1, Math.floor(rawData.length / 10000));
   let count = 0;
   for (let i = 0; i < rawData.length; i += step) { sumSq += rawData[i]*rawData[i]; count++; }
   const rms = Math.sqrt(sumSq / count);
-  const energyLabel = rms > 0.15 ? 'Élevée' : rms > 0.06 ? 'Moyenne' : 'Faible';
-  document.getElementById('meta-energy').textContent = energyLabel;
+
+  // LUFS estimate (integrated, approximated from RMS)
+  const lufs = rms > 0 ? Math.round(20 * Math.log10(rms) - 0.5) : -99;
+  const lufsStr = lufs <= -99 ? 'Silence' : lufs + ' dBFS';
+  const energyColor = lufs > -14 ? '#22C55E' : lufs > -23 ? '#F59E0B' : '#94A3B8';
+  const metaEnergyEl = document.getElementById('meta-energy');
+  metaEnergyEl.textContent = lufsStr;
+  metaEnergyEl.style.color = energyColor;
+
+  // Genre (now passes rms for energy-aware estimation)
+  const genre = estimateGenre(bpmResult.bpm, rms);
+  document.getElementById('genre-emoji').textContent = genre.emoji;
+  document.getElementById('genre-name').textContent  = genre.name;
+  document.getElementById('genre-desc').textContent  = genre.desc;
+  document.getElementById('genre-conf').textContent  = genre.conf + '%';
+  document.getElementById('genre-conf-bar').style.width = genre.conf + '%';
+
+  // Store share data
+  _shareData = { bpm: bpmResult.bpm, confBpm: bpmResult.confidence, noteEn: NOTES[keyResult.keyIndex], isMinor: keyResult.isMinor, confKey: keyResult.confidence, genre: genre.name };
+
+  // Real danceability (BPM + energy based)
+  const bpmNorm = Math.min(1, Math.max(0, (bpmResult.bpm - 55) / 145));
+  const energyNorm = Math.min(1, rms / 0.25);
+  const danceScore = Math.round((bpmNorm * 0.6 + energyNorm * 0.4) * 100);
+  document.getElementById('meta-dance').textContent = danceScore + '%';
+
+  // Bars count (total measures at detected BPM)
+  const totalBeats = (audioBuffer.duration / 60) * bpmResult.bpm;
+  const bars = Math.round(totalBeats / 4);
+  document.getElementById('meta-bars').textContent = bars + ' mes.';
+
+  // Channels
+  const chStr = audioBuffer.numberOfChannels === 1 ? 'Mono' : audioBuffer.numberOfChannels === 2 ? 'Stéréo' : audioBuffer.numberOfChannels + 'ch';
+  document.getElementById('meta-channels').textContent = chStr;
 
   // Duration
   document.getElementById('meta-duration').textContent = formatTime(audioBuffer.duration);
@@ -1078,8 +1181,9 @@ function showResults(file, bpmResult, chroma, keyResult) {
   // Draw waveform
   drawWaveform(audioBuffer);
 
-  // Draw chroma
+  // Draw chroma + scale notes
   drawChromaBars(chroma, keyResult.keyIndex);
+  drawScaleNotes(keyResult.keyIndex, keyResult.isMinor);
 
   // Start spectrum analyser
   startSpectrumViz();
@@ -1118,6 +1222,27 @@ function drawChromaBars(chroma, rootKey) {
 }
 
 // ═══════════════════════════════════════════════════════════
+//  SCALE NOTES (7 degrees of the detected key)
+// ═══════════════════════════════════════════════════════════
+const MAJOR_INTERVALS = [0, 2, 4, 5, 7, 9, 11];
+const MINOR_INTERVALS = [0, 2, 3, 5, 7, 8, 10];
+
+function drawScaleNotes(rootIndex, isMinor) {
+  const container = document.getElementById('key-scale-notes');
+  if (!container) return;
+  container.innerHTML = '';
+  const intervals = isMinor ? MINOR_INTERVALS : MAJOR_INTERVALS;
+  intervals.forEach((interval, degree) => {
+    const noteIndex = (rootIndex + interval) % 12;
+    const chip = document.createElement('span');
+    chip.className = 'scale-note-chip' + (degree === 0 ? ' root' : '');
+    chip.textContent = NOTES[noteIndex];
+    chip.title = degree === 0 ? 'Tonique' : `Degré ${degree + 1}`;
+    container.appendChild(chip);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
 //  SPECTRUM VISUALIZER (real-time via AnalyserNode)
 // ═══════════════════════════════════════════════════════════
 function startSpectrumViz() {
@@ -1147,19 +1272,30 @@ function startSpectrumViz() {
     specRafId = requestAnimationFrame(draw);
     analyserNode.getByteFrequencyData(dataArr);
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#F9FAFB';
+    ctx.fillStyle = '#080C1A';
     ctx.fillRect(0, 0, W, H);
 
-    const barW = (W / bufLen) * 2;
+    const barW = Math.max(2, (W / bufLen) * 2.2);
     let x = 0;
     for (let i = 0; i < bufLen; i++) {
-      const barH = (dataArr[i] / 255) * H;
+      const barH = Math.max(1, (dataArr[i] / 255) * H);
       const t = i / bufLen;
-      const r = Math.round(59 + (255-59)*t);
-      const g = Math.round(130 + (107-130)*t);
-      const b = Math.round(246 + (43-246)*t);
-      ctx.fillStyle = `rgba(${r},${g},${b},0.75)`;
+      // Cyan → purple → orange gradient across spectrum
+      let r, g, b;
+      if (t < 0.5) {
+        r = Math.round(0   + (155-0)   * (t*2));
+        g = Math.round(200 + (127-200) * (t*2));
+        b = Math.round(255 + (255-255) * (t*2));
+      } else {
+        r = Math.round(155 + (255-155) * ((t-.5)*2));
+        g = Math.round(127 + (107-127) * ((t-.5)*2));
+        b = Math.round(255 + (43-255)  * ((t-.5)*2));
+      }
+      ctx.fillStyle = `rgba(${r},${g},${b},0.85)`;
       ctx.fillRect(x, H - barH, barW - 1, barH);
+      // Glow cap at the top
+      ctx.fillStyle = `rgba(${r},${g},${b},0.4)`;
+      ctx.fillRect(x, H - barH - 2, barW - 1, 2);
       x += barW;
     }
   }
@@ -1380,18 +1516,26 @@ document.addEventListener('DOMContentLoaded', () => {
   wc.addEventListener('mousedown', e => { isDraggingWave = true; seekTo(getPct(e, wc)); });
   wc.addEventListener('mouseup',   () => { isDraggingWave = false; });
 
+  // Touch support for waveform
+  function getTouchPct(e, el) {
+    const touch = e.touches[0] || e.changedTouches[0];
+    const r = el.getBoundingClientRect();
+    return Math.max(0, Math.min(1, (touch.clientX - r.left) / r.width));
+  }
+  wc.addEventListener('touchstart', e => { if (!audioBuffer) return; e.preventDefault(); isDraggingWave = true; seekTo(getTouchPct(e, wc)); }, { passive: false });
+  wc.addEventListener('touchmove',  e => { if (!isDraggingWave) return; e.preventDefault(); seekTo(getTouchPct(e, wc)); }, { passive: false });
+  wc.addEventListener('touchend',   () => { isDraggingWave = false; });
+
   // ── Seekbar drag ──
   const sb = document.getElementById('seekbar-wrap');
-  sb.addEventListener('mousedown', e => {
-    isDraggingSeek = true;
-    seekTo(getPct(e, sb));
-  });
-  document.addEventListener('mousemove', e => {
-    if (!isDraggingSeek) return;
-    seekTo(getPct(e, sb));
-  });
+  sb.addEventListener('mousedown', e => { isDraggingSeek = true; seekTo(getPct(e, sb)); });
+  document.addEventListener('mousemove', e => { if (!isDraggingSeek) return; seekTo(getPct(e, sb)); });
   document.addEventListener('mouseup', () => { isDraggingSeek = false; });
   sb.addEventListener('click', e => seekTo(getPct(e, sb)));
+  // Touch for seekbar
+  sb.addEventListener('touchstart', e => { e.preventDefault(); isDraggingSeek = true; seekTo(getTouchPct(e, sb)); }, { passive: false });
+  sb.addEventListener('touchmove',  e => { if (!isDraggingSeek) return; e.preventDefault(); seekTo(getTouchPct(e, sb)); }, { passive: false });
+  sb.addEventListener('touchend', () => { isDraggingSeek = false; });
 });
 
 // Keyboard shortcuts
@@ -1454,8 +1598,11 @@ function loadSharedResults() {
   fakeChroma[keyIndex] = 1;
   const keyResult  = { keyIndex, isMinor, confidence: confKey };
 
+  // Provide a minimal mock audioBuffer for shared view (no audio data)
+  audioBuffer = { duration: 0, numberOfChannels: 2, length: 0, getChannelData: () => new Float32Array(0) };
   showResults({ name: 'Résultat partagé', size: 0 }, bpmResult, fakeChroma, keyResult);
-  // audioBuffer manquant — désactiver le player
+  audioBuffer = null;
+  // Player not available in shared view
   document.getElementById('player-section').style.display = 'none';
   document.getElementById('state-results').style.display  = 'block';
   showToast('📊 Résultat partagé chargé');
@@ -1487,6 +1634,11 @@ function resetApp() {
   document.getElementById('current-time').textContent = '0:00';
   document.getElementById('seek-fill').style.width = '0%';
   document.getElementById('file-input').value = '';
+  // Clear new meta cells
+  const newMeta = ['meta-bars', 'meta-channels', 'meta-energy', 'meta-dance', 'meta-duration', 'meta-format'];
+  newMeta.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '—'; });
+  const sn = document.getElementById('key-scale-notes');
+  if (sn) sn.innerHTML = '';
   document.getElementById('loop-btn').classList.remove('active');
   document.getElementById('mute-btn').classList.remove('active');
   document.getElementById('icon-vol').style.display  = '';
