@@ -1182,7 +1182,7 @@ async function buyBeat(tier) {
 
     const { data, error } = await db.functions.invoke('stripe-checkout', {
       body: {
-        beat_id: activeLicenseBeat.id,
+        beat_id: activeLicenseBeat.dbId || activeLicenseBeat.id,
         tier,
         buyer_email: buyerEmail,
         buyer_name: buyerName,
