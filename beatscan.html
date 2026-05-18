@@ -338,7 +338,77 @@
       .result-cards { grid-template-columns: 1fr; }
       .results-topbar { padding: 14px 16px 0; }
       .results-body { padding: 18px 16px; }
+      .search-row { flex-wrap: wrap; }
+      .search-input.artist { max-width: 100%; flex: 1; }
+      .search-btn { width: 100%; justify-content: center; }
+      .mode-tab { font-size: 10px; padding: 8px 8px; gap: 5px; }
     }
+
+    /* ── Mode tabs ── */
+    .mode-tabs { display: flex; gap: 3px; padding: 4px; background: rgba(255,255,255,.04); border-radius: 12px; border: 1px solid rgba(0,240,255,.07); }
+    .mode-tab {
+      flex: 1; padding: 9px 14px; border: none; border-radius: 9px; cursor: pointer;
+      font-family: var(--mono); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+      background: transparent; color: rgba(180,210,255,.4); transition: background .15s, color .15s;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+    }
+    .mode-tab.active { background: rgba(0,200,255,.12); color: #00C8FF; }
+    .mode-tab:hover:not(.active) { background: rgba(255,255,255,.06); color: rgba(180,210,255,.7); }
+
+    /* ── Search form ── */
+    #state-search { display: none; }
+    .search-hero { text-align: center; padding: 24px 0 28px; }
+    .search-hero-title { font-size: 20px; font-weight: 800; font-family: var(--mono); text-transform: uppercase; color: #E8F0FF; margin-bottom: 6px; }
+    .search-hero-sub { font-size: 13px; color: rgba(180,210,255,.35); }
+    .search-row { display: flex; gap: 10px; max-width: 600px; margin: 0 auto 12px; }
+    .search-input {
+      flex: 1; background: #0D1228; border: 1.5px solid rgba(0,240,255,.1);
+      border-radius: 12px; padding: 13px 16px; font-family: var(--mono); font-size: 14px;
+      color: #E8F0FF; outline: none; transition: border-color .15s;
+    }
+    .search-input::placeholder { color: rgba(180,210,255,.22); }
+    .search-input:focus { border-color: rgba(0,200,255,.4); }
+    .search-input.artist { max-width: 190px; flex: none; }
+    .search-btn {
+      padding: 13px 22px; background: linear-gradient(135deg,#00C8FF,#9B7FFF);
+      border: none; border-radius: 12px; font-family: var(--mono); font-size: 12px;
+      font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #000;
+      cursor: pointer; display: flex; align-items: center; gap: 8px;
+      white-space: nowrap; transition: opacity .15s, transform .1s;
+      flex-shrink: 0;
+    }
+    .search-btn:hover { opacity: .85; }
+    .search-btn:active { transform: scale(.96); }
+    .search-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .search-error { text-align: center; color: #F87171; font-size: 13px; font-family: var(--mono); padding: 12px; display: none; }
+
+    /* ── Suggestions ── */
+    .search-suggestions { max-width: 600px; margin: 16px auto 0; display: none; }
+    .sug-header { font-size: 10px; font-weight: 700; color: rgba(180,210,255,.3); text-transform: uppercase; letter-spacing: .06em; font-family: var(--mono); margin-bottom: 8px; }
+    .sug-list { display: flex; flex-direction: column; gap: 5px; max-height: 210px; overflow-y: auto; }
+    .sug-item {
+      display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+      background: #0D1228; border: 1.5px solid rgba(0,240,255,.06); border-radius: 10px;
+      cursor: pointer; transition: border-color .15s, background .15s;
+    }
+    .sug-item:hover { border-color: rgba(0,200,255,.2); background: rgba(0,200,255,.04); }
+    .sug-item.active { border-color: rgba(0,200,255,.35); background: rgba(0,200,255,.07); }
+    .sug-title { font-size: 13px; font-weight: 700; color: #E8F0FF; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sug-artist { font-size: 11px; color: rgba(180,210,255,.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
+    .sug-bpm { font-size: 12px; font-weight: 700; color: #00C8FF; font-family: var(--mono); flex-shrink: 0; }
+
+    /* ── Search result cards ── */
+    .sr-song-header { max-width: 600px; margin: 0 auto 20px; display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: #0D1228; border: 1.5px solid rgba(0,240,255,.08); border-radius: 14px; }
+    .sr-song-info { flex: 1; min-width: 0; }
+    .sr-song-title { font-size: 16px; font-weight: 800; color: #E8F0FF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sr-song-artist { font-size: 12px; color: rgba(180,210,255,.4); margin-top: 2px; font-family: var(--mono); }
+    .sr-source-tag { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px; font-size: 10px; font-weight: 700; background: rgba(99,102,241,.08); border: 1px solid rgba(99,102,241,.2); color: #818CF8; font-family: var(--mono); white-space: nowrap; }
+    .camelot-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; font-family: var(--mono); background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); color: rgba(180,210,255,.6); margin-bottom: 10px; }
+
+    /* ── Attribution ── */
+    .getsong-attribution { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 14px; margin-top: 16px; font-size: 11px; color: rgba(180,210,255,.22); font-family: var(--mono); border-top: 1px solid rgba(0,240,255,.05); }
+    .getsong-attribution a { color: rgba(0,200,255,.45); text-decoration: none; transition: color .15s; }
+    .getsong-attribution a:hover { color: rgba(0,200,255,.8); }
 
     /* ── Scale notes ── */
     .scale-notes-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
@@ -572,13 +642,26 @@
   <div class="results-topbar">
     <div class="topbar-inner">
       <div>
-        <div class="page-title">Analyse Audio</div>
-        <div class="page-sub">BPM · Gamme · Genre — analyse réelle par signal audio</div>
+        <div class="page-title" id="topbar-title">Analyse Audio</div>
+        <div class="page-sub" id="topbar-sub">BPM · Gamme · Genre — analyse réelle par signal audio</div>
       </div>
-      <div class="real-badge">⚡ ANALYSE RÉELLE</div>
-      <button id="share-btn" onclick="shareResults()" style="display:none;align-items:center;gap:7px;padding:5px 14px;border:1px solid rgba(0,240,255,.25);background:rgba(0,240,255,.06);color:var(--cyan);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);cursor:none;transition:background .15s,border-color .15s;">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        Partager
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="real-badge" id="topbar-badge">⚡ ANALYSE RÉELLE</div>
+        <button id="share-btn" onclick="shareResults()" style="display:none;align-items:center;gap:7px;padding:5px 14px;border:1px solid rgba(0,240,255,.25);background:rgba(0,240,255,.06);color:var(--cyan);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);cursor:none;transition:background .15s,border-color .15s;">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Partager
+        </button>
+      </div>
+    </div>
+    <!-- Mode tabs -->
+    <div class="mode-tabs" style="margin-bottom:-1px;">
+      <button class="mode-tab active" data-mode="file" onclick="switchMode('file')">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2z"/></svg>
+        Fichier Audio
+      </button>
+      <button class="mode-tab" data-mode="search" onclick="switchMode('search')">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Recherche
       </button>
     </div>
   </div>
@@ -694,6 +777,123 @@
       </div>
     </div>
 
+    <!-- ══════════════════════════════════════════════
+         SEARCH MODE — GetSongBPM / GetSongKey API
+    ══════════════════════════════════════════════ -->
+    <div id="state-search">
+
+      <!-- Hero + form -->
+      <div class="search-hero">
+        <div class="search-hero-title">Recherche par titre</div>
+        <div class="search-hero-sub">BPM exact · Tonalité · Camelot · Genre — données GetSongKey</div>
+      </div>
+
+      <div class="search-row">
+        <input type="text" id="search-title" class="search-input" placeholder="Titre de la chanson…" onkeydown="if(event.key==='Enter')searchSong()">
+        <input type="text" id="search-artist" class="search-input artist" placeholder="Artiste…" onkeydown="if(event.key==='Enter')searchSong()">
+        <button id="search-btn" class="search-btn" onclick="searchSong()">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Analyser
+        </button>
+      </div>
+
+      <div id="search-error" class="search-error"></div>
+
+      <!-- Suggestions (multiple results) -->
+      <div id="search-suggestions" class="search-suggestions">
+        <div class="sug-header">Sélectionne la bonne version</div>
+        <div id="search-sug-list" class="sug-list"></div>
+      </div>
+
+      <!-- Results section -->
+      <div id="search-results-section" style="display:none;margin-top:24px;">
+
+        <!-- Song header -->
+        <div class="sr-song-header">
+          <div class="sr-song-info">
+            <div class="sr-song-title" id="sr-title">—</div>
+            <div class="sr-song-artist" id="sr-artist">—</div>
+          </div>
+          <div class="sr-source-tag">
+            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            GETSONGKEY
+          </div>
+        </div>
+
+        <!-- 3 result cards -->
+        <div class="result-cards">
+
+          <!-- BPM -->
+          <div class="res-card">
+            <div class="res-card-strip" style="background:linear-gradient(90deg,#00C8FF,#9B7FFF);"></div>
+            <div class="res-card-label" style="color:#0EA5E9;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Tempo
+            </div>
+            <div id="sr-bpm" class="res-card-val" style="color:#E8F0FF;">—</div>
+            <div class="res-card-unit" style="color:#0EA5E9;">BPM</div>
+            <div class="sr-source-tag" style="margin-bottom:10px;">
+              <svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              GETSONGBPM.COM
+            </div>
+            <div class="conf-row"><span>Mesure</span><span id="sr-time-sig">—</span></div>
+          </div>
+
+          <!-- KEY + Camelot -->
+          <div class="res-card">
+            <div class="res-card-strip" id="sr-key-strip"></div>
+            <div class="res-card-label" style="color:#8B5CF6;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>Tonalité
+            </div>
+            <div id="sr-key" class="res-card-val" style="font-size:52px;">—</div>
+            <div id="sr-key-mode" class="key-mode-badge" style="margin-bottom:8px;">—</div>
+            <div class="camelot-badge">
+              <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 8v4l3 3"/></svg>
+              Camelot : <span id="sr-camelot" style="color:#E8F0FF;margin-left:3px;">—</span>
+            </div>
+            <div class="sr-source-tag">
+              <svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              GETSONGKEY.COM
+            </div>
+          </div>
+
+          <!-- Genre -->
+          <div class="res-card">
+            <div class="res-card-strip" style="background:linear-gradient(90deg,#FF6B2B,#FF47B5);"></div>
+            <div class="res-card-label" style="color:#EA580C;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4"/></svg>Genre
+            </div>
+            <div id="sr-genre-emoji" class="genre-emoji-big">🎵</div>
+            <div id="sr-genre-name" class="genre-name-tag" style="background:rgba(255,107,43,.08);border:1px solid rgba(255,107,43,.2);color:#C44000;">—</div>
+            <div id="sr-genre-extra" class="genre-sub"></div>
+            <div class="sr-source-tag">
+              <svg width="9" height="9" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              SPOTIFY DATA
+            </div>
+          </div>
+
+        </div><!-- /result-cards -->
+
+        <!-- Meta row -->
+        <div class="meta-row" style="grid-template-columns:repeat(4,1fr);">
+          <div class="meta-cell"><div class="meta-cell-label">Danceability</div><div id="sr-dance" class="meta-cell-val" style="color:#0EA5E9;">—</div></div>
+          <div class="meta-cell"><div class="meta-cell-label">Acousticness</div><div id="sr-acoustic" class="meta-cell-val" style="color:#22C55E;">—</div></div>
+          <div class="meta-cell"><div class="meta-cell-label">Open Key</div><div id="sr-open-key" class="meta-cell-val" style="color:#A78BFA;">—</div></div>
+          <div class="meta-cell"><div class="meta-cell-label">Energie</div><div id="sr-energy" class="meta-cell-val" style="color:#F59E0B;">—</div></div>
+        </div>
+
+        <!-- Required backlink attribution -->
+        <div class="getsong-attribution">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Données musicales via
+          <a href="https://getsongbpm.com" target="_blank" rel="noopener">GetSongBPM</a>
+          &amp;
+          <a href="https://getsongkey.com" target="_blank" rel="noopener">GetSongKey</a>
+        </div>
+
+      </div><!-- /search-results-section -->
+
+    </div><!-- /state-search -->
+
   </div>
 </div>
 
@@ -747,6 +947,8 @@ let isDraggingSeek = false;
 //  UI STATE
 // ═══════════════════════════════════════════════════════════
 function showState(state) {
+  // If in search mode, ignore file state changes
+  if (typeof currentMode !== 'undefined' && currentMode === 'search') return;
   document.getElementById('state-drop').style.display    = state==='drop'    ? 'flex'  : 'none';
   document.getElementById('state-loading').style.display = state==='loading' ? 'flex'  : 'none';
   document.getElementById('state-results').style.display = state==='results' ? 'block' : 'none';
@@ -1652,6 +1854,221 @@ function resetApp() {
 
 // init
 showState('drop');
+
+// ═══════════════════════════════════════════════════════════
+//  GETSONGKEY / GETSONGBPM API — SEARCH MODE
+// ═══════════════════════════════════════════════════════════
+
+// ⚠️  Remplace par ta clé gratuite obtenue sur getsongbpm.com/api
+const GETSONG_API_KEY = 'YOUR_API_KEY_HERE';
+
+let currentMode = 'file';
+
+function switchMode(mode) {
+  currentMode = mode;
+  // Update tab states
+  document.querySelectorAll('.mode-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.mode === mode)
+  );
+
+  if (mode === 'file') {
+    document.getElementById('state-search').style.display = 'none';
+    // Update topbar
+    document.getElementById('topbar-title').textContent = 'Analyse Audio';
+    document.getElementById('topbar-sub').textContent   = 'BPM · Gamme · Genre — analyse réelle par signal audio';
+    document.getElementById('topbar-badge').textContent = '⚡ ANALYSE RÉELLE';
+    document.getElementById('topbar-badge').style.display = '';
+    // Restore file state
+    if (audioBuffer) {
+      showState('results');
+    } else {
+      showState('drop');
+    }
+  } else {
+    // Hide all file states
+    ['state-drop','state-loading','state-results','drop-zone-section','loading-section','player-section']
+      .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+    const fab = document.getElementById('mobile-reanalyze-fab');
+    if (fab) fab.classList.remove('visible');
+    const shareBtn = document.getElementById('share-btn');
+    if (shareBtn) shareBtn.style.display = 'none';
+    // Update topbar
+    document.getElementById('topbar-title').textContent = 'Recherche';
+    document.getElementById('topbar-sub').textContent   = 'BPM · Tonalité · Camelot · Genre — données GetSongKey';
+    document.getElementById('topbar-badge').style.display = 'none';
+    document.getElementById('state-search').style.display = 'block';
+  }
+}
+
+// ── Camelot wheel map (key_of → Camelot notation) ──────────
+const CAMELOT_MAP = {
+  'C':'8B','C#':'3B','Db':'3B','D':'10B','D#':'5B','Eb':'5B',
+  'E':'12B','F':'7B','F#':'2B','Gb':'2B','G':'9B','G#':'4B',
+  'Ab':'4B','A':'11B','A#':'6B','Bb':'6B','B':'1B',
+  'Cm':'5A','C#m':'12A','Dbm':'12A','Dm':'7A','D#m':'2A','Ebm':'2A',
+  'Em':'9A','Fm':'4A','F#m':'11A','Gbm':'11A','Gm':'6A','G#m':'1A',
+  'Abm':'1A','Am':'8A','A#m':'3A','Bbm':'3A','Bm':'10A',
+};
+
+function parseSongKey(keyOf) {
+  if (!keyOf) return { note:'—', modeFr:'', camelot:'—', isMinor:false };
+  const isMinor = keyOf.endsWith('m');
+  const note = isMinor ? keyOf.slice(0,-1) : keyOf;
+  const camelot = CAMELOT_MAP[keyOf] || '—';
+  const modeFr  = isMinor ? 'Mineur' : 'Majeur';
+  return { note, modeFr, camelot, isMinor };
+}
+
+// ── Robust response parser (API may vary slightly) ──────────
+function extractSongs(data) {
+  // Possible structures encountered in the wild:
+  return data?.search?.data?.songs?.data    // most common
+      || data?.search?.songs?.data
+      || data?.songs?.data
+      || data?.data?.songs
+      || (Array.isArray(data?.songs) ? data.songs : null)
+      || null;
+}
+function extractSong(data) {
+  return data?.song || data;
+}
+
+// ── Main search function ────────────────────────────────────
+async function searchSong() {
+  const title = (document.getElementById('search-title').value || '').trim();
+  if (!title) { showToast('✏️ Saisis un titre de chanson'); return; }
+
+  if (GETSONG_API_KEY === 'YOUR_API_KEY_HERE') {
+    document.getElementById('search-error').textContent =
+      '⚠️ Clé API non configurée. Obtiens ta clé gratuite sur getsongbpm.com/api et remplace YOUR_API_KEY_HERE dans le code.';
+    document.getElementById('search-error').style.display = 'block';
+    return;
+  }
+
+  const artist = (document.getElementById('search-artist').value || '').trim();
+  const lookup = artist ? `${title} ${artist}` : title;
+
+  const btn = document.getElementById('search-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="animation:spin .8s linear infinite"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Recherche…';
+
+  document.getElementById('search-error').style.display = 'none';
+  document.getElementById('search-results-section').style.display = 'none';
+  document.getElementById('search-suggestions').style.display = 'none';
+
+  try {
+    const url = `https://api.getsong.co/search/?api_key=${GETSONG_API_KEY}&type=song&lookup=${encodeURIComponent(lookup)}`;
+    const res  = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    const songs = extractSongs(data);
+    if (!songs || songs.length === 0) {
+      document.getElementById('search-error').textContent = `Aucun résultat pour "${title}". Essaie un autre titre ou ajoute l'artiste.`;
+      document.getElementById('search-error').style.display = 'block';
+      return;
+    }
+
+    renderSuggestions(songs);
+    // Auto-load the first result
+    await loadSongDetail(songs[0].id, songs[0]);
+
+  } catch (err) {
+    console.error('[BeatScan Search]', err);
+    document.getElementById('search-error').textContent =
+      'Erreur de connexion à l\'API. Vérifie ta clé et ta connexion internet.';
+    document.getElementById('search-error').style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Analyser';
+  }
+}
+
+// ── Load full song details ──────────────────────────────────
+async function loadSongDetail(songId, fallback) {
+  try {
+    const url = `https://api.getsong.co/song/?api_key=${GETSONG_API_KEY}&id=${songId}`;
+    const res  = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    renderSearchResults(extractSong(data));
+  } catch (_) {
+    // Fallback to partial data from search list
+    if (fallback) renderSearchResults(fallback);
+  }
+}
+
+// ── Render suggestion pills ─────────────────────────────────
+function renderSuggestions(songs) {
+  const list = document.getElementById('search-sug-list');
+  list.innerHTML = '';
+  songs.slice(0, 7).forEach((s, idx) => {
+    const item = document.createElement('div');
+    item.className = 'sug-item' + (idx === 0 ? ' active' : '');
+    item.innerHTML = `
+      <div style="flex:1;min-width:0;">
+        <div class="sug-title">${s.title || '—'}</div>
+        <div class="sug-artist">${s.artist?.name || '—'}</div>
+      </div>
+      ${s.tempo ? `<div class="sug-bpm">${Math.round(s.tempo)} BPM</div>` : ''}
+    `;
+    item.onclick = () => {
+      document.querySelectorAll('.sug-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      loadSongDetail(s.id, s);
+    };
+    list.appendChild(item);
+  });
+  // Only show the suggestions block if there's more than one result
+  document.getElementById('search-suggestions').style.display =
+    songs.length > 1 ? 'block' : 'none';
+}
+
+// ── Render the result cards ─────────────────────────────────
+function renderSearchResults(song) {
+  // Song header
+  document.getElementById('sr-title').textContent  = song.title  || '—';
+  document.getElementById('sr-artist').textContent = song.artist?.name || '—';
+
+  // BPM
+  const bpm = parseInt(song.tempo) || 0;
+  document.getElementById('sr-bpm').textContent      = bpm || '—';
+  document.getElementById('sr-time-sig').textContent = song.time_sig || '—';
+
+  // Key + Camelot
+  const k = parseSongKey(song.key_of);
+  const keyColor    = k.isMinor ? '#8B5CF6' : '#3B82F6';
+  const keyColorRgb = k.isMinor ? '139,92,246' : '59,130,246';
+  document.getElementById('sr-key-strip').style.background =
+    `linear-gradient(90deg,${keyColor},${k.isMinor ? '#EC4899' : '#06B6D4'})`;
+  document.getElementById('sr-key').textContent        = k.note;
+  document.getElementById('sr-key').style.color        = keyColor;
+  const modeBadge = document.getElementById('sr-key-mode');
+  modeBadge.textContent        = k.modeFr;
+  modeBadge.style.background   = `rgba(${keyColorRgb},.1)`;
+  modeBadge.style.border       = `1px solid rgba(${keyColorRgb},.25)`;
+  modeBadge.style.color        = keyColor;
+  document.getElementById('sr-camelot').textContent   = k.camelot;
+  document.getElementById('sr-open-key').textContent  = song.open_key || '—';
+
+  // Genre
+  const genres    = song.artist?.genres || [];
+  const genreMatch = GENRES.find(g => bpm >= g.bpm[0]-5 && bpm <= g.bpm[1]+5);
+  document.getElementById('sr-genre-emoji').textContent = genreMatch ? genreMatch.emoji : '🎵';
+  const primaryGenre = genres[0] || (genreMatch ? genreMatch.name : '—');
+  document.getElementById('sr-genre-name').textContent  = primaryGenre;
+  document.getElementById('sr-genre-extra').textContent = genres.slice(1,4).join(' · ');
+
+  // Meta
+  const dance    = song.danceability != null ? Math.round(song.danceability) + '%' : '—';
+  const acoustic = song.acousticness != null ? Math.round(song.acousticness) + '%' : '—';
+  const energy   = song.energy       != null ? Math.round(song.energy)       + '%' : '—';
+  document.getElementById('sr-dance').textContent    = dance;
+  document.getElementById('sr-acoustic').textContent = acoustic;
+  document.getElementById('sr-energy').textContent   = energy;
+
+  document.getElementById('search-results-section').style.display = 'block';
+}
 </script>
 
 <script>
