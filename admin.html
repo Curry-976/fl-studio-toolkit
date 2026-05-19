@@ -16,11 +16,7 @@
       --muted: rgba(255,255,255,.35); --mono: 'JetBrains Mono', monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: #fff; font-family: var(--mono), monospace; min-height: 100vh; cursor: none; }
-    #c-dot  { position:fixed; width:8px; height:8px; border-radius:50%; background:var(--cyan);
-               transform:translate(-50%,-50%); pointer-events:none; z-index:9999; box-shadow:0 0 10px var(--cyan); }
-    #c-ring { position:fixed; width:32px; height:32px; border-radius:50%; border:1.5px solid rgba(0,240,255,.5);
-               transform:translate(-50%,-50%); pointer-events:none; z-index:9998; transition:border-color .2s; }
+    body { background: var(--bg); color: #fff; font-family: var(--mono), monospace; min-height: 100vh; }
 
     .admin-layout { display: flex; flex-direction: column; min-height: 100vh; padding-left: var(--sidebar-w, 72px); }
 
@@ -135,8 +131,7 @@
   </style>
 </head>
 <body>
-<div id="c-dot"></div>
-<div id="c-ring"></div>
+
 
 <div id="auth-gate" style="display:none;">
   <h2>🔒 Accès refusé</h2>
@@ -363,12 +358,6 @@ function toast(msg, color = 'var(--cyan)') {
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 3000);
 }
-
-// ── Cursor
-const _dot = document.getElementById('c-dot'), _ring = document.getElementById('c-ring');
-let _mx=0,_my=0,_rx=0,_ry=0;
-document.addEventListener('mousemove', e => { _mx=e.clientX; _my=e.clientY; _dot.style.left=_mx+'px'; _dot.style.top=_my+'px'; });
-(function animRing(){ _rx+=(_mx-_rx)*.12; _ry+=(_my-_ry)*.12; _ring.style.left=_rx+'px'; _ring.style.top=_ry+'px'; requestAnimationFrame(animRing); })();
 
 // ── Init
 document.addEventListener('DOMContentLoaded', () => {

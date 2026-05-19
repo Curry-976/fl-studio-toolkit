@@ -10,6 +10,15 @@
   style.id = 'navbar-styles';
   style.textContent = `
 
+    /* ── Curseur personnalisé (desktop) ── */
+    body { cursor: none !important; }
+    #c-dot  { position:fixed; width:8px; height:8px; border-radius:50%;
+               background:var(--cyan,#00F0FF); transform:translate(-50%,-50%);
+               pointer-events:none; z-index:9999; box-shadow:0 0 10px var(--cyan,#00F0FF); }
+    #c-ring { position:fixed; width:32px; height:32px; border-radius:50%;
+               border:1.5px solid rgba(0,240,255,.5); transform:translate(-50%,-50%);
+               pointer-events:none; z-index:9998; transition:border-color .2s; }
+
     /* ══════════════════════════════════
        BASE — Sidebar verticale (desktop)
     ══════════════════════════════════ */
@@ -373,6 +382,11 @@
     const target = document.querySelector('.layout') || document.body;
     target.insertAdjacentHTML('afterbegin', html);
 
+    // Injecte le curseur s'il n'existe pas déjà dans la page
+    if (!document.getElementById('c-dot')) {
+      document.body.insertAdjacentHTML('beforeend', '<div id="c-dot"></div><div id="c-ring"></div>');
+    }
+
     // Logout visibility
     try {
       const sbKey = Object.keys(localStorage).find(k => k.startsWith('sb-') && k.endsWith('-auth-token'));
@@ -387,6 +401,22 @@
       }
     } catch(e) {}
   });
+
+  // ── Curseur — animation partagée ─────────────────────────────
+  (function () {
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      const d = document.getElementById('c-dot');
+      if (d) { d.style.left = mx + 'px'; d.style.top = my + 'px'; }
+    });
+    (function loop() {
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      const r = document.getElementById('c-ring');
+      if (r) { r.style.left = rx + 'px'; r.style.top = ry + 'px'; }
+      requestAnimationFrame(loop);
+    })();
+  })();
 
   // ── Drawer ────────────────────────────────────────────────────
   window.sbToggleDrawer = function() {

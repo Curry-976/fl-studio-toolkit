@@ -55,7 +55,7 @@
       --border:rgba(0,240,255,.08); --border2:rgba(0,240,255,.15);
       --mono:'Space Mono',monospace; --sidebar-w:72px;
     }
-    body { min-height:100vh; cursor:none; }
+    body { min-height:100vh; }
     body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:1000;
       background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px); }
     #bg-grid { position:fixed; inset:0; z-index:0; pointer-events:none;
@@ -63,10 +63,6 @@
       background-size:40px 40px; animation:grid-drift 20s linear infinite; }
     @keyframes grid-drift { 0%{background-position:0 0} 100%{background-position:40px 40px} }
     #bg-particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
-    #c-dot  { position:fixed; width:8px; height:8px; border-radius:50%; background:var(--cyan);
-               transform:translate(-50%,-50%); pointer-events:none; z-index:9999; box-shadow:0 0 10px var(--cyan); }
-    #c-ring { position:fixed; width:32px; height:32px; border-radius:50%; border:1.5px solid rgba(0,240,255,.5);
-               transform:translate(-50%,-50%); pointer-events:none; z-index:9998; transition:border-color .2s; }
 
     /* ── Layout ── */
     .layout { display:flex; min-height:100vh; position:relative; z-index:2; }
@@ -732,8 +728,7 @@
 <body>
 <canvas id="bg-particles"></canvas>
 <div id="bg-grid"></div>
-<div id="c-dot"></div>
-<div id="c-ring"></div>
+
 
 <div class="layout">
 
@@ -1208,12 +1203,6 @@
 </div>
 
 <script>
-// ── Cursor ──
-const dot=document.getElementById('c-dot'),ring=document.getElementById('c-ring');
-let _mx=0,_my=0,_rx=0,_ry=0;
-document.addEventListener('mousemove',e=>{_mx=e.clientX;_my=e.clientY;dot.style.left=_mx+'px';dot.style.top=_my+'px';});
-(function animRing(){_rx+=(_mx-_rx)*.12;_ry+=(_my-_ry)*.12;ring.style.left=_rx+'px';ring.style.top=_ry+'px';requestAnimationFrame(animRing);})();
-
 // ── Particles ──
 const _cv=document.getElementById('bg-particles'),_cx=_cv.getContext('2d');
 let _W,_H,_pts=[];
