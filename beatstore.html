@@ -1192,36 +1192,7 @@ function _drawPts(){_cx.clearRect(0,0,_W,_H);_pts.forEach(p=>{p.update();_cx.beg
 _drawPts();
 
 // ═══════════════════════════════════════════════════════════
-//  BEAT DATA — 6 demo beats (used when Supabase returns nothing)
-// ═══════════════════════════════════════════════════════════
-const DEMO_BEATS = [
-  { id:1, title:'NIGHT CRAWLER', producer:'MayanaBeat', genre:'Trap', bpm:140, key:'Fm', mood:'Sombre',
-    plays:4821, sales:23, accent:'#00F0FF',
-    prices:{ lease:29, trackout:59, exclu:199 }, dur:187,
-    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
-  { id:2, title:'DARK MATTER', producer:'MayanaBeat', genre:'Drill', bpm:145, key:'Cm', mood:'Agressif',
-    plays:3209, sales:17, accent:'#BF5FFF',
-    prices:{ lease:35, trackout:69, exclu:249 }, dur:203,
-    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
-  { id:3, title:'LOTUS FIELDS', producer:'MayanaBeat', genre:'Lo-Fi', bpm:88, key:'G', mood:'Détendu',
-    plays:6012, sales:41, accent:'#00FF88',
-    prices:{ lease:19, trackout:39, exclu:149 }, dur:215,
-    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
-  { id:4, title:'AFRO ECLIPSE', producer:'MayanaBeat', genre:'Afrobeats', bpm:105, key:'Am', mood:'Festif',
-    plays:2741, sales:11, accent:'#FFD700',
-    prices:{ lease:29, trackout:59, exclu:199 }, dur:192,
-    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
-  { id:5, title:'PHARAOH WAVE', producer:'MayanaBeat', genre:'Phonk', bpm:130, key:'Dm', mood:'Puissant',
-    plays:5334, sales:28, accent:'#FF6B35',
-    prices:{ lease:32, trackout:65, exclu:229 }, dur:178,
-    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
-  { id:6, title:'VELVET GROOVE', producer:'MayanaBeat', genre:'R&B', bpm:92, key:'Bb', mood:'Romantique',
-    plays:1887, sales:8, accent:'#FF6B9D',
-    prices:{ lease:25, trackout:49, exclu:179 }, dur:224,
-    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3' },
-];
-
-const BEATS = [...DEMO_BEATS];
+const BEATS = [];
 
 // ── Pseudo-random waveform (seeded)
 function seededRandom(n) { const x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); }
@@ -1766,14 +1737,7 @@ function showToast(msg, color) {
 
 async function loadBeats() {
   if (!SUPABASE_READY) {
-    // No Supabase — keep demo beats and render
-    BEATS.length = 0;
-    DEMO_BEATS.forEach(b => BEATS.push(b));
     applyFilters();
-    // update stats from demo
-    document.getElementById('stat-beats').textContent = BEATS.length;
-    document.getElementById('stat-prod').textContent  = 1;
-    document.getElementById('stat-sales').textContent = BEATS.reduce((s,b) => s + b.sales, 0);
     return;
   }
 
@@ -1787,9 +1751,7 @@ async function loadBeats() {
       .limit(100);
 
     if (error || !data || data.length === 0) {
-      // Fall back to demo beats
       BEATS.length = 0;
-      DEMO_BEATS.forEach(b => BEATS.push(b));
       applyFilters();
       return;
     }
