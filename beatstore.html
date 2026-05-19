@@ -618,7 +618,36 @@
     }
     .row-play:hover, .beat-row.playing .row-play { border-color:var(--cyan); color:var(--cyan); background:rgba(0,240,255,.1); }
     .row-play svg { width:12px; height:12px; }
-    .row-wave { width:80px; height:28px; flex-shrink:0; }
+    .row-wave { width:88px; height:32px; flex-shrink:0; border-radius:2px; display:block; }
+
+    /* ── Equalizer animé (remplace la mini-waveform quand en lecture) ── */
+    .eq-bars { display:none; align-items:flex-end; justify-content:center; gap:2px;
+               width:88px; height:32px; flex-shrink:0; }
+    .beat-row.playing .eq-bars  { display:flex; }
+    .beat-row.playing .row-wave { display:none; }
+    .beat-row.paused  .eq-bars  { display:flex; }
+    .beat-row.paused  .row-wave { display:none; }
+    .beat-row.paused  .eq-bar   { animation-play-state:paused; opacity:.45; }
+    .eq-bar {
+      width:4px; border-radius:2px 2px 0 0;
+      background:var(--cyan);
+      animation: eq-dance 0.6s ease-in-out infinite alternate;
+      transform-origin: bottom center;
+    }
+    .eq-bar:nth-child(1){ height:40%; animation-delay:0s;    animation-duration:.5s; }
+    .eq-bar:nth-child(2){ height:80%; animation-delay:.08s;  animation-duration:.7s; }
+    .eq-bar:nth-child(3){ height:55%; animation-delay:.15s;  animation-duration:.4s; }
+    .eq-bar:nth-child(4){ height:95%; animation-delay:.05s;  animation-duration:.6s; }
+    .eq-bar:nth-child(5){ height:65%; animation-delay:.22s;  animation-duration:.5s; }
+    .eq-bar:nth-child(6){ height:45%; animation-delay:.12s;  animation-duration:.8s; }
+    .eq-bar:nth-child(7){ height:75%; animation-delay:.03s;  animation-duration:.45s; }
+    .eq-bar:nth-child(8){ height:50%; animation-delay:.18s;  animation-duration:.65s; }
+    @keyframes eq-dance {
+      from { transform:scaleY(0.25); opacity:.5; }
+      to   { transform:scaleY(1);    opacity:1; }
+    }
+    /* Couleur par genre sur les barres EQ */
+    .beat-row.playing[data-accent] .eq-bar { background: var(--row-accent, var(--cyan)); }
     .row-info { flex:1; min-width:0; }
     .row-title { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .row-producer { font-size:11px; color:var(--cyan); margin-top:1px; }
@@ -1194,30 +1223,107 @@ _drawPts();
 // ═══════════════════════════════════════════════════════════
 const BEATS = [];
 
-// ── Pseudo-random waveform (seeded)
+// ── Pseudo-random waveform (seeded) ─────────────────────────────
 function seededRandom(n) { const x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); }
 
-function drawWaveform(canvas, accent, seed, progress = 0) {
+// Multi-octave noise → courbe plus naturelle (proche d'une vraie forme d'onde)
+function waveNoise(seed, i) {
+  // 3 octaves : basse fréquence (forme globale) + deux harmoniques (détails)
+  const s0 = seededRandom(seed + i * 0.13);
+  const s1 = seededRandom(seed + i * 0.37 + 17.3);
+  const s2 = seededRandom(seed + i * 0.71 + 53.1);
+  return s0 * 0.55 + s1 * 0.30 + s2 * 0.15;   // somme pondérée ∈ [0,1]
+}
+
+// Parse '#RRGGBB' → {r,g,b}
+function hexRgb(hex) {
+  return { r: parseInt(hex.slice(1,3),16), g: parseInt(hex.slice(3,5),16), b: parseInt(hex.slice(5,7),16) };
+}
+
+// Arrondi portable (roundRect dispo Chrome 99+, Safari 15.4+, FF 112+)
+function roundRect(ctx, x, y, w, h, r) {
+  if (ctx.roundRect) { ctx.roundRect(x, y, w, h, r); return; }
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y);
+}
+
+/**
+ * drawWaveform — barres symétriques (miroir haut/bas), dégradé, bords arrondis
+ * @param {HTMLCanvasElement} canvas
+ * @param {string}  accent   '#RRGGBB'
+ * @param {number}  seed     identifiant du beat
+ * @param {number}  progress 0→1
+ * @param {boolean} isPlayer true = player principal (plus large, glow, ligne de curseur)
+ */
+function drawWaveform(canvas, accent, seed, progress = 0, isPlayer = false) {
+  const dpr = window.devicePixelRatio || 1;
+  const dispW = canvas.clientWidth  || canvas.offsetWidth  || (isPlayer ? 400 : 88);
+  const dispH = canvas.clientHeight || canvas.offsetHeight || (isPlayer ? 44  : 32);
+  // évite le flou sur écrans Retina
+  if (canvas.width !== dispW * dpr || canvas.height !== dispH * dpr) {
+    canvas.width  = dispW * dpr;
+    canvas.height = dispH * dpr;
+  }
   const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  ctx.clearRect(0, 0, W, H);
-  const bars = Math.floor(W / 4);
-  const bW = W / bars;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, dispW, dispH);
+
+  const W = dispW, H = dispH, cy = H / 2;
+  const bW   = isPlayer ? 3  : 2;   // largeur barre (px logiques)
+  const gap  = isPlayer ? 2  : 1;   // espace entre barres
+  const step = bW + gap;
+  const bars = Math.floor(W / step);
+  const progX = progress * W;
+  const { r, g, b } = hexRgb(accent);
+
   for (let i = 0; i < bars; i++) {
-    const r1 = seededRandom(seed + i);
-    const r2 = seededRandom(seed + i + 0.5);
-    const h = (r1 * 0.6 + r2 * 0.4) * H * 0.75 + H * 0.12;
-    const played = i / bars <= progress;
-    const alpha = played ? 0.9 : 0.22;
-    ctx.fillStyle = accent + Math.round(alpha * 255).toString(16).padStart(2,'0');
-    ctx.fillRect(i * bW + 1, (H - h) / 2, bW - 2, h);
+    const x   = i * step;
+    const n   = waveNoise(seed, i);
+    const amp = n * cy * 0.82 + cy * 0.10;   // amplitude min 10 % de cy
+
+    const played  = x < progX;
+    const alpha   = played ? 1 : (isPlayer ? 0.18 : 0.22);
+
+    if (played && isPlayer) {
+      // Dégradé vertical : plus vif au centre
+      const grd = ctx.createLinearGradient(x, cy - amp, x, cy + amp);
+      grd.addColorStop(0,   `rgba(${r},${g},${b},0.10)`);
+      grd.addColorStop(0.3, `rgba(${r},${g},${b},0.90)`);
+      grd.addColorStop(0.5, `rgba(${r},${g},${b},1.00)`);
+      grd.addColorStop(0.7, `rgba(${r},${g},${b},0.90)`);
+      grd.addColorStop(1,   `rgba(${r},${g},${b},0.10)`);
+      ctx.fillStyle = grd;
+    } else {
+      ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+    }
+
+    // Barre symétrique (haut + bas)
+    ctx.beginPath();
+    roundRect(ctx, x, cy - amp, bW, amp * 2, bW / 2);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Ligne de curseur dans le player
+  if (isPlayer && progress > 0.001 && progress < 0.999) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+    ctx.lineWidth   = 1.5;
+    ctx.shadowColor = `rgba(${r},${g},${b},0.6)`;
+    ctx.shadowBlur  = 6;
+    ctx.beginPath();
+    ctx.moveTo(progX, 0);
+    ctx.lineTo(progX, H);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
   }
 }
 
 function drawPlayerWave(accent, seed, progress = 0) {
   const canvas = document.getElementById('player-wave');
-  canvas.width = canvas.offsetWidth || 400;
-  drawWaveform(canvas, accent, seed, progress);
+  drawWaveform(canvas, accent, seed, progress, true);
 }
 
 // ── Player state (real HTML5 Audio)
@@ -1249,8 +1355,10 @@ _audio.addEventListener('loadedmetadata', () => {
 _audio.addEventListener('ended', () => {
   isPlaying = false;
   updatePlayIcon();
-  // Auto-next
   if (currentBeat) {
+    const row = document.querySelector(`.beat-row[data-id="${currentBeat.id}"]`);
+    if (row) { row.classList.remove('playing'); row.classList.add('paused'); }
+    // Auto-next
     const idx = filtered.findIndex(b => b.id === currentBeat.id);
     if (idx < filtered.length - 1) playBeat(filtered[idx + 1]);
   }
@@ -1262,7 +1370,7 @@ _audio.addEventListener('error', () => {
 
 function playBeat(beat) {
   // Mark cards / rows
-  document.querySelectorAll('.beat-card,.beat-row').forEach(c => c.classList.remove('playing'));
+  document.querySelectorAll('.beat-card,.beat-row').forEach(c => c.classList.remove('playing','paused'));
   const card = document.querySelector(`.beat-card[data-id="${beat.id}"], .beat-row[data-id="${beat.id}"]`);
   if (card) card.classList.add('playing');
 
@@ -1292,12 +1400,15 @@ function playBeat(beat) {
 
 function togglePlay() {
   if (!currentBeat) return;
+  const row = document.querySelector(`.beat-row[data-id="${currentBeat.id}"]`);
   if (_audio.paused) {
     _audio.play().catch(() => {});
     isPlaying = true;
+    if (row) { row.classList.remove('paused'); row.classList.add('playing'); }
   } else {
     _audio.pause();
     isPlaying = false;
+    if (row) { row.classList.remove('playing'); row.classList.add('paused'); }
   }
   updatePlayIcon();
 }
@@ -1333,7 +1444,7 @@ function closePlayer() {
   _audio.src = '';
   isPlaying = false;
   document.getElementById('player-bar').classList.remove('visible');
-  document.querySelectorAll('.beat-card,.beat-row').forEach(c => c.classList.remove('playing'));
+  document.querySelectorAll('.beat-card,.beat-row').forEach(c => c.classList.remove('playing','paused'));
   currentBeat = null;
 }
 
@@ -1400,12 +1511,17 @@ function renderGrid() {
     grid.className = 'beat-list';
     grid.innerHTML = filtered.map((b, idx) => {
       const isNow = currentBeat && currentBeat.id === b.id;
-      return `<div class="beat-row${isNow?' playing':''}" data-id="${b.id}">
+      return `<div class="beat-row${isNow?' playing':''}" data-id="${b.id}" data-accent="${b.accent}" style="--row-accent:${b.accent}">
         <div class="row-num">${idx + 1}</div>
         <button class="row-play" onclick="playBeat(BEATS.find(x=>x.id===${b.id}))" title="Écouter ${b.title}">
           ${isNow && isPlaying ? PAUSE_ICON_SVG : PLAY_ICON_SVG}
         </button>
-        <canvas class="row-wave" id="wv-${b.id}" width="80" height="28" aria-hidden="true"></canvas>
+        <canvas class="row-wave" id="wv-${b.id}" aria-hidden="true"></canvas>
+        <div class="eq-bars" aria-hidden="true">
+          <span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span>
+          <span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span>
+          <span class="eq-bar"></span><span class="eq-bar"></span>
+        </div>
         <div class="row-info">
           <div class="row-title">${b.title}</div>
           <div class="row-producer">${b.producer}</div>
