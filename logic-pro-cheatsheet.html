@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Raccourcis Logic Pro 11 — Cheatsheet Complète | MayanaBeat</title>
+  <meta name="description" content="Tous les raccourcis clavier Logic Pro 11 en une page. Cheatsheet complète pour accélérer votre workflow de production musicale sur Mac.">
+  <meta name="keywords" content="raccourcis Logic Pro, shortcut Logic Pro, cheatsheet Logic Pro, clavier Logic Pro 11, workflow production Mac, MayanaBeat">
+  <meta name="author" content="MayanaBeat">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mayanabeat.fr/logic-pro-cheatsheet.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MayanaBeat">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="Raccourcis Logic Pro 11 — Cheatsheet Complète | MayanaBeat">
+  <meta property="og:description" content="Tous les raccourcis clavier Logic Pro 11 en une page. Cheatsheet complète pour accélérer votre workflow de production musicale sur Mac.">
+  <meta property="og:url" content="https://mayanabeat.fr/logic-pro-cheatsheet.html">
+  <meta property="og:image" content="https://mayanabeat.fr/mayanabeat-icon.svg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@mayanabeat">
+  <meta name="twitter:title" content="Raccourcis Logic Pro 11 — Cheatsheet Complète | MayanaBeat">
+  <meta name="twitter:description" content="Tous les raccourcis clavier Logic Pro 11 en une page. Cheatsheet complète pour accélérer votre workflow.">
+  <meta name="twitter:image" content="https://mayanabeat.fr/mayanabeat-icon.svg">
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://mayanabeat.fr/"},{"@type":"ListItem","position":2,"name":"Raccourcis Logic Pro","item":"https://mayanabeat.fr/logic-pro-cheatsheet.html"}]}
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="theme-color" content="#03050D">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    body { min-height: 100vh; }
+
+    .layout { display:flex; min-height:100vh; position:relative; z-index:2; }
+
+    .panel {
+      width:var(--panel-w); background:var(--panel);
+      position:fixed; left:var(--sidebar-w); top:0; bottom:0;
+      overflow-y:auto; padding:24px 16px;
+      border-right:1px solid var(--border);
+      scrollbar-width:thin; scrollbar-color:rgba(0,240,255,.1) transparent;
+    }
+    .panel-head { margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+    .panel-title { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--cyan); letter-spacing:.05em; text-transform:uppercase; }
+    .panel-sub { font-size:10px; color:var(--muted2); margin-top:3px; text-transform:uppercase; letter-spacing:.08em; font-family:var(--mono); }
+    .panel-badge {
+      display:inline-flex; align-items:center; gap:6px; padding:4px 10px;
+      clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+      background:rgba(0,240,255,.06); border:1px solid rgba(0,240,255,.15);
+      color:var(--cyan); font-size:10px; font-weight:700; margin-bottom:20px;
+      font-family:var(--mono); letter-spacing:.06em; text-transform:uppercase;
+    }
+    .badge-dot { width:6px; height:6px; border-radius:50%; background:var(--cyan); box-shadow:0 0 6px var(--cyan); animation:pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+    .panel-sec { font-size:9px; font-weight:700; color:var(--muted2); text-transform:uppercase; letter-spacing:.12em; margin-bottom:8px; padding:0 4px; font-family:var(--mono); }
+    .pc-item {
+      display:flex; align-items:center; gap:10px; padding:8px 10px;
+      border:1px solid transparent; color:var(--muted); cursor:pointer;
+      transition:all .2s; font-size:12px; font-weight:500; margin-bottom:2px; font-family:var(--mono);
+    }
+    .pc-item:hover { background:rgba(0,240,255,.04); color:var(--text); border-color:var(--border); }
+    .pc-item.active { background:rgba(0,240,255,.06); border-color:rgba(0,240,255,.2); color:var(--cyan);
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%); }
+    .pc-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+    .pc-count { margin-left:auto; font-size:10px; color:var(--muted2); font-family:var(--mono); }
+    .pc-item.active .pc-count { color:rgba(0,240,255,.5); }
+    .panel-stats { margin-top:20px; padding-top:16px; border-top:1px solid var(--border); }
+    .pstat { display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:11px; color:var(--muted); border-bottom:1px solid var(--border); font-family:var(--mono); }
+    .pstat-val { font-weight:700; color:var(--cyan); }
+
+    .layout > .main { margin-left:calc(var(--sidebar-w) + var(--panel-w)); flex:1; padding:28px 28px 60px; }
+
+    .topbar { display:flex; align-items:center; gap:14px; margin-bottom:24px; flex-wrap:wrap; }
+    .topbar-title { font-family:var(--mono); font-size:18px; font-weight:700; letter-spacing:.02em; flex-shrink:0; text-transform:uppercase; }
+    .topbar-title em { color:var(--cyan); font-style:normal; }
+    .search-wrap { position:relative; flex:1; max-width:380px; }
+    .search-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--muted); pointer-events:none; }
+    .search-input {
+      width:100%; height:40px; padding:0 40px 0 40px;
+      border:1px solid var(--border2); background:var(--surface);
+      font-size:12px; font-family:var(--mono); color:var(--text); outline:none;
+      transition:border-color .2s, box-shadow .2s;
+      clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
+    }
+    .search-input::placeholder { color:var(--muted2); }
+    .search-input:focus { border-color:var(--cyan); box-shadow:0 0 16px rgba(0,240,255,.12); }
+    .search-clear { position:absolute; right:11px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:none; color:var(--muted); padding:4px; display:none; }
+    .result-count { display:none; font-size:11px; font-weight:700; color:var(--cyan); background:rgba(0,240,255,.07); border:1px solid rgba(0,240,255,.2); padding:4px 12px; white-space:nowrap; font-family:var(--mono); text-transform:uppercase; letter-spacing:.06em; }
+
+    .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+    .cat-card {
+      background:var(--card); overflow:hidden; border:1px solid var(--border);
+      clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+      transition:box-shadow .2s, border-color .2s;
+    }
+    .cat-card:hover { border-color:var(--border2); box-shadow:0 0 30px rgba(0,240,255,.07); }
+    .cat-card.full { grid-column:1/-1; }
+    .cc-head {
+      display:flex; align-items:center; gap:12px; padding:14px 18px 12px;
+      border-bottom:1px solid var(--border); background:rgba(0,240,255,.02);
+    }
+    .cc-bar { width:3px; height:26px; flex-shrink:0; }
+    .cc-title { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.05em; }
+    .cc-sub { font-size:10px; color:var(--muted); margin-top:2px; font-family:var(--mono); }
+    .cc-icon { margin-left:auto; color:var(--muted2); }
+    .cc-icon svg { width:16px; height:16px; }
+
+    .command-row {
+      display:flex; align-items:center; gap:12px; padding:10px 18px;
+      border-bottom:1px solid rgba(0,240,255,.04); transition:background .15s; position:relative;
+    }
+    .command-row:last-child { border-bottom:none; }
+    .command-row:hover { background:rgba(0,240,255,.03); }
+    .cmd-keys { display:flex; flex-wrap:wrap; gap:3px; align-items:center; min-width:140px; flex-shrink:0; }
+    .kbd {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:3px 8px; min-width:28px; height:22px;
+      font-size:10px; font-weight:700; font-family:var(--mono); white-space:nowrap;
+      background:rgba(0,240,255,.05); border:1px solid rgba(0,240,255,.2); color:var(--cyan);
+      user-select:none; text-transform:uppercase; letter-spacing:.04em;
+      box-shadow:0 0 6px rgba(0,240,255,.08);
+    }
+    .kbd-accent { background:rgba(191,95,255,.08); border-color:rgba(191,95,255,.3); color:var(--purple); box-shadow:0 0 6px rgba(191,95,255,.1); }
+    .kbd-plus { font-size:10px; color:var(--muted2); margin:0 1px; font-family:var(--mono); }
+    .cmd-label { font-size:13px; color:var(--text); font-weight:500; flex:1; }
+    .tooltip {
+      display:none; position:absolute; left:150px; top:calc(100% + 4px); z-index:100;
+      max-width:280px; background:#0A0E20; color:var(--text);
+      font-size:11px; line-height:1.6; padding:10px 14px;
+      border:1px solid var(--border2);
+      clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+      box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 20px rgba(0,240,255,.06);
+      pointer-events:none;
+    }
+    .command-row:hover .tooltip { display:block; }
+
+    .rec-grid { display:grid; grid-template-columns:1fr 1fr 1fr; }
+    .rec-grid .command-row { border-right:1px solid rgba(0,240,255,.04); }
+    .rec-grid .command-row:nth-child(3n) { border-right:none; }
+
+    .empty-state { display:none; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center; color:var(--muted); gap:10px; }
+
+    .footer { margin-top:32px; text-align:center; font-size:10px; color:var(--muted2); padding:16px 0; border-top:1px solid var(--border); font-family:var(--mono); text-transform:uppercase; letter-spacing:.08em; }
+    .footer kbd { background:rgba(0,240,255,.07); border:1px solid rgba(0,240,255,.2); color:var(--cyan); font-family:var(--mono); padding:1px 6px; font-size:10px; }
+
+    @media(max-width:1000px){
+      :root { --panel-w:0px; }
+      .panel { display:none; }
+      .layout > .main { margin-left:var(--sidebar-w); padding:20px 16px 40px; }
+      .cat-grid { grid-template-columns:1fr; }
+      .rec-grid { grid-template-columns:1fr 1fr; }
+    }
+    @media(max-width:768px){
+      body { cursor:auto; }
+      #c-dot,#c-ring { display:none; }
+      :root { --panel-w:0px; }
+      .panel { display:none; }
+      .layout > .main { margin-left:0 !important; padding:16px 16px 80px !important; }
+      .cat-grid { grid-template-columns:1fr; }
+      .rec-grid { grid-template-columns:1fr 1fr; }
+      .search-wrap { max-width:100%; }
+    }
+    @media(max-width:580px){
+      .layout > .main { margin-left:0; padding:16px 12px 80px; }
+      .rec-grid { grid-template-columns:1fr; }
+    }
+    @media(max-width:480px){
+      .rec-grid { grid-template-columns:1fr; }
+      .cat-grid { grid-template-columns:1fr; }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script defer src="navbar.js"></script>
+</head>
+<body>
+<div id="bg-grid"></div>
+<canvas id="bg-particles" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></canvas>
+<div id="c-dot"></div>
+<div id="c-ring"></div>
+
+<div class="layout">
+
+<!-- ══ LEFT PANEL ══ -->
+<div class="panel">
+  <div class="panel-head">
+    <div class="panel-title">Raccourcis Logic</div>
+    <div class="panel-sub">Cheatsheet interactif</div>
+  </div>
+  <div class="panel-badge"><span class="badge-dot"></span>macOS · Logic Pro 11+</div>
+  <div class="panel-sec">Catégories</div>
+  <div class="pc-item active" onclick="filterCategory(this)" data-cat="all">
+    <span class="pc-dot" style="background:var(--cyan);box-shadow:0 0 6px var(--cyan);"></span>Tout afficher<span class="pc-count">64</span>
+  </div>
+  <div class="pc-item" onclick="filterCategory(this)" data-cat="general">
+    <span class="pc-dot" style="background:#FF6B35;box-shadow:0 0 6px #FF6B35;"></span>Navigation Générale<span class="pc-count">16</span>
+  </div>
+  <div class="pc-item" onclick="filterCategory(this)" data-cat="arrangement">
+    <span class="pc-dot" style="background:#84CC16;box-shadow:0 0 6px #84CC16;"></span>Arrangement<span class="pc-count">14</span>
+  </div>
+  <div class="pc-item" onclick="filterCategory(this)" data-cat="pianoroll">
+    <span class="pc-dot" style="background:#8B7FFF;box-shadow:0 0 6px #8B7FFF;"></span>Piano Roll<span class="pc-count">12</span>
+  </div>
+  <div class="pc-item" onclick="filterCategory(this)" data-cat="mixer">
+    <span class="pc-dot" style="background:#0EA5E9;box-shadow:0 0 6px #0EA5E9;"></span>Mixer<span class="pc-count">10</span>
+  </div>
+  <div class="pc-item" onclick="filterCategory(this)" data-cat="recording">
+    <span class="pc-dot" style="background:#EC4899;box-shadow:0 0 6px #EC4899;"></span>Enregistrement &amp; Outils<span class="pc-count">12</span>
+  </div>
+  <div class="panel-stats">
+    <div class="panel-sec">Infos</div>
+    <div class="pstat"><span>Raccourcis</span><span class="pstat-val">64</span></div>
+    <div class="pstat"><span>Catégories</span><span class="pstat-val">5</span></div>
+    <div class="pstat"><span>Version</span><span class="pstat-val">Logic 11+</span></div>
+    <div class="pstat"><span>Plateforme</span><span class="pstat-val">macOS</span></div>
+    <div class="pstat" style="border:none;"><span>Survol = conseil</span><span class="pstat-val" style="color:var(--green);">✓</span></div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <div class="topbar">
+    <h1 class="topbar-title"><em>Raccourcis</em> Logic Pro</h1>
+    <div class="search-wrap">
+      <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input id="search" type="text" class="search-input" placeholder="Rechercher… (/ pour focus)" autocomplete="off" spellcheck="false"/>
+      <button id="clear-btn" class="search-clear" onclick="clearSearch()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <span id="result-count" class="result-count"></span>
+  </div>
+
+  <div id="empty-state" class="empty-state">
+    <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <p style="font-family:var(--mono);font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.05em;">Aucune commande trouvée</p>
+    <p style="font-size:12px;color:var(--muted);font-family:var(--mono);">Essayez un autre terme de recherche</p>
+  </div>
+
+  <div id="categories-grid" class="cat-grid">
+
+    <!-- ─── NAVIGATION GÉNÉRALE ─── -->
+    <div class="cat-card category-section" data-cat="general">
+      <div class="cc-head">
+        <div class="cc-bar" style="background:linear-gradient(180deg,#FF6B35,#FF4500);box-shadow:0 0 8px #FF6B35;"></div>
+        <div><h2 class="cc-title">Navigation Générale</h2><div class="cc-sub">Fenêtres, lecture, projet</div></div>
+        <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><path stroke-linecap="round" d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M10 14h4M18 14h.01"/></svg></div>
+      </div>
+      <div class="commands-list">
+        <div class="command-row" data-search="lecture play pause espace space stop"><div class="cmd-keys"><span class="kbd">Espace</span></div><span class="cmd-label">Play / Pause</span><div class="tooltip">Lance ou met en pause la lecture. Appuyer à nouveau repart depuis la position actuelle.</div></div>
+        <div class="command-row" data-search="début return retour play depuis le début"><div class="cmd-keys"><span class="kbd">Return</span></div><span class="cmd-label">Lecture depuis le début</span><div class="tooltip">Remet le curseur au début du projet et lance la lecture. Indispensable pour les écoutes complètes.</div></div>
+        <div class="command-row" data-search="annuler undo cmd z"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">Z</span></div><span class="cmd-label">Annuler (Undo)</span><div class="tooltip">Annule la dernière action. Logic dispose d'un historique illimité des modifications.</div></div>
+        <div class="command-row" data-search="rétablir redo cmd shift z"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">⇧</span><span class="kbd-plus">+</span><span class="kbd">Z</span></div><span class="cmd-label">Rétablir (Redo)</span><div class="tooltip">Refait une action annulée.</div></div>
+        <div class="command-row" data-search="sauvegarder enregistrer cmd s save"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">S</span></div><span class="cmd-label">Sauvegarder le projet</span><div class="tooltip">Sauvegarde le projet en cours. Logic propose aussi la sauvegarde automatique.</div></div>
+        <div class="command-row" data-search="sauvegarder sous save as cmd shift s"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">⇧</span><span class="kbd-plus">+</span><span class="kbd">S</span></div><span class="cmd-label">Enregistrer sous</span><div class="tooltip">Crée une copie du projet sous un nouveau nom. Utile pour les versions alternatives.</div></div>
+        <div class="command-row" data-search="nouveau projet cmd n new"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">N</span></div><span class="cmd-label">Nouveau projet</span><div class="tooltip">Crée un nouveau projet vierge. Logic te proposera de sauvegarder le projet en cours.</div></div>
+        <div class="command-row" data-search="ouvrir projet cmd o open"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">O</span></div><span class="cmd-label">Ouvrir un projet</span><div class="tooltip">Ouvre la boîte de dialogue pour charger un fichier .logicx existant.</div></div>
+        <div class="command-row" data-search="boucle loop toggle l activer désactiver"><div class="cmd-keys"><span class="kbd">L</span></div><span class="cmd-label">Activer / Désactiver la boucle</span><div class="tooltip">Bascule le mode Loop entre les locators gauche et droit. Très utile pendant le mixage.</div></div>
+        <div class="command-row" data-search="locator gauche aller / barre oblique"><div class="cmd-keys"><span class="kbd">/</span></div><span class="cmd-label">Aller au locator gauche</span><div class="tooltip">Déplace la tête de lecture au locator gauche (début de la boucle).</div></div>
+        <div class="command-row" data-search="mixer afficher masquer x console"><div class="cmd-keys"><span class="kbd">X</span></div><span class="cmd-label">Afficher / Masquer le Mixer</span><div class="tooltip">Ouvre ou ferme la fenêtre Mixer en bas de l'écran.</div></div>
+        <div class="command-row" data-search="piano roll éditeur midi e ouvrir"><div class="cmd-keys"><span class="kbd">E</span></div><span class="cmd-label">Ouvrir le Piano Roll</span><div class="tooltip">Ouvre l'éditeur Piano Roll pour la région MIDI sélectionnée.</div></div>
+        <div class="command-row" data-search="inspecteur afficher masquer i inspector"><div class="cmd-keys"><span class="kbd">I</span></div><span class="cmd-label">Afficher / Masquer l'Inspecteur</span><div class="tooltip">Bascule le panneau Inspecteur (gauche) qui affiche les paramètres de la région ou de la piste.</div></div>
+        <div class="command-row" data-search="smart controls b afficher masquer"><div class="cmd-keys"><span class="kbd">B</span></div><span class="cmd-label">Smart Controls</span><div class="tooltip">Ouvre les Smart Controls en bas de l'écran — contrôles rapides pour l'instrument ou les effets.</div></div>
+        <div class="command-row" data-search="bounce exporter cmd b rendre"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">B</span></div><span class="cmd-label">Bounce (Exporter)</span><div class="tooltip">Exporte le projet ou les pistes sélectionnées en fichier audio (WAV, AIFF, MP3…).</div></div>
+        <div class="command-row" data-search="raccourcis clavier fenêtre cmd k key commands"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">K</span></div><span class="cmd-label">Fenêtre Raccourcis clavier</span><div class="tooltip">Ouvre la fenêtre de gestion des raccourcis clavier pour les personnaliser.</div></div>
+      </div>
+    </div>
+
+    <!-- ─── ARRANGEMENT ─── -->
+    <div class="cat-card category-section" data-cat="arrangement">
+      <div class="cc-head">
+        <div class="cc-bar" style="background:linear-gradient(180deg,#84CC16,#4D7C0F);box-shadow:0 0 8px #84CC16;"></div>
+        <div><h2 class="cc-title">Arrangement</h2><div class="cc-sub">Régions, pistes, édition</div></div>
+        <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg></div>
+      </div>
+      <div class="commands-list">
+        <div class="command-row" data-search="tout sélectionner select all cmd a arrangement"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">A</span></div><span class="cmd-label">Tout sélectionner</span><div class="tooltip">Sélectionne toutes les régions de toutes les pistes. Pratique pour déplacer tout l'arrangement.</div></div>
+        <div class="command-row" data-search="copier copy cmd c région"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">C</span></div><span class="cmd-label">Copier</span><div class="tooltip">Copie les régions sélectionnées dans le presse-papier.</div></div>
+        <div class="command-row" data-search="coller paste cmd v région"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">V</span></div><span class="cmd-label">Coller</span><div class="tooltip">Colle les régions copiées à la position de la tête de lecture.</div></div>
+        <div class="command-row" data-search="couper cut cmd x région"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">X</span></div><span class="cmd-label">Couper</span><div class="tooltip">Coupe les régions sélectionnées pour les déplacer ailleurs.</div></div>
+        <div class="command-row" data-search="supprimer delete région arrangement"><div class="cmd-keys"><span class="kbd">Suppr</span></div><span class="cmd-label">Supprimer la région</span><div class="tooltip">Efface les régions sélectionnées. Action annulable avec ⌘+Z.</div></div>
+        <div class="command-row" data-search="dupliquer région cmd d duplicate"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">D</span></div><span class="cmd-label">Dupliquer la région</span><div class="tooltip">Crée une copie de la région juste après l'originale sur la même piste.</div></div>
+        <div class="command-row" data-search="fusionner régions join merge cmd j coller"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">J</span></div><span class="cmd-label">Fusionner les régions (Join)</span><div class="tooltip">Fusionne plusieurs régions sélectionnées en une seule sur la même piste.</div></div>
+        <div class="command-row" data-search="copier région option glisser alt drag"><div class="cmd-keys"><span class="kbd">⌥</span><span class="kbd-plus">+</span><span class="kbd">Glisser</span></div><span class="cmd-label">Copier une région</span><div class="tooltip">Maintiens Option et glisse une région pour en créer une copie instantanément.</div></div>
+        <div class="command-row" data-search="muter région option slash /"><div class="cmd-keys"><span class="kbd">⌥</span><span class="kbd-plus">+</span><span class="kbd">/</span></div><span class="cmd-label">Muter / Démuter une région</span><div class="tooltip">Mute ou démute la région sélectionnée sans la supprimer.</div></div>
+        <div class="command-row" data-search="nudge décaler gauche droite flèche région"><div class="cmd-keys"><span class="kbd">←</span><span class="kbd-plus">/</span><span class="kbd">→</span></div><span class="cmd-label">Nudge (décaler d'une division)</span><div class="tooltip">Décale la région d'une division de grille. Très précis pour aligner les éléments.</div></div>
+        <div class="command-row" data-search="déplacer mesure barre shift flèche région"><div class="cmd-keys"><span class="kbd">⇧</span><span class="kbd-plus">+</span><span class="kbd">←</span><span class="kbd-plus">/</span><span class="kbd">→</span></div><span class="cmd-label">Déplacer d'une mesure</span><div class="tooltip">Déplace la région d'une mesure entière vers la gauche ou la droite.</div></div>
+        <div class="command-row" data-search="boutibox outil tool t scissors crayon"><div class="cmd-keys"><span class="kbd">T</span></div><span class="cmd-label">Afficher la boîte à outils</span><div class="tooltip">Affiche le menu de sélection des outils (Pointeur, Crayon, Ciseau, Gomme, etc.).</div></div>
+        <div class="command-row" data-search="couper région playhead cmd t split"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">T</span></div><span class="cmd-label">Couper la région à la tête de lecture</span><div class="tooltip">Coupe toutes les régions sélectionnées à l'emplacement précis de la tête de lecture.</div></div>
+        <div class="command-row" data-search="dupliquer piste cmd shift d track duplicate"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">⇧</span><span class="kbd-plus">+</span><span class="kbd">D</span></div><span class="cmd-label">Dupliquer la piste</span><div class="tooltip">Crée une copie complète de la piste sélectionnée avec ses réglages et plugins.</div></div>
+      </div>
+    </div>
+
+    <!-- ─── PIANO ROLL ─── -->
+    <div class="cat-card category-section" data-cat="pianoroll">
+      <div class="cc-head">
+        <div class="cc-bar" style="background:linear-gradient(180deg,#8B7FFF,#5B50CC);box-shadow:0 0 8px #8B7FFF;"></div>
+        <div><h2 class="cc-title">Piano Roll</h2><div class="cc-sub">Édition MIDI &amp; notes</div></div>
+        <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2zm12-3c0 1.1-1.34 2-3 2s-3-.9-3-2 1.34-2 3-2 3 .9 3 2z"/></svg></div>
+      </div>
+      <div class="commands-list">
+        <div class="command-row" data-search="tout sélectionner cmd a piano roll notes midi"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">A</span></div><span class="cmd-label">Tout sélectionner</span><div class="tooltip">Sélectionne toutes les notes du Piano Roll. Utile avant de transposer ou quantiser en masse.</div></div>
+        <div class="command-row" data-search="quantiser q piano roll notes grille"><div class="cmd-keys"><span class="kbd">Q</span></div><span class="cmd-label">Quantiser</span><div class="tooltip">Quantise les notes sélectionnées selon la valeur de grille active. Raccourci rapide.</div></div>
+        <div class="command-row" data-search="transposer monter demi-ton cmd haut piano roll"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">↑</span></div><span class="cmd-label">Transposer +1 demi-ton</span><div class="tooltip">Monte les notes sélectionnées d'un demi-ton.</div></div>
+        <div class="command-row" data-search="transposer descendre demi-ton cmd bas piano roll"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">↓</span></div><span class="cmd-label">Transposer -1 demi-ton</span><div class="tooltip">Descend les notes sélectionnées d'un demi-ton.</div></div>
+        <div class="command-row" data-search="transposer octave haut shift haut piano roll"><div class="cmd-keys"><span class="kbd">⇧</span><span class="kbd-plus">+</span><span class="kbd">↑</span></div><span class="cmd-label">Transposer +1 octave</span><div class="tooltip">Monte les notes d'une octave entière (12 demi-tons).</div></div>
+        <div class="command-row" data-search="transposer octave bas shift bas piano roll"><div class="cmd-keys"><span class="kbd">⇧</span><span class="kbd-plus">+</span><span class="kbd">↓</span></div><span class="cmd-label">Transposer -1 octave</span><div class="tooltip">Descend les notes d'une octave entière.</div></div>
+        <div class="command-row" data-search="nudge déplacer note gauche droite flèche piano roll"><div class="cmd-keys"><span class="kbd">←</span><span class="kbd-plus">/</span><span class="kbd">→</span></div><span class="cmd-label">Déplacer la note (Nudge)</span><div class="tooltip">Décale les notes sélectionnées d'une division de grille pour affiner le timing.</div></div>
+        <div class="command-row" data-search="copier note option glisser alt drag piano roll"><div class="cmd-keys"><span class="kbd">⌥</span><span class="kbd-plus">+</span><span class="kbd">Glisser</span></div><span class="cmd-label">Copier une note</span><div class="tooltip">Option+Glisser une note pour en créer une copie à l'endroit souhaité.</div></div>
+        <div class="command-row" data-search="supprimer note delete piano roll effacer"><div class="cmd-keys"><span class="kbd">Suppr</span></div><span class="cmd-label">Supprimer la note</span><div class="tooltip">Efface les notes sélectionnées. Action annulable avec ⌘+Z.</div></div>
+        <div class="command-row" data-search="outil vélocité v vitesse piano roll"><div class="cmd-keys"><span class="kbd">V</span></div><span class="cmd-label">Outil Vélocité</span><div class="tooltip">Active l'outil Vélocité pour ajuster l'intensité des notes en faisant glisser verticalement.</div></div>
+        <div class="command-row" data-search="outil crayon pencil p créer note piano roll"><div class="cmd-keys"><span class="kbd">P</span></div><span class="cmd-label">Outil Crayon (Pencil)</span><div class="tooltip">Sélectionne l'outil Crayon pour dessiner de nouvelles notes directement dans le Piano Roll.</div></div>
+        <div class="command-row" data-search="zoom fit adapter sélection cmd f piano roll"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">F</span></div><span class="cmd-label">Adapter la vue à la sélection</span><div class="tooltip">Zoome automatiquement pour afficher l'ensemble des notes sélectionnées dans la fenêtre.</div></div>
+      </div>
+    </div>
+
+    <!-- ─── MIXER ─── -->
+    <div class="cat-card category-section" data-cat="mixer">
+      <div class="cc-head">
+        <div class="cc-bar" style="background:linear-gradient(180deg,#0EA5E9,#0369A1);box-shadow:0 0 8px #0EA5E9;"></div>
+        <div><h2 class="cc-title">Mixer</h2><div class="cc-sub">Pistes, effets, routage</div></div>
+        <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg></div>
+      </div>
+      <div class="commands-list">
+        <div class="command-row" data-search="afficher masquer mixer x console channel strip"><div class="cmd-keys"><span class="kbd">X</span></div><span class="cmd-label">Afficher / Masquer le Mixer</span><div class="tooltip">Bascule l'affichage de la console de mixage en bas de la fenêtre principale.</div></div>
+        <div class="command-row" data-search="réinitialiser fader option clic alt click 0db"><div class="cmd-keys"><span class="kbd">⌥</span><span class="kbd-plus">+</span><span class="kbd">Clic</span></div><span class="cmd-label">Réinitialiser un fader à 0 dB</span><div class="tooltip">Option+Clic sur un fader ou un knob pour le remettre à sa valeur par défaut.</div></div>
+        <div class="command-row" data-search="solo piste cmd clic isoler channel strip"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">Clic</span></div><span class="cmd-label">Solo d'une piste</span><div class="tooltip">⌘+Clic sur le bouton Solo pour isoler cette piste sans désactiver les autres solos.</div></div>
+        <div class="command-row" data-search="muter silencer m piste track channel"><div class="cmd-keys"><span class="kbd">M</span></div><span class="cmd-label">Muter / Démuter la piste</span><div class="tooltip">Active ou désactive le mute sur la piste sélectionnée dans le Mixer.</div></div>
+        <div class="command-row" data-search="solo s piste isoler channel strip"><div class="cmd-keys"><span class="kbd">S</span></div><span class="cmd-label">Solo</span><div class="tooltip">Active ou désactive le solo sur la piste sélectionnée.</div></div>
+        <div class="command-row" data-search="arm enregistrement r rec ready piste"><div class="cmd-keys"><span class="kbd">R</span></div><span class="cmd-label">Armer l'enregistrement</span><div class="tooltip">Active l'armement de la piste sélectionnée pour l'enregistrement (bouton rouge).</div></div>
+        <div class="command-row" data-search="groupe créer cmd g group pistes channel strip"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">G</span></div><span class="cmd-label">Créer un groupe de pistes</span><div class="tooltip">Regroupe les pistes sélectionnées pour contrôler leur volume/mute/solo simultanément.</div></div>
+        <div class="command-row" data-search="copier réglages canal cmd option c channel strip settings"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">⌥</span><span class="kbd-plus">+</span><span class="kbd">C</span></div><span class="cmd-label">Copier les réglages du canal</span><div class="tooltip">Copie tous les réglages du channel strip (plugins, sends, routing) pour les coller ailleurs.</div></div>
+        <div class="command-row" data-search="coller réglages canal cmd option v channel strip settings"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">⌥</span><span class="kbd-plus">+</span><span class="kbd">V</span></div><span class="cmd-label">Coller les réglages du canal</span><div class="tooltip">Colle les réglages copiés sur le channel strip sélectionné.</div></div>
+        <div class="command-row" data-search="démuter toutes option m unmute all tracks"><div class="cmd-keys"><span class="kbd">⌥</span><span class="kbd-plus">+</span><span class="kbd">M</span></div><span class="cmd-label">Démuter toutes les pistes</span><div class="tooltip">Retire le mute de toutes les pistes en une seule frappe. Très utile après une session de comparaison.</div></div>
+      </div>
+    </div>
+
+    <!-- ─── ENREGISTREMENT & OUTILS ─── -->
+    <div class="cat-card category-section full" data-cat="recording">
+      <div class="cc-head">
+        <div class="cc-bar" style="background:linear-gradient(180deg,#EC4899,#BE185D);box-shadow:0 0 8px #EC4899;"></div>
+        <div><h2 class="cc-title">Enregistrement &amp; Outils</h2><div class="cc-sub">Record, Flex, nouvelles pistes</div></div>
+        <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg></div>
+      </div>
+      <div class="commands-list rec-grid">
+        <div class="command-row" data-search="enregistrement record cmd r lancer démarrer"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">R</span></div><span class="cmd-label">Lancer l'enregistrement</span><div class="tooltip">Lance l'enregistrement sur toutes les pistes armées. Assure-toi d'avoir armé la bonne piste avant.</div></div>
+        <div class="command-row" data-search="punch-in recording cmd shift r prise à partir de"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">⇧</span><span class="kbd-plus">+</span><span class="kbd">R</span></div><span class="cmd-label">Enregistrement avec Punch-in</span><div class="tooltip">Lance l'enregistrement avec punch-in automatique entre les locators pour corriger une section.</div></div>
+        <div class="command-row" data-search="flex time activer f mode flex timing"><div class="cmd-keys"><span class="kbd">F</span></div><span class="cmd-label">Activer / Désactiver Flex Time</span><div class="tooltip">Active le mode Flex Time sur la piste — permet de déplacer des transitoires audio librement.</div></div>
+        <div class="command-row" data-search="flex pitch shift f hauteur tonalité audio"><div class="cmd-keys"><span class="kbd">⇧</span><span class="kbd-plus">+</span><span class="kbd">F</span></div><span class="cmd-label">Activer Flex Pitch</span><div class="tooltip">Active le mode Flex Pitch — permet de corriger la hauteur de chaque note d'une prise audio.</div></div>
+        <div class="command-row" data-search="nouvelle piste audio cmd option a add track"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">⌥</span><span class="kbd-plus">+</span><span class="kbd">A</span></div><span class="cmd-label">Nouvelle piste Audio</span><div class="tooltip">Crée une nouvelle piste Audio immédiatement sans passer par le menu.</div></div>
+        <div class="command-row" data-search="nouvelle piste software instrument cmd option s midi synth"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">⌥</span><span class="kbd-plus">+</span><span class="kbd">S</span></div><span class="cmd-label">Nouvelle piste Software Instrument</span><div class="tooltip">Crée une nouvelle piste MIDI/Software Instrument pour tes synths et samplers.</div></div>
+        <div class="command-row" data-search="bounce in place cmd u consolider freezer piste"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">U</span></div><span class="cmd-label">Bounce in place</span><div class="tooltip">Convertit la région ou la piste en fichier audio directement dans le projet. Idéal pour libérer le CPU.</div></div>
+        <div class="command-row" data-search="outils 1-9 pointeur crayon gomme ciseaux numéro touche"><div class="cmd-keys"><span class="kbd">1</span><span class="kbd-plus">à</span><span class="kbd">9</span></div><span class="cmd-label">Sélectionner un outil (1–9)</span><div class="tooltip">Les touches 1–9 sélectionnent directement les outils : 1=Pointeur, 2=Crayon, 3=Gomme, 4=Texte, 5=Ciseau, 6=Glue, 7=Solo, 8=Mute, 9=Zoom.</div></div>
+        <div class="command-row" data-search="dernier outil escape précédent previous"><div class="cmd-keys"><span class="kbd">Échap</span></div><span class="cmd-label">Revenir au dernier outil</span><div class="tooltip">Escape repasse à l'outil précédemment utilisé — pratique pour alterner rapidement entre deux outils.</div></div>
+        <div class="command-row" data-search="loop région cmd l loop region activer"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">L</span></div><span class="cmd-label">Boucler la région</span><div class="tooltip">Active le mode Loop sur la région sélectionnée — elle se répète automatiquement.</div></div>
+        <div class="command-row" data-search="désélectionner tout cmd shift a deselect all"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">⇧</span><span class="kbd-plus">+</span><span class="kbd">A</span></div><span class="cmd-label">Désélectionner tout</span><div class="tooltip">Retire la sélection de toutes les régions ou notes sans rien supprimer.</div></div>
+        <div class="command-row" data-search="zoomer fit fenêtre cmd option f zoom to fit window"><div class="cmd-keys"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">⌥</span><span class="kbd-plus">+</span><span class="kbd">F</span></div><span class="cmd-label">Zoom pour tout afficher</span><div class="tooltip">Adapte le zoom horizontal pour afficher tout le projet dans la fenêtre d'arrangement.</div></div>
+      </div>
+    </div>
+
+  </div><!-- /cat-grid -->
+
+  <div class="footer">Logic Pro 11+ &middot; Apple Inc. &middot; macOS &middot; Survolez une commande pour voir les détails &middot; Appuyez sur <kbd>/</kbd> pour rechercher</div>
+</main>
+</div>
+
+<script>
+  const dot=document.getElementById('c-dot'),ring=document.getElementById('c-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+
+  const canvas=document.getElementById('bg-particles');
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize(); window.addEventListener('resize',resize);
+  class Particle{constructor(){this.reset();}reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()*1.5+.5;this.a=Math.random()*.4+.1;}update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1;}}
+  for(let i=0;i<60;i++)particles.push(new Particle());
+  function drawParticles(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.update();ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(0,240,255,${p.a})`;ctx.fill();});
+  for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<120){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(0,240,255,${.06*(1-dist/120)})`;ctx.lineWidth=.5;ctx.stroke();}}
+  requestAnimationFrame(drawParticles);}
+  drawParticles();
+
+  const searchInput = document.getElementById('search');
+  const clearBtn    = document.getElementById('clear-btn');
+  const emptyState  = document.getElementById('empty-state');
+  const grid        = document.getElementById('categories-grid');
+  const resultCount = document.getElementById('result-count');
+  const allRows     = document.querySelectorAll('.command-row');
+  const allSections = document.querySelectorAll('.category-section');
+  let activeCategory = 'all';
+
+  searchInput.addEventListener('input', () => {
+    clearBtn.style.display = searchInput.value ? 'block' : 'none';
+    applyFilters();
+  });
+
+  function clearSearch() {
+    searchInput.value = '';
+    clearBtn.style.display = 'none';
+    applyFilters();
+    searchInput.focus();
+  }
+
+  function filterCategory(el) {
+    activeCategory = el.dataset.cat;
+    document.querySelectorAll('.pc-item').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.pc-item[data-cat="'+activeCategory+'"]').forEach(p => p.classList.add('active'));
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const q = searchInput.value.toLowerCase().trim();
+    let count = 0;
+    allSections.forEach(section => {
+      const catOk = activeCategory === 'all' || section.dataset.cat === activeCategory;
+      if (!catOk) { section.style.display = 'none'; return; }
+      section.style.display = '';
+      let sectionVisible = false;
+      section.querySelectorAll('.command-row').forEach(row => {
+        const text = (row.dataset.search + ' ' + row.textContent).toLowerCase();
+        const match = !q || text.includes(q);
+        row.style.display = match ? '' : 'none';
+        if (match) { sectionVisible = true; count++; }
+      });
+      section.style.display = sectionVisible ? '' : 'none';
+    });
+    const isEmpty = count === 0;
+    emptyState.style.display = isEmpty ? 'flex' : 'none';
+    grid.style.display = isEmpty ? 'none' : '';
+    if (q) {
+      resultCount.style.display = 'inline-block';
+      resultCount.textContent = count + (count > 1 ? ' commandes' : ' commande');
+    } else {
+      resultCount.style.display = 'none';
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== searchInput) {
+      e.preventDefault(); searchInput.focus(); searchInput.select();
+    }
+    if (e.key === 'Escape' && document.activeElement === searchInput) {
+      clearSearch(); searchInput.blur();
+    }
+  });
+
+  document.querySelectorAll('.command-row').forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      const t = row.querySelector('.tooltip'); if (!t) return;
+      const r = t.getBoundingClientRect();
+      if (r.right > window.innerWidth) { t.style.left = 'auto'; t.style.right = '0'; }
+      else { t.style.right = ''; }
+      if (r.left < 0) t.style.left = '0';
+    });
+  });
+</script>
+</body>
+</html>
