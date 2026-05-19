@@ -325,18 +325,26 @@ async function moderateBeat(beatId, newStatus) {
 async function deleteBeat(beatId, audioPath) {
   if (!confirm('Supprimer définitivement ce beat ? Cette action est irréversible.')) return;
   try {
-    // Supprimer l'audio du storage
+    // Supprimer l'audio du storage (erreur non bloquante)
     if (audioPath) {
-      await db.storage.from('beats-audio').remove([audioPath]);
+      const { error: storErr } = await db.storage.from('beats-audio').remove([audioPath]);
+      if (storErr) console.warn('[deleteBeat] storage:', storErr.message);
     }
+
     // Supprimer le beat en DB
-    const { error } = await db.from('beats').delete().eq('id', beatId);
-    if (error) throw error;
+    const { error, count } = await db
+      .from('beats')
+      .delete({ count: 'exact' })
+      .eq('id', beatId);
+
+    if (error) throw new Error(error.message + ' (code: ' + error.code + ')');
+    if (count === 0) throw new Error('Aucune ligne supprimée — vérifie les RLS policies dans Supabase SQL Editor.');
 
     toast('🗑 Beat supprimé', 'var(--pink)');
     await loadAllBeats();
   } catch(e) {
-    toast('❌ Erreur : ' + e.message, 'var(--pink)');
+    console.error('[deleteBeat]', e);
+    alert('❌ Erreur suppression :\n\n' + e.message);
   }
 }
 
