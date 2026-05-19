@@ -266,18 +266,21 @@ function buildBeatRow(b, tab) {
     : `<span style="font-size:10px;color:var(--muted);">Pas d'audio</span>`;
 
   let actions = '';
+  const deleteBtn = `<button class="btn-reject" onclick="deleteBeat('${b.id}','${b.audio_path || ''}')">🗑 Supprimer</button>`;
   if (tab === 'pending') {
     actions = `
       <button class="btn-approve" onclick="moderateBeat('${b.id}','active')">✓ Approuver</button>
-      <button class="btn-reject"  onclick="moderateBeat('${b.id}','flagged')">✗ Rejeter</button>`;
+      <button class="btn-reject"  onclick="moderateBeat('${b.id}','flagged')">✗ Rejeter</button>
+      ${deleteBtn}`;
   } else if (tab === 'active') {
     actions = `
       <button class="btn-flag"   onclick="moderateBeat('${b.id}','flagged')">⚑ Signaler</button>
-      <button class="btn-reject" onclick="moderateBeat('${b.id}','pending')">↩ Repasser en attente</button>`;
+      <button class="btn-reject" onclick="moderateBeat('${b.id}','pending')">↩ Repasser en attente</button>
+      ${deleteBtn}`;
   } else if (tab === 'flagged') {
     actions = `
       <button class="btn-restore" onclick="moderateBeat('${b.id}','active')">✓ Restaurer</button>
-      <button class="btn-reject"  onclick="deleteBeat('${b.id}','${b.audio_path || ''}')">🗑 Supprimer</button>`;
+      ${deleteBtn}`;
   }
 
   return `
