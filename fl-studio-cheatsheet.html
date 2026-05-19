@@ -132,6 +132,23 @@
     .search-clear { position:absolute; right:11px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:none; color:var(--muted); padding:4px; display:none; }
     .result-count { display:none; font-size:11px; font-weight:700; color:var(--cyan); background:rgba(0,240,255,.07); border:1px solid rgba(0,240,255,.2); padding:4px 12px; white-space:nowrap; font-family:var(--mono); text-transform:uppercase; letter-spacing:.06em; }
 
+    /* ── OS Toggle ── */
+    .os-toggle { display:flex; gap:0; flex-shrink:0; }
+    .os-btn {
+      padding:6px 14px; border:1px solid var(--border2); background:var(--surface);
+      color:var(--muted); font-size:11px; font-family:var(--mono); font-weight:700;
+      cursor:pointer; letter-spacing:.06em; text-transform:uppercase;
+      transition:all .18s; white-space:nowrap;
+    }
+    .os-btn:first-child { clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%); border-right:none; }
+    .os-btn:last-child  { clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px); }
+    .os-btn.active { background:rgba(0,240,255,.08); border-color:rgba(0,240,255,.3); color:var(--cyan); }
+    .os-btn:hover:not(.active) { color:var(--text); border-color:var(--border2); }
+
+    /* Hide/show Win vs Mac key variants */
+    body:not(.os-mac) .cmd-keys-mac { display:none !important; }
+    body.os-mac      .cmd-keys-win  { display:none !important; }
+
     /* ── Grid ── */
     .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 
@@ -165,7 +182,7 @@
     }
     .command-row:last-child { border-bottom:none; }
     .command-row:hover { background:rgba(0,240,255,.03); }
-    .cmd-keys { display:flex; flex-wrap:wrap; gap:3px; align-items:center; min-width:120px; flex-shrink:0; }
+    .cmd-keys,.cmd-keys-win,.cmd-keys-mac { display:flex; flex-wrap:wrap; gap:3px; align-items:center; min-width:120px; flex-shrink:0; }
     .kbd {
       display:inline-flex; align-items:center; justify-content:center;
       padding:3px 8px; min-width:28px; height:22px;
@@ -250,7 +267,7 @@
     <div class="panel-title">Raccourcis FL</div>
     <div class="panel-sub">Cheatsheet interactif</div>
   </div>
-  <div class="panel-badge"><span class="badge-dot"></span>Windows · FL Studio 21+</div>
+  <div class="panel-badge"><span class="badge-dot"></span><span id="panel-badge-os">Windows · FL Studio 21+</span></div>
   <div class="panel-sec">Catégories</div>
   <div class="pc-item active" onclick="filterCategory(this)" data-cat="all">
     <span class="pc-dot" style="background:var(--cyan);box-shadow:0 0 6px var(--cyan);"></span>Tout afficher<span class="pc-count">66</span>
@@ -275,7 +292,7 @@
     <div class="pstat"><span>Raccourcis</span><span class="pstat-val">66</span></div>
     <div class="pstat"><span>Catégories</span><span class="pstat-val">5</span></div>
     <div class="pstat"><span>Version</span><span class="pstat-val">FL 21+</span></div>
-    <div class="pstat"><span>Plateforme</span><span class="pstat-val">Windows</span></div>
+    <div class="pstat"><span>Plateforme</span><span class="pstat-val" id="pstat-platform">Windows</span></div>
     <div class="pstat" style="border:none;"><span>Survol = conseil</span><span class="pstat-val" style="color:var(--green);">✓</span></div>
   </div>
 </div>
@@ -290,6 +307,10 @@
       <button id="clear-btn" class="search-clear" onclick="clearSearch()">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
+    </div>
+    <div class="os-toggle">
+      <button class="os-btn active" id="btn-win" onclick="setOS('win')">⊞ Win</button>
+      <button class="os-btn" id="btn-mac" onclick="setOS('mac')">⌘ Mac</button>
     </div>
     <span id="result-count" class="result-count"></span>
   </div>
@@ -317,17 +338,57 @@
         <div class="command-row" data-search="browser navigateur fichiers samples f8"><div class="cmd-keys"><span class="kbd kbd-accent">F8</span></div><span class="cmd-label">Ouvrir le Navigateur</span><div class="tooltip">Affiche le Browser de fichiers pour accéder à tes samples, presets et plugins rapidement.</div></div>
         <div class="command-row" data-search="mixer table de mixage ouvrir f9"><div class="cmd-keys"><span class="kbd kbd-accent">F9</span></div><span class="cmd-label">Ouvrir le Mixer</span><div class="tooltip">Affiche la table de mixage pour gérer les niveaux, effets et routage de chaque piste.</div></div>
         <div class="command-row" data-search="lecture play pause espace stop"><div class="cmd-keys"><span class="kbd">Espace</span></div><span class="cmd-label">Play / Pause</span><div class="tooltip">Lance ou met en pause la lecture. Appuyer une 2ème fois repart depuis la position actuelle.</div></div>
-        <div class="command-row" data-search="lecture début entrée enter play"><div class="cmd-keys"><span class="kbd">Entrée</span></div><span class="cmd-label">Play depuis le début</span><div class="tooltip">Remet le curseur à zéro et lance la lecture depuis le début du morceau.</div></div>
-        <div class="command-row" data-search="annuler undo ctrl z"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Z</span></div><span class="cmd-label">Annuler (Undo)</span><div class="tooltip">Annule la dernière action. FL Studio possède un historique illimité.</div></div>
-        <div class="command-row" data-search="rétablir redo ctrl y"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Y</span></div><span class="cmd-label">Rétablir (Redo)</span><div class="tooltip">Refait une action annulée. Fonctionne aussi avec Ctrl+Shift+Z.</div></div>
-        <div class="command-row" data-search="sauvegarder enregistrer ctrl s"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">S</span></div><span class="cmd-label">Sauvegarder le projet</span><div class="tooltip">Sauvegarde le projet en cours. Prends l'habitude de sauvegarder souvent !</div></div>
-        <div class="command-row" data-search="sauvegarder nouvelle version ctrl shift s"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Shift</span><span class="kbd-plus">+</span><span class="kbd">S</span></div><span class="cmd-label">Sauvegarder en nouvelle version</span><div class="tooltip">Crée une copie numérotée du projet (v1, v2…). Idéal pour garder l'historique.</div></div>
-        <div class="command-row" data-search="nouveau projet ctrl n"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">N</span></div><span class="cmd-label">Nouveau projet</span><div class="tooltip">Crée un nouveau projet vierge. FL Studio te demandera si tu veux sauvegarder.</div></div>
-        <div class="command-row" data-search="ouvrir projet ctrl o"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">O</span></div><span class="cmd-label">Ouvrir un projet</span><div class="tooltip">Ouvre la boîte de dialogue pour charger un fichier .flp existant.</div></div>
-        <div class="command-row" data-search="mode song pattern ctrl e basculer"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">E</span></div><span class="cmd-label">Basculer Mode Pattern / Song</span><div class="tooltip">Alterne entre la lecture du Pattern actif et la lecture complète du morceau.</div></div>
+        <div class="command-row" data-search="lecture début entrée enter play return">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd">Entrée</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd">↵</span></div>
+          <span class="cmd-label">Play depuis le début</span><div class="tooltip">Remet le curseur à zéro et lance la lecture depuis le début du morceau.</div>
+        </div>
+        <div class="command-row" data-search="annuler undo ctrl z cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Z</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">Z</span></div>
+          <span class="cmd-label">Annuler (Undo)</span><div class="tooltip">Annule la dernière action. FL Studio possède un historique illimité.</div>
+        </div>
+        <div class="command-row" data-search="rétablir redo ctrl y cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Y</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">Y</span></div>
+          <span class="cmd-label">Rétablir (Redo)</span><div class="tooltip">Refait une action annulée. Fonctionne aussi avec Ctrl+Shift+Z.</div>
+        </div>
+        <div class="command-row" data-search="sauvegarder enregistrer ctrl s cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">S</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">S</span></div>
+          <span class="cmd-label">Sauvegarder le projet</span><div class="tooltip">Sauvegarde le projet en cours. Prends l'habitude de sauvegarder souvent !</div>
+        </div>
+        <div class="command-row" data-search="sauvegarder nouvelle version ctrl shift s cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Shift</span><span class="kbd-plus">+</span><span class="kbd">S</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd kbd-accent">⇧</span><span class="kbd-plus">+</span><span class="kbd">S</span></div>
+          <span class="cmd-label">Sauvegarder en nouvelle version</span><div class="tooltip">Crée une copie numérotée du projet (v1, v2…). Idéal pour garder l'historique.</div>
+        </div>
+        <div class="command-row" data-search="nouveau projet ctrl n cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">N</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">N</span></div>
+          <span class="cmd-label">Nouveau projet</span><div class="tooltip">Crée un nouveau projet vierge. FL Studio te demandera si tu veux sauvegarder.</div>
+        </div>
+        <div class="command-row" data-search="ouvrir projet ctrl o cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">O</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">O</span></div>
+          <span class="cmd-label">Ouvrir un projet</span><div class="tooltip">Ouvre la boîte de dialogue pour charger un fichier .flp existant.</div>
+        </div>
+        <div class="command-row" data-search="mode song pattern ctrl e cmd basculer">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">E</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">E</span></div>
+          <span class="cmd-label">Basculer Mode Pattern / Song</span><div class="tooltip">Alterne entre la lecture du Pattern actif et la lecture complète du morceau.</div>
+        </div>
         <div class="command-row" data-search="boucle loop toggle l"><div class="cmd-keys"><span class="kbd">L</span></div><span class="cmd-label">Activer / Désactiver la Boucle</span><div class="tooltip">Active le mode Loop pour répéter la sélection indéfiniment. Très utile pendant le mixage.</div></div>
-        <div class="command-row" data-search="plugin picker instrument ctrl p"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">P</span></div><span class="cmd-label">Ouvrir le Plugin Picker</span><div class="tooltip">Affiche la liste de tes plugins VST/AU pour en charger un rapidement.</div></div>
-        <div class="command-row" data-search="export rendre bounce ctrl shift r render"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">R</span></div><span class="cmd-label">Exporter / Render</span><div class="tooltip">Ouvre la fenêtre d'export pour rendre ton morceau en WAV, MP3 ou FLAC.</div></div>
+        <div class="command-row" data-search="plugin picker instrument ctrl p cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">P</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">P</span></div>
+          <span class="cmd-label">Ouvrir le Plugin Picker</span><div class="tooltip">Affiche la liste de tes plugins VST/AU pour en charger un rapidement.</div>
+        </div>
+        <div class="command-row" data-search="export rendre bounce ctrl shift r render cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">R</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">R</span></div>
+          <span class="cmd-label">Exporter / Render</span><div class="tooltip">Ouvre la fenêtre d'export pour rendre ton morceau en WAV, MP3 ou FLAC.</div>
+        </div>
       </div>
     </div>
 
@@ -339,19 +400,51 @@
         <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg></div>
       </div>
       <div class="commands-list">
-        <div class="command-row" data-search="tout sélectionner select all ctrl a playlist"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">A</span></div><span class="cmd-label">Tout sélectionner</span><div class="tooltip">Sélectionne tous les clips de la Playlist. Pratique pour déplacer l'ensemble d'un arrangement.</div></div>
+        <div class="command-row" data-search="tout sélectionner select all ctrl a playlist cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">A</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">A</span></div>
+          <span class="cmd-label">Tout sélectionner</span><div class="tooltip">Sélectionne tous les clips de la Playlist. Pratique pour déplacer l'ensemble d'un arrangement.</div>
+        </div>
         <div class="command-row" data-search="outil dessin draw mode b playlist"><div class="cmd-keys"><span class="kbd">B</span></div><span class="cmd-label">Mode Dessin (Draw)</span><div class="tooltip">Active l'outil Dessin pour placer des clips dans la Playlist en cliquant-glissant.</div></div>
         <div class="command-row" data-search="outil sélection select mode e playlist"><div class="cmd-keys"><span class="kbd">E</span></div><span class="cmd-label">Mode Sélection</span><div class="tooltip">Passe en mode Sélection pour sélectionner et déplacer les clips existants.</div></div>
         <div class="command-row" data-search="outil suppression delete mode d playlist"><div class="cmd-keys"><span class="kbd">D</span></div><span class="cmd-label">Mode Suppression</span><div class="tooltip">Active l'outil de suppression : clique sur un clip pour l'effacer immédiatement.</div></div>
         <div class="command-row" data-search="outil mute silencier t playlist"><div class="cmd-keys"><span class="kbd">T</span></div><span class="cmd-label">Mode Muet</span><div class="tooltip">Clique sur un clip pour le muter/démuter sans le supprimer.</div></div>
         <div class="command-row" data-search="outil slip time shift y playlist décaler"><div class="cmd-keys"><span class="kbd">Y</span></div><span class="cmd-label">Mode Slip (Décalage temporel)</span><div class="tooltip">Permet de décaler le contenu d'un clip sans changer ses bornes.</div></div>
-        <div class="command-row" data-search="copier copy ctrl c playlist clip"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">C</span></div><span class="cmd-label">Copier</span><div class="tooltip">Copie la sélection de clips dans le presse-papier pour la coller ailleurs.</div></div>
-        <div class="command-row" data-search="coller paste ctrl v playlist"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">V</span></div><span class="cmd-label">Coller</span><div class="tooltip">Colle les clips copiés à la position du curseur sur les mêmes pistes.</div></div>
-        <div class="command-row" data-search="couper cut ctrl x playlist"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">X</span></div><span class="cmd-label">Couper</span><div class="tooltip">Coupe les clips sélectionnés pour les déplacer ailleurs dans l'arrangement.</div></div>
-        <div class="command-row" data-search="supprimer effacer delete playlist clip"><div class="cmd-keys"><span class="kbd">Suppr</span></div><span class="cmd-label">Supprimer la sélection</span><div class="tooltip">Efface tous les clips sélectionnés. Action annulable avec Ctrl+Z.</div></div>
-        <div class="command-row" data-search="dupliquer alt drag playlist copie rapide"><div class="cmd-keys"><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">Glisser</span></div><span class="cmd-label">Dupliquer un clip</span><div class="tooltip">Maintiens Alt et glisse un clip pour en créer une copie. Plus rapide que Copier/Coller.</div></div>
-        <div class="command-row" data-search="regrouper pistes group ctrl alt g"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">G</span></div><span class="cmd-label">Grouper les pistes sélectionnées</span><div class="tooltip">Regroupe les pistes sous un dossier. Parfait pour organiser drums, synths, etc.</div></div>
-        <div class="command-row" data-search="zoom horizontal scroll molette playlist"><div class="cmd-keys"><span class="kbd">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Molette</span></div><span class="cmd-label">Zoom horizontal</span><div class="tooltip">Ctrl + Molette pour zoomer/dézoomer sur l'axe temporel de la Playlist.</div></div>
+        <div class="command-row" data-search="copier copy ctrl c playlist clip cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">C</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">C</span></div>
+          <span class="cmd-label">Copier</span><div class="tooltip">Copie la sélection de clips dans le presse-papier pour la coller ailleurs.</div>
+        </div>
+        <div class="command-row" data-search="coller paste ctrl v playlist cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">V</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">V</span></div>
+          <span class="cmd-label">Coller</span><div class="tooltip">Colle les clips copiés à la position du curseur sur les mêmes pistes.</div>
+        </div>
+        <div class="command-row" data-search="couper cut ctrl x playlist cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">X</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">X</span></div>
+          <span class="cmd-label">Couper</span><div class="tooltip">Coupe les clips sélectionnés pour les déplacer ailleurs dans l'arrangement.</div>
+        </div>
+        <div class="command-row" data-search="supprimer effacer delete playlist clip backspace">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd">Suppr</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd">⌫</span></div>
+          <span class="cmd-label">Supprimer la sélection</span><div class="tooltip">Efface tous les clips sélectionnés. Action annulable avec Ctrl+Z / ⌘+Z.</div>
+        </div>
+        <div class="command-row" data-search="dupliquer alt drag playlist copie rapide option">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">Glisser</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌥</span><span class="kbd-plus">+</span><span class="kbd">Glisser</span></div>
+          <span class="cmd-label">Dupliquer un clip</span><div class="tooltip">Maintiens Alt (⌥ sur Mac) et glisse un clip pour en créer une copie. Plus rapide que Copier/Coller.</div>
+        </div>
+        <div class="command-row" data-search="regrouper pistes group ctrl alt g cmd option">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">G</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd kbd-accent">⌥</span><span class="kbd-plus">+</span><span class="kbd">G</span></div>
+          <span class="cmd-label">Grouper les pistes sélectionnées</span><div class="tooltip">Regroupe les pistes sous un dossier. Parfait pour organiser drums, synths, etc.</div>
+        </div>
+        <div class="command-row" data-search="zoom horizontal scroll molette playlist cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Molette</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">Molette</span></div>
+          <span class="cmd-label">Zoom horizontal</span><div class="tooltip">Ctrl (⌘ sur Mac) + Molette pour zoomer/dézoomer sur l'axe temporel de la Playlist.</div>
+        </div>
       </div>
     </div>
 
@@ -366,15 +459,51 @@
         <div class="command-row" data-search="outil dessin draw note b piano roll"><div class="cmd-keys"><span class="kbd">B</span></div><span class="cmd-label">Mode Dessin (Draw)</span><div class="tooltip">Active l'outil Dessin pour créer de nouvelles notes en cliquant dans le Piano Roll.</div></div>
         <div class="command-row" data-search="outil sélection select e piano roll note"><div class="cmd-keys"><span class="kbd">E</span></div><span class="cmd-label">Mode Sélection</span><div class="tooltip">Sélectionne des notes pour les déplacer, redimensionner ou copier.</div></div>
         <div class="command-row" data-search="quantiser quantize q piano roll notes"><div class="cmd-keys"><span class="kbd">Q</span></div><span class="cmd-label">Quantisation rapide</span><div class="tooltip">Quantise instantanément les notes sélectionnées selon la grille active.</div></div>
-        <div class="command-row" data-search="quantiser options settings ctrl q piano roll"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Q</span></div><span class="cmd-label">Options de Quantisation</span><div class="tooltip">Ouvre les réglages de quantisation pour choisir la valeur de grille et l'intensité.</div></div>
-        <div class="command-row" data-search="tout sélectionner ctrl a piano roll notes"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">A</span></div><span class="cmd-label">Tout sélectionner</span><div class="tooltip">Sélectionne toutes les notes du Pattern. Utile avant de transposer ou copier l'ensemble.</div></div>
-        <div class="command-row" data-search="transposer monter demi-ton ctrl haut flèche piano roll"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">↑</span></div><span class="cmd-label">Transposer +1 demi-ton</span><div class="tooltip">Monte les notes sélectionnées d'un demi-ton.</div></div>
-        <div class="command-row" data-search="transposer descendre demi-ton ctrl bas flèche piano roll"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">↓</span></div><span class="cmd-label">Transposer -1 demi-ton</span><div class="tooltip">Descend les notes sélectionnées d'un demi-ton.</div></div>
-        <div class="command-row" data-search="transposer octave haut shift haut piano roll"><div class="cmd-keys"><span class="kbd">Shift</span><span class="kbd-plus">+</span><span class="kbd">↑</span></div><span class="cmd-label">Transposer +1 octave</span><div class="tooltip">Monte les notes d'une octave complète (12 demi-tons).</div></div>
-        <div class="command-row" data-search="transposer octave bas shift bas piano roll"><div class="cmd-keys"><span class="kbd">Shift</span><span class="kbd-plus">+</span><span class="kbd">↓</span></div><span class="cmd-label">Transposer -1 octave</span><div class="tooltip">Descend les notes d'une octave complète.</div></div>
-        <div class="command-row" data-search="déplacer noter gauche droite ctrl flèche piano roll nudge"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">←/→</span></div><span class="cmd-label">Déplacer la note (Nudge)</span><div class="tooltip">Décale les notes sélectionnées d'une unité de grille pour affiner le timing.</div></div>
-        <div class="command-row" data-search="inverser flip notes vertical ctrl m piano roll"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">M</span></div><span class="cmd-label">Retourner verticalement</span><div class="tooltip">Retourne la sélection de notes sur l'axe vertical (miroir mélodique).</div></div>
-        <div class="command-row" data-search="coller glue notes fusionner ctrl g piano roll"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">G</span></div><span class="cmd-label">Fusionner les notes (Glue)</span><div class="tooltip">Fusionne les notes sélectionnées contiguës en une seule note longue.</div></div>
+        <div class="command-row" data-search="quantiser options settings ctrl q piano roll cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Q</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">Q</span></div>
+          <span class="cmd-label">Options de Quantisation</span><div class="tooltip">Ouvre les réglages de quantisation pour choisir la valeur de grille et l'intensité.</div>
+        </div>
+        <div class="command-row" data-search="tout sélectionner ctrl a piano roll notes cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">A</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">A</span></div>
+          <span class="cmd-label">Tout sélectionner</span><div class="tooltip">Sélectionne toutes les notes du Pattern. Utile avant de transposer ou copier l'ensemble.</div>
+        </div>
+        <div class="command-row" data-search="transposer monter demi-ton ctrl haut flèche piano roll cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">↑</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">↑</span></div>
+          <span class="cmd-label">Transposer +1 demi-ton</span><div class="tooltip">Monte les notes sélectionnées d'un demi-ton.</div>
+        </div>
+        <div class="command-row" data-search="transposer descendre demi-ton ctrl bas flèche piano roll cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">↓</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">↓</span></div>
+          <span class="cmd-label">Transposer -1 demi-ton</span><div class="tooltip">Descend les notes sélectionnées d'un demi-ton.</div>
+        </div>
+        <div class="command-row" data-search="transposer octave haut shift haut piano roll">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd">Shift</span><span class="kbd-plus">+</span><span class="kbd">↑</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⇧</span><span class="kbd-plus">+</span><span class="kbd">↑</span></div>
+          <span class="cmd-label">Transposer +1 octave</span><div class="tooltip">Monte les notes d'une octave complète (12 demi-tons).</div>
+        </div>
+        <div class="command-row" data-search="transposer octave bas shift bas piano roll">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd">Shift</span><span class="kbd-plus">+</span><span class="kbd">↓</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⇧</span><span class="kbd-plus">+</span><span class="kbd">↓</span></div>
+          <span class="cmd-label">Transposer -1 octave</span><div class="tooltip">Descend les notes d'une octave complète.</div>
+        </div>
+        <div class="command-row" data-search="déplacer noter gauche droite ctrl flèche piano roll nudge cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">←/→</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">←/→</span></div>
+          <span class="cmd-label">Déplacer la note (Nudge)</span><div class="tooltip">Décale les notes sélectionnées d'une unité de grille pour affiner le timing.</div>
+        </div>
+        <div class="command-row" data-search="inverser flip notes vertical ctrl m piano roll cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">M</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">M</span></div>
+          <span class="cmd-label">Retourner verticalement</span><div class="tooltip">Retourne la sélection de notes sur l'axe vertical (miroir mélodique).</div>
+        </div>
+        <div class="command-row" data-search="coller glue notes fusionner ctrl g piano roll cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">G</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">G</span></div>
+          <span class="cmd-label">Fusionner les notes (Glue)</span><div class="tooltip">Fusionne les notes sélectionnées contiguës en une seule note longue.</div>
+        </div>
       </div>
     </div>
 
@@ -386,17 +515,41 @@
         <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg></div>
       </div>
       <div class="commands-list">
-        <div class="command-row" data-search="lier canal piste mixer ctrl l channel"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">L</span></div><span class="cmd-label">Lier canal → piste Mixer</span><div class="tooltip">Connecte le canal sélectionné au Channel Rack à la piste Mixer sélectionnée.</div></div>
-        <div class="command-row" data-search="réinitialiser knob valeur défaut alt clic mixer"><div class="cmd-keys"><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">Clic</span></div><span class="cmd-label">Réinitialiser un paramètre</span><div class="tooltip">Alt+Clic sur n'importe quel knob ou fader pour le remettre à sa valeur par défaut.</div></div>
-        <div class="command-row" data-search="saisir valeur précise ctrl clic knob mixer"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Clic</span></div><span class="cmd-label">Saisir une valeur précise</span><div class="tooltip">Ouvre un champ de saisie numérique pour entrer une valeur exacte sur un knob.</div></div>
+        <div class="command-row" data-search="lier canal piste mixer ctrl l channel cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">L</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">L</span></div>
+          <span class="cmd-label">Lier canal → piste Mixer</span><div class="tooltip">Connecte le canal sélectionné au Channel Rack à la piste Mixer sélectionnée.</div>
+        </div>
+        <div class="command-row" data-search="réinitialiser knob valeur défaut alt clic mixer option">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">Clic</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌥</span><span class="kbd-plus">+</span><span class="kbd">Clic</span></div>
+          <span class="cmd-label">Réinitialiser un paramètre</span><div class="tooltip">Alt (⌥ sur Mac) + Clic sur n'importe quel knob ou fader pour le remettre à sa valeur par défaut.</div>
+        </div>
+        <div class="command-row" data-search="saisir valeur précise ctrl clic knob mixer cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Clic</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">Clic</span></div>
+          <span class="cmd-label">Saisir une valeur précise</span><div class="tooltip">Ouvre un champ de saisie numérique pour entrer une valeur exacte sur un knob.</div>
+        </div>
         <div class="command-row" data-search="ajustement fin scroll molette knob mixer"><div class="cmd-keys"><span class="kbd">Molette</span></div><span class="cmd-label">Ajustement fin d'un paramètre</span><div class="tooltip">Fais défiler la molette sur un knob pour l'ajuster finement.</div></div>
         <div class="command-row" data-search="muter piste mixer silence m"><div class="cmd-keys"><span class="kbd">Clic LED</span></div><span class="cmd-label">Muter / Démuter une piste</span><div class="tooltip">Clique sur le témoin vert d'une piste Mixer pour la muter.</div></div>
-        <div class="command-row" data-search="solo piste isoler mixer"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Clic LED</span></div><span class="cmd-label">Solo d'une piste</span><div class="tooltip">Ctrl+Clic sur le témoin d'une piste pour l'isoler en solo.</div></div>
-        <div class="command-row" data-search="sidechain routing send receive mixer"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Shift</span><span class="kbd-plus">+</span><span class="kbd">V</span></div><span class="cmd-label">Ajouter un Send (Sidechain)</span><div class="tooltip">Configure le routage sidechain entre deux pistes Mixer.</div></div>
+        <div class="command-row" data-search="solo piste isoler mixer cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Clic LED</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">Clic</span></div>
+          <span class="cmd-label">Solo d'une piste</span><div class="tooltip">Ctrl (⌘ sur Mac) + Clic sur le témoin d'une piste pour l'isoler en solo.</div>
+        </div>
+        <div class="command-row" data-search="sidechain routing send receive mixer cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Shift</span><span class="kbd-plus">+</span><span class="kbd">V</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd kbd-accent">⇧</span><span class="kbd-plus">+</span><span class="kbd">V</span></div>
+          <span class="cmd-label">Ajouter un Send (Sidechain)</span><div class="tooltip">Configure le routage sidechain entre deux pistes Mixer.</div>
+        </div>
         <div class="command-row" data-search="naviguer piste gauche droite mixer flèche"><div class="cmd-keys"><span class="kbd">←</span><span class="kbd-plus">/</span><span class="kbd">→</span></div><span class="cmd-label">Naviguer entre les pistes</span><div class="tooltip">Les flèches gauche/droite déplacent la sélection entre les pistes du Mixer.</div></div>
         <div class="command-row" data-search="automatisation clip automation record write"><div class="cmd-keys"><span class="kbd">Clic droit</span></div><span class="cmd-label">Créer un clip d'automatisation</span><div class="tooltip">Clic droit sur n'importe quel paramètre → "Create automation clip".</div></div>
         <div class="command-row" data-search="nommer piste renommer f2 mixer"><div class="cmd-keys"><span class="kbd kbd-accent">F2</span></div><span class="cmd-label">Renommer la piste</span><div class="tooltip">Ouvre le champ de renommage de la piste Mixer sélectionnée.</div></div>
-        <div class="command-row" data-search="ajouter insérer piste mixer insert"><div class="cmd-keys"><span class="kbd">Inser</span></div><span class="cmd-label">Ajouter une piste Mixer</span><div class="tooltip">Insère une nouvelle piste vide dans le Mixer.</div></div>
+        <div class="command-row" data-search="ajouter insérer piste mixer insert fn">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd">Inser</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd">Fn</span><span class="kbd-plus">+</span><span class="kbd">↵</span></div>
+          <span class="cmd-label">Ajouter une piste Mixer</span><div class="tooltip">Insère une nouvelle piste vide dans le Mixer. Sur Mac : Fn+Retour (les claviers Mac n'ont pas de touche Insert).</div>
+        </div>
       </div>
     </div>
 
@@ -408,28 +561,75 @@
         <div class="cc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3"/></svg></div>
       </div>
       <div class="commands-list ss-grid">
-        <div class="command-row" data-search="tout sélectionner ctrl a step sequencer steps"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">A</span></div><span class="cmd-label">Tout sélectionner</span><div class="tooltip">Sélectionne toutes les steps du canal actif dans le Step Sequencer.</div></div>
-        <div class="command-row" data-search="copier pattern ctrl c step sequencer"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">C</span></div><span class="cmd-label">Copier le pattern</span><div class="tooltip">Copie la séquence de steps du canal sélectionné.</div></div>
-        <div class="command-row" data-search="coller pattern ctrl v step sequencer"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">V</span></div><span class="cmd-label">Coller le pattern</span><div class="tooltip">Colle le pattern copié sur le canal actif.</div></div>
-        <div class="command-row" data-search="effacer vider canal ctrl delete step sequencer"><div class="cmd-keys"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Suppr</span></div><span class="cmd-label">Vider le pattern</span><div class="tooltip">Efface toutes les steps actives du canal sélectionné en un seul raccourci.</div></div>
-        <div class="command-row" data-search="déplacer pattern droite alt right step sequencer"><div class="cmd-keys"><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">→</span></div><span class="cmd-label">Décaler le pattern à droite</span><div class="tooltip">Décale tous les steps d'un cran vers la droite.</div></div>
-        <div class="command-row" data-search="déplacer pattern gauche alt left step sequencer"><div class="cmd-keys"><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">←</span></div><span class="cmd-label">Décaler le pattern à gauche</span><div class="tooltip">Décale tous les steps d'un cran vers la gauche.</div></div>
+        <div class="command-row" data-search="tout sélectionner ctrl a step sequencer steps cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">A</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">A</span></div>
+          <span class="cmd-label">Tout sélectionner</span><div class="tooltip">Sélectionne toutes les steps du canal actif dans le Step Sequencer.</div>
+        </div>
+        <div class="command-row" data-search="copier pattern ctrl c step sequencer cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">C</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">C</span></div>
+          <span class="cmd-label">Copier le pattern</span><div class="tooltip">Copie la séquence de steps du canal sélectionné.</div>
+        </div>
+        <div class="command-row" data-search="coller pattern ctrl v step sequencer cmd">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">V</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">V</span></div>
+          <span class="cmd-label">Coller le pattern</span><div class="tooltip">Colle le pattern copié sur le canal actif.</div>
+        </div>
+        <div class="command-row" data-search="effacer vider canal ctrl delete step sequencer cmd backspace">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd kbd-accent">Ctrl</span><span class="kbd-plus">+</span><span class="kbd">Suppr</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌘</span><span class="kbd-plus">+</span><span class="kbd">⌫</span></div>
+          <span class="cmd-label">Vider le pattern</span><div class="tooltip">Efface toutes les steps actives du canal sélectionné en un seul raccourci.</div>
+        </div>
+        <div class="command-row" data-search="déplacer pattern droite alt right step sequencer option">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">→</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌥</span><span class="kbd-plus">+</span><span class="kbd">→</span></div>
+          <span class="cmd-label">Décaler le pattern à droite</span><div class="tooltip">Décale tous les steps d'un cran vers la droite.</div>
+        </div>
+        <div class="command-row" data-search="déplacer pattern gauche alt left step sequencer option">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">←</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌥</span><span class="kbd-plus">+</span><span class="kbd">←</span></div>
+          <span class="cmd-label">Décaler le pattern à gauche</span><div class="tooltip">Décale tous les steps d'un cran vers la gauche.</div>
+        </div>
         <div class="command-row" data-search="propriétés step clic droit vélocité note step sequencer"><div class="cmd-keys"><span class="kbd">Clic droit</span></div><span class="cmd-label">Propriétés d'une step</span><div class="tooltip">Clic droit sur un step pour modifier sa vélocité, la note jouée, le panoramique.</div></div>
-        <div class="command-row" data-search="vélocité volume step alt clic step sequencer"><div class="cmd-keys"><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">Clic+Glisser</span></div><span class="cmd-label">Régler la vélocité</span><div class="tooltip">Alt+Clic+Glisser vertical sur un step pour ajuster sa vélocité directement.</div></div>
+        <div class="command-row" data-search="vélocité volume step alt clic step sequencer option">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd">Alt</span><span class="kbd-plus">+</span><span class="kbd">Clic+Glisser</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⌥</span><span class="kbd-plus">+</span><span class="kbd">Clic+Glisser</span></div>
+          <span class="cmd-label">Régler la vélocité</span><div class="tooltip">Alt (⌥ sur Mac) + Clic + Glisser vertical sur un step pour ajuster sa vélocité directement.</div>
+        </div>
         <div class="command-row" data-search="naviguer canal haut bas flèche step sequencer"><div class="cmd-keys"><span class="kbd">↑</span><span class="kbd-plus">/</span><span class="kbd">↓</span></div><span class="cmd-label">Naviguer entre les canaux</span><div class="tooltip">Les flèches haut/bas changent le canal actif dans le Step Sequencer.</div></div>
         <div class="command-row" data-search="muter canal step sequencer clic nom"><div class="cmd-keys"><span class="kbd">Clic</span><span class="kbd-plus"> sur </span><span class="kbd">LED</span></div><span class="cmd-label">Muter / Démuter un canal</span><div class="tooltip">Clique sur le témoin à gauche du nom de canal pour le muter.</div></div>
-        <div class="command-row" data-search="sélectionner multiple shift clic steps step sequencer"><div class="cmd-keys"><span class="kbd">Shift</span><span class="kbd-plus">+</span><span class="kbd">Clic+Glisser</span></div><span class="cmd-label">Sélection multiple de steps</span><div class="tooltip">Maintiens Shift et glisse sur plusieurs steps pour les activer/désactiver en masse.</div></div>
+        <div class="command-row" data-search="sélectionner multiple shift clic steps step sequencer">
+          <div class="cmd-keys cmd-keys-win"><span class="kbd">Shift</span><span class="kbd-plus">+</span><span class="kbd">Clic+Glisser</span></div>
+          <div class="cmd-keys cmd-keys-mac"><span class="kbd kbd-accent">⇧</span><span class="kbd-plus">+</span><span class="kbd">Clic+Glisser</span></div>
+          <span class="cmd-label">Sélection multiple de steps</span><div class="tooltip">Maintiens Shift (⇧ sur Mac) et glisse sur plusieurs steps pour les activer/désactiver en masse.</div>
+        </div>
         <div class="command-row" data-search="nombre steps longueur pattern changer step sequencer"><div class="cmd-keys"><span class="kbd">Clic droit</span><span class="kbd-plus"> sur </span><span class="kbd">Step</span></div><span class="cmd-label">Changer le nombre de steps</span><div class="tooltip">Clic droit sur le dernier step → "Step count" pour modifier la longueur du pattern.</div></div>
       </div>
     </div>
 
   </div><!-- /cat-grid -->
 
-  <div class="footer">FL Studio 21+ &middot; Image-Line &middot; Windows &middot; Survolez une commande pour voir les détails &middot; Appuyez sur <kbd>/</kbd> pour rechercher</div>
+  <div class="footer" id="footer-text">FL Studio 21+ &middot; Image-Line &middot; Windows &middot; Survolez une commande pour voir les détails &middot; Appuyez sur <kbd>/</kbd> pour rechercher</div>
 </main>
 </div>
 
 <script>
+  // ── OS Toggle ──
+  function setOS(os) {
+    const isMac = os === 'mac';
+    document.body.classList.toggle('os-mac', isMac);
+    document.getElementById('btn-win').classList.toggle('active', !isMac);
+    document.getElementById('btn-mac').classList.toggle('active', isMac);
+    const label = isMac ? 'macOS · FL Studio 21+' : 'Windows · FL Studio 21+';
+    document.getElementById('panel-badge-os').textContent = label;
+    document.getElementById('pstat-platform').textContent = isMac ? 'macOS' : 'Windows';
+    document.getElementById('footer-text').innerHTML = `FL Studio 21+ &middot; Image-Line &middot; ${isMac ? 'macOS' : 'Windows'} &middot; Survolez une commande pour voir les détails &middot; Appuyez sur <kbd>/</kbd> pour rechercher`;
+    try { localStorage.setItem('fl-os', os); } catch(e) {}
+  }
+  // Restore preference
+  try { const s = localStorage.getItem('fl-os'); if (s === 'mac') setOS('mac'); } catch(e) {}
+
   // ── Cursor ──
   const dot=document.getElementById('c-dot'),ring=document.getElementById('c-ring');
   let mx=0,my=0,rx=0,ry=0;
