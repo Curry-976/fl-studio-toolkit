@@ -374,14 +374,57 @@
       font-family:var(--mono); letter-spacing:.03em; }
 
     .drop-zone {
-      border:2px dashed rgba(0,240,255,.2); border-radius:4px; padding:24px;
-      display:flex; flex-direction:column; align-items:center; gap:8px;
-      text-align:center; cursor:none; transition:all .2s;
+      border:2px dashed rgba(0,240,255,.2); border-radius:4px; padding:20px;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+      text-align:center; cursor:pointer; transition:all .2s;
     }
     .drop-zone:hover, .drop-zone.drag { border-color:rgba(0,240,255,.5); background:rgba(0,240,255,.04); }
-    .drop-icon { font-size:28px; }
+    .drop-zone.has-file { border-color:rgba(0,255,136,.4); background:rgba(0,255,136,.03); }
+    .drop-icon { font-size:24px; }
     .drop-text { font-family:var(--mono); font-size:11px; color:var(--muted); }
     .drop-sub { font-size:10px; color:rgba(180,210,255,.2); }
+    .drop-filename { font-family:var(--mono); font-size:10px; color:var(--green); margin-top:2px; }
+
+    /* ── Upload steps ── */
+    .upload-steps { display:flex; flex-direction:column; gap:14px; margin-bottom:18px; }
+    .upload-step {
+      border:1px solid var(--border); border-radius:6px; overflow:hidden;
+      transition:border-color .2s;
+    }
+    .upload-step.required { border-color:rgba(0,240,255,.15); }
+    .upload-step.optional { border-color:rgba(180,210,255,.08); }
+    .upload-step.done    { border-color:rgba(0,255,136,.3); }
+    .step-header {
+      display:flex; align-items:center; gap:12px;
+      padding:10px 14px; background:rgba(0,0,0,.2);
+    }
+    .step-num {
+      width:24px; height:24px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--mono); font-size:11px; font-weight:700;
+      background:rgba(0,240,255,.1); border:1px solid rgba(0,240,255,.3); color:var(--cyan);
+    }
+    .upload-step.done .step-num {
+      background:rgba(0,255,136,.15); border-color:rgba(0,255,136,.4); color:var(--green);
+    }
+    .step-info { flex:1; }
+    .step-title { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text); letter-spacing:.04em; }
+    .step-desc  { font-size:10px; color:var(--muted); margin-top:1px; line-height:1.4; }
+    .step-badge {
+      padding:2px 8px; border-radius:2px; font-family:var(--mono);
+      font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+    }
+    .badge-required { background:rgba(0,240,255,.1); color:var(--cyan); border:1px solid rgba(0,240,255,.25); }
+    .badge-optional  { background:rgba(180,210,255,.05); color:var(--muted); border:1px solid rgba(180,210,255,.12); }
+    .badge-done      { background:rgba(0,255,136,.1); color:var(--green); border:1px solid rgba(0,255,136,.3); }
+    .step-body { padding:12px 14px; }
+    .step-delivery {
+      display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;
+    }
+    .delivery-chip {
+      padding:2px 8px; border-radius:2px; font-size:9px; font-family:var(--mono);
+      background:rgba(191,95,255,.08); color:var(--purple2); border:1px solid rgba(191,95,255,.15);
+    }
 
     .price-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
     .price-input-wrap { display:flex; flex-direction:column; gap:4px; }
@@ -933,22 +976,98 @@
       <button class="modal-close" onclick="closeUpload()">✕</button>
     </div>
 
-    <!-- Drop zone audio -->
-    <div class="form-group full" style="margin-bottom:16px;">
-      <div class="form-label">Fichier audio (WAV ou MP3) *</div>
-      <input type="file" id="upload-audio-input" accept=".mp3,.wav,.flac,.ogg,audio/*" style="display:none" onchange="pickAudioFile(this.files)">
-      <div class="drop-zone" id="drop-audio"
-        onclick="document.getElementById('upload-audio-input').click()"
-        ondragover="event.preventDefault();this.classList.add('drag')"
-        ondragleave="this.classList.remove('drag')"
-        ondrop="handleDrop(event,'audio')"
-        style="cursor:pointer;">
-        <div class="drop-icon">🎵</div>
-        <div class="drop-text">Glisse ton fichier ici ou <span style="color:var(--cyan);text-decoration:underline;">parcourir</span></div>
-        <div class="drop-sub">WAV, MP3 — max 100 MB</div>
-        <div id="audio-name" style="font-family:var(--mono);font-size:10px;color:var(--cyan);margin-top:4px;"></div>
+    <!-- ── 3 étapes d'upload ── -->
+    <div class="upload-steps">
+
+      <!-- ÉTAPE 1 : DÉMO TAGGUÉ -->
+      <div class="upload-step required" id="step-tagged">
+        <div class="step-header">
+          <div class="step-num" id="stepnum-tagged">1</div>
+          <div class="step-info">
+            <div class="step-title">Démo taggué (Voice Tag)</div>
+            <div class="step-desc">Le fichier que les visiteurs écouteront sur le site — avec ton voice tag pour protéger la prod.</div>
+          </div>
+          <span class="step-badge badge-required" id="stepbadge-tagged">Requis</span>
+        </div>
+        <div class="step-body">
+          <input type="file" id="input-tagged" accept=".mp3,.wav,audio/*" style="display:none" onchange="pickFile('tagged',this.files)">
+          <div class="drop-zone" id="drop-tagged"
+            onclick="document.getElementById('input-tagged').click()"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="handleDropFile(event,'tagged')">
+            <div class="drop-icon">🎙️</div>
+            <div class="drop-text">Glisse ou <span style="color:var(--cyan);text-decoration:underline;">parcourir</span></div>
+            <div class="drop-sub">MP3 · WAV — max 50 MB</div>
+            <div class="drop-filename" id="name-tagged"></div>
+          </div>
+          <div class="step-delivery">
+            <span class="delivery-chip">🔊 Streaming sur le store</span>
+            <span class="delivery-chip">Pas livré à l'acheteur</span>
+          </div>
+        </div>
       </div>
-    </div>
+
+      <!-- ÉTAPE 2 : FICHIER PROPRE -->
+      <div class="upload-step required" id="step-untagged">
+        <div class="step-header">
+          <div class="step-num" id="stepnum-untagged">2</div>
+          <div class="step-info">
+            <div class="step-title">Fichier propre (Sans tag)</div>
+            <div class="step-desc">La prod haute qualité, sans voice tag. Livrée automatiquement aux acheteurs Lease et Trackout.</div>
+          </div>
+          <span class="step-badge badge-required" id="stepbadge-untagged">Requis</span>
+        </div>
+        <div class="step-body">
+          <input type="file" id="input-untagged" accept=".mp3,.wav,.flac,audio/*" style="display:none" onchange="pickFile('untagged',this.files)">
+          <div class="drop-zone" id="drop-untagged"
+            onclick="document.getElementById('input-untagged').click()"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="handleDropFile(event,'untagged')">
+            <div class="drop-icon">🎵</div>
+            <div class="drop-text">Glisse ou <span style="color:var(--cyan);text-decoration:underline;">parcourir</span></div>
+            <div class="drop-sub">MP3 · WAV · FLAC — max 100 MB</div>
+            <div class="drop-filename" id="name-untagged"></div>
+          </div>
+          <div class="step-delivery">
+            <span class="delivery-chip">📦 Lease</span>
+            <span class="delivery-chip">📦 Trackout (si pas de stems)</span>
+            <span class="delivery-chip">📦 Exclusif</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 3 : STEMS / TRACKOUTS -->
+      <div class="upload-step optional" id="step-stems">
+        <div class="step-header">
+          <div class="step-num" id="stepnum-stems">3</div>
+          <div class="step-info">
+            <div class="step-title">Stems / Trackouts</div>
+            <div class="step-desc">Un ZIP avec chaque piste séparée (kick, basse, mélodie…). Pour les artistes qui veulent mixer en studio.</div>
+          </div>
+          <span class="step-badge badge-optional" id="stepbadge-stems">Optionnel</span>
+        </div>
+        <div class="step-body">
+          <input type="file" id="input-stems" accept=".zip,application/zip,application/x-zip-compressed" style="display:none" onchange="pickFile('stems',this.files)">
+          <div class="drop-zone" id="drop-stems"
+            onclick="document.getElementById('input-stems').click()"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="handleDropFile(event,'stems')">
+            <div class="drop-icon">🗜️</div>
+            <div class="drop-text">Glisse ou <span style="color:var(--cyan);text-decoration:underline;">parcourir</span></div>
+            <div class="drop-sub">ZIP uniquement — max 500 MB</div>
+            <div class="drop-filename" id="name-stems"></div>
+          </div>
+          <div class="step-delivery">
+            <span class="delivery-chip">📦 Trackout (remplace le fichier propre)</span>
+            <span class="delivery-chip">📦 Exclusif</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /upload-steps -->
 
     <div class="form-grid">
       <div class="form-group">
@@ -2023,26 +2142,68 @@ function onSellClick() {
 }
 
 // ══════════════════════════════════════════════════════════════
-//  UPLOAD BEAT → SUPABASE
+//  UPLOAD BEAT → SUPABASE  (3 fichiers)
 // ══════════════════════════════════════════════════════════════
 
-let uploadedAudioFile = null;
+const uploadFiles = { tagged: null, untagged: null, stems: null };
 
-function pickAudioFile(files) {
+// ── Sélecteur de fichier (click ou drag)
+function pickFile(type, files) {
   if (!files || files.length === 0) return;
-  uploadedAudioFile = files[0];
-  document.getElementById('audio-name').textContent = '✓ ' + files[0].name;
+  const file = files[0];
+  uploadFiles[type] = file;
+
+  // Met à jour l'affichage du nom + taille
+  const mb = (file.size / 1048576).toFixed(1);
+  const nameEl = document.getElementById(`name-${type}`);
+  if (nameEl) nameEl.textContent = `✓ ${file.name} (${mb} MB)`;
+
+  // Marque la zone comme remplie
+  const zone = document.getElementById(`drop-${type}`);
+  if (zone) zone.classList.add('has-file');
+
+  // Marque l'étape comme done
+  markStepDone(type);
 }
 
-// Override handleDrop pour stocker le fichier
-function handleDrop(e, type) {
+function handleDropFile(e, type) {
   e.preventDefault();
-  const files = e.dataTransfer.files;
-  if (files.length > 0 && type === 'audio') {
-    uploadedAudioFile = files[0];
-    document.getElementById('audio-name').textContent = '✓ ' + files[0].name;
-    document.getElementById('drop-audio').classList.remove('drag');
+  const zone = document.getElementById(`drop-${type}`);
+  if (zone) zone.classList.remove('drag');
+  pickFile(type, e.dataTransfer.files);
+}
+
+function markStepDone(type) {
+  const step   = document.getElementById(`step-${type}`);
+  const num    = document.getElementById(`stepnum-${type}`);
+  const badge  = document.getElementById(`stepbadge-${type}`);
+  if (!step) return;
+  step.classList.remove('required','optional');
+  step.classList.add('done');
+  if (num)   num.textContent = '✓';
+  if (badge) { badge.textContent = 'OK'; badge.className = 'step-badge badge-done'; }
+}
+
+// ── Validation et barre de progression upload
+function setUploadProgress(current, total) {
+  const btn = document.querySelector('.btn-submit');
+  if (!btn) return;
+  const pct = Math.round((current / total) * 100);
+  btn.textContent = `⏳ Upload ${pct}% (${current}/${total} fichiers)…`;
+}
+
+async function uploadToStorage(bucket, path, file, isPublic = false) {
+  const { error } = await db.storage
+    .from(bucket)
+    .upload(path, file, { contentType: file.type, upsert: true });
+  if (error) throw new Error(`[${bucket}] ${error.message}`);
+
+  if (isPublic) {
+    const { data } = db.storage.from(bucket).getPublicUrl(path);
+    return data.publicUrl;
   }
+  // Bucket privé : on stocke juste le chemin (signed URL générée à la livraison)
+  return null;
 }
 
 async function submitBeat() {
@@ -2051,68 +2212,141 @@ async function submitBeat() {
   if (!session) { openAuth(); return; }
   const uid = session.user.id;
 
+  // ── Lecture des champs
   const title    = document.getElementById('up-title').value.trim();
   const genre    = document.getElementById('up-genre').value;
   const bpm      = parseInt(document.getElementById('up-bpm').value) || 120;
   const key      = document.getElementById('up-key').value;
   const mood     = document.getElementById('up-mood')?.value || '';
   const lease    = Math.round(parseFloat(document.getElementById('up-price-lease').value) * 100) || 2900;
-  const trackout = Math.round(parseFloat(document.getElementById('up-price-track')?.value || document.getElementById('up-price-trackout')?.value) * 100) || 5900;
+  const trackout = Math.round(parseFloat(document.getElementById('up-price-track')?.value) * 100) || 5900;
   const exclu    = Math.round(parseFloat(document.getElementById('up-price-exclu').value) * 100) || 19900;
 
-  if (!title) { alert('Titre requis.'); return; }
-  if (!uploadedAudioFile) { alert('Ajoute un fichier audio (MP3 ou WAV).'); return; }
+  // ── Validations
+  if (!title) {
+    document.getElementById('up-title').focus();
+    showToast('⚠️ Le titre du beat est requis.', 'var(--yellow)'); return;
+  }
+  if (!uploadFiles.tagged) {
+    document.getElementById('drop-tagged').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('drop-tagged').style.borderColor = '', 2500);
+    showToast('⚠️ Le fichier de démo taggué est requis.', 'var(--yellow)'); return;
+  }
+  if (!uploadFiles.untagged) {
+    document.getElementById('drop-untagged').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('drop-untagged').style.borderColor = '', 2500);
+    showToast('⚠️ Le fichier propre (sans tag) est requis.', 'var(--yellow)'); return;
+  }
   const certifiedCb = document.getElementById('certified-owner-cb');
-  if (!certifiedCb || !certifiedCb.checked) {
-    alert('⚠️ Tu dois certifier être l\'auteur original du beat avant de le mettre en vente.');
-    if (certifiedCb) certifiedCb.focus();
-    return;
+  if (!certifiedCb?.checked) {
+    certifiedCb?.focus();
+    showToast('⚠️ Tu dois certifier être l\'auteur original.', 'var(--yellow)'); return;
+  }
+
+  // ── Avertissement si pas de stems mais prix trackout actif
+  if (!uploadFiles.stems && trackout > 0) {
+    const ok = confirm(
+      'Tu n\'as pas ajouté de stems/trackouts.\n\n' +
+      'Les acheteurs Trackout recevront le fichier propre (MP3/WAV) à la place.\n\n' +
+      'Continuer quand même ?'
+    );
+    if (!ok) return;
   }
 
   const btn = document.querySelector('.btn-submit');
-  if (btn) { btn.textContent = '⏳ Upload en cours…'; btn.disabled = true; }
+  if (btn) { btn.disabled = true; }
 
   try {
-    // 1. Upload audio
-    const ext  = uploadedAudioFile.name.split('.').pop();
-    const audioPath = `${uid}/${Date.now()}_${title.replace(/\s+/g,'_')}.${ext}`;
-    const { error: storErr } = await db.storage
-      .from('beats-audio')
-      .upload(audioPath, uploadedAudioFile, { contentType: uploadedAudioFile.type, upsert: true });
-    if (storErr) throw storErr;
-    const { data: urlData } = db.storage.from('beats-audio').getPublicUrl(audioPath);
-    const audioUrl = urlData.publicUrl;
+    const slug = `${uid}/${Date.now()}_${title.replace(/[^a-zA-Z0-9]/g,'_').toLowerCase()}`;
+    let uploadCount = 0;
+    const totalFiles = uploadFiles.stems ? 3 : 2;
 
-    // 2. Durée audio
-    const duration = await getAudioDuration(uploadedAudioFile).catch(() => 180);
+    // ── 1. Upload DÉMO TAGGUÉ → bucket public (streaming)
+    setUploadProgress(++uploadCount, totalFiles);
+    const taggedExt  = uploadFiles.tagged.name.split('.').pop().toLowerCase();
+    const taggedPath = `${slug}_demo.${taggedExt}`;
+    const audioUrl = await uploadToStorage('beats-audio', taggedPath, uploadFiles.tagged, true);
 
-    // 3. Insérer le beat en base
+    // ── 2. Upload FICHIER PROPRE → bucket privé
+    setUploadProgress(++uploadCount, totalFiles);
+    const untaggedExt  = uploadFiles.untagged.name.split('.').pop().toLowerCase();
+    const untaggedPath = `${slug}_clean.${untaggedExt}`;
+    await uploadToStorage('beats-untagged', untaggedPath, uploadFiles.untagged, false);
+
+    // ── 3. Upload STEMS (optionnel) → bucket privé
+    let stemsPath = null;
+    if (uploadFiles.stems) {
+      setUploadProgress(++uploadCount, totalFiles);
+      stemsPath = `${slug}_stems.zip`;
+      await uploadToStorage('beats-stems', stemsPath, uploadFiles.stems, false);
+    }
+
+    // ── 4. Durée audio depuis le fichier taggué
+    const duration = await getAudioDuration(uploadFiles.tagged).catch(() => 180);
+
+    // ── 5. Insert en base
     const { error: dbErr } = await db.from('beats').insert({
       producer_id:    uid,
       title, genre, bpm, key, mood,
       price_lease:    lease,
       price_trackout: trackout,
       price_exclu:    exclu,
-      audio_url:      audioUrl,
-      audio_path:     audioPath,
+      audio_url:      audioUrl,        // public → streaming
+      audio_path:     taggedPath,
+      untagged_path:  untaggedPath,    // privé → livraison lease/exclu
+      stems_path:     stemsPath,       // privé → livraison trackout/exclu
+      has_stems:      !!stemsPath,
       duration,
       certified_owner: true,
-      status:          'pending',
+      status:         'pending',
     });
     if (dbErr) throw dbErr;
 
+    // ── Succès
     closeUpload();
-    uploadedAudioFile = null;
-    document.getElementById('audio-name').textContent = 'Glisse ton fichier ici ou clique';
+    resetUploadForm();
     await loadBeats();
-    showToast(`✅ "${title}" soumis — en attente de validation par l'équipe MayanaBeat.`, 'var(--cyan)');
+    showToast(`✅ "${title}" soumis — validation sous 24-48h.`, 'var(--cyan)');
 
   } catch(e) {
     console.error('[submitBeat]', e);
-    alert('❌ Erreur : ' + (e.message || JSON.stringify(e)));
+    showToast('❌ Erreur upload : ' + (e.message || JSON.stringify(e)), 'var(--pink)');
   } finally {
-    if (btn) { btn.textContent = 'Mettre en vente — Commission 15%'; btn.disabled = false; }
+    if (btn) { btn.textContent = 'Soumettre pour validation — Commission 15%'; btn.disabled = false; }
   }
+}
+
+function resetUploadForm() {
+  // Remet les 3 fichiers à null
+  uploadFiles.tagged = uploadFiles.untagged = uploadFiles.stems = null;
+
+  // Réinitialise les noms affichés
+  ['tagged','untagged','stems'].forEach(type => {
+    const name = document.getElementById(`name-${type}`);
+    const zone = document.getElementById(`drop-${type}`);
+    const step = document.getElementById(`step-${type}`);
+    const num  = document.getElementById(`stepnum-${type}`);
+    const badge = document.getElementById(`stepbadge-${type}`);
+    if (name) name.textContent = '';
+    if (zone) { zone.classList.remove('has-file','drag'); zone.style.borderColor = ''; }
+    if (step) {
+      step.classList.remove('done');
+      step.classList.add(type === 'stems' ? 'optional' : 'required');
+    }
+    if (num) num.textContent = type === 'tagged' ? '1' : type === 'untagged' ? '2' : '3';
+    if (badge) {
+      badge.textContent = type === 'stems' ? 'Optionnel' : 'Requis';
+      badge.className = `step-badge ${type === 'stems' ? 'badge-optional' : 'badge-required'}`;
+    }
+  });
+
+  // Remet les champs texte
+  ['up-title','up-bpm'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const cb = document.getElementById('certified-owner-cb');
+  if (cb) cb.checked = false;
 }
 
 function getAudioDuration(file) {
