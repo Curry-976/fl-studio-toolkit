@@ -540,10 +540,120 @@
     }
     @media (max-width:480px) {
       .beat-grid { grid-template-columns:1fr 1fr; gap:10px; }
+      .beat-list .beat-row { flex-wrap:wrap; }
       .player-wave-wrap { display:none; }
       .player-time { display:none; }
       #player-bar { gap:8px; }
       .stat-chip-val { font-size:13px; }
+    }
+
+    /* ── View toggle ── */
+    .view-toggle { display:flex; gap:4px; }
+    .btn-view {
+      width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+      border:1px solid var(--border2); border-radius:4px; background:transparent;
+      color:var(--muted); cursor:none; transition:all .18s;
+    }
+    .btn-view.active { border-color:var(--cyan); color:var(--cyan); background:rgba(0,240,255,.08); }
+    .btn-view svg { width:14px; height:14px; }
+
+    /* ── Beat list (row) view ── */
+    .beat-list { display:flex; flex-direction:column; gap:2px; margin-top:24px; }
+    .beat-row {
+      display:flex; align-items:center; gap:16px;
+      padding:10px 14px; border-radius:4px;
+      background:var(--card); border:1px solid var(--border);
+      transition:all .18s; position:relative; cursor:default;
+    }
+    .beat-row:hover { border-color:var(--border2); background:rgba(15,21,48,1); }
+    .beat-row.playing { border-color:rgba(0,240,255,.4); background:rgba(0,240,255,.03); }
+    .row-num { font-family:var(--mono); font-size:11px; color:var(--muted); width:22px; text-align:right; flex-shrink:0; }
+    .row-play {
+      width:32px; height:32px; border-radius:50%; border:1px solid var(--border2);
+      background:rgba(0,240,255,.04); color:var(--muted); cursor:none;
+      display:flex; align-items:center; justify-content:center; transition:all .18s; flex-shrink:0;
+    }
+    .row-play:hover, .beat-row.playing .row-play { border-color:var(--cyan); color:var(--cyan); background:rgba(0,240,255,.1); }
+    .row-play svg { width:12px; height:12px; }
+    .row-wave { width:80px; height:28px; flex-shrink:0; }
+    .row-info { flex:1; min-width:0; }
+    .row-title { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .row-producer { font-size:11px; color:var(--cyan); margin-top:1px; }
+    .row-tags { display:flex; gap:4px; flex-shrink:0; }
+    .row-dur { font-family:var(--mono); font-size:10px; color:var(--muted); flex-shrink:0; width:34px; text-align:right; }
+    .row-price { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--cyan); flex-shrink:0; min-width:54px; text-align:right; }
+    .row-actions { display:flex; gap:6px; flex-shrink:0; }
+    .btn-row-cart {
+      padding:6px 10px; border:1px solid rgba(0,240,255,.25); border-radius:4px; cursor:none;
+      background:rgba(0,240,255,.08); color:var(--cyan); font-family:var(--mono);
+      font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+      transition:all .15s;
+      clip-path:polygon(0 0,calc(100% - 4px) 0,100% 4px,100% 100%,0 100%);
+    }
+    .btn-row-cart:hover { background:rgba(0,240,255,.18); border-color:var(--cyan); }
+    .btn-row-buy {
+      padding:6px 10px; border:none; border-radius:4px; cursor:none;
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2)); color:#000;
+      font-family:var(--mono); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+      transition:all .15s;
+      clip-path:polygon(0 0,calc(100% - 4px) 0,100% 4px,100% 100%,0 100%);
+    }
+    .btn-row-buy:hover { box-shadow:0 0 12px rgba(0,240,255,.3); transform:translateY(-1px); }
+
+    /* ── Cart drawer ── */
+    #cart-drawer {
+      position:fixed; top:0; right:0; bottom:0; width:360px; max-width:96vw;
+      background:var(--bg2); border-left:1px solid var(--border2);
+      z-index:700; display:flex; flex-direction:column;
+      transform:translateX(100%); transition:transform .3s cubic-bezier(.4,0,.2,1);
+    }
+    #cart-drawer.open { transform:translateX(0); }
+    .cart-hd {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:20px 20px 16px; border-bottom:1px solid var(--border2); flex-shrink:0;
+    }
+    .cart-title { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.05em; }
+    .cart-count { font-family:var(--mono); font-size:11px; color:var(--cyan); }
+    .btn-cart-close { background:none; border:none; color:var(--muted); cursor:none; font-size:18px; transition:color .18s; }
+    .btn-cart-close:hover { color:var(--text); }
+    .cart-body { flex:1; overflow-y:auto; padding:16px 20px; }
+    .cart-empty { text-align:center; padding:40px 20px; }
+    .cart-empty-icon { font-size:32px; margin-bottom:10px; }
+    .cart-empty-txt { font-family:var(--mono); font-size:11px; color:var(--muted); }
+    .cart-item {
+      display:flex; align-items:flex-start; gap:12px;
+      padding:12px 0; border-bottom:1px solid var(--border);
+    }
+    .cart-item-info { flex:1; min-width:0; }
+    .cart-item-title { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.03em; }
+    .cart-item-sub { font-size:10px; color:var(--muted); margin-top:2px; }
+    .cart-item-price { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--cyan); flex-shrink:0; }
+    .btn-cart-remove { background:none; border:none; color:var(--muted); cursor:none; font-size:14px; transition:color .18s; flex-shrink:0; }
+    .btn-cart-remove:hover { color:#ff6b6b; }
+    .cart-ft {
+      padding:16px 20px; border-top:1px solid var(--border2); flex-shrink:0;
+    }
+    .cart-total-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .cart-total-lbl { font-family:var(--mono); font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+    .cart-total-val { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--text); }
+    .btn-checkout {
+      width:100%; padding:13px; border:none; border-radius:4px; cursor:none;
+      font-family:var(--mono); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2)); color:#000;
+      transition:all .2s;
+      clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+    }
+    .btn-checkout:hover { box-shadow:0 0 24px rgba(0,240,255,.4); transform:translateY(-1px); }
+    .btn-checkout:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
+    /* Cart badge on header */
+    .cart-badge-wrap { position:relative; display:inline-flex; }
+    .cart-badge {
+      position:absolute; top:-6px; right:-6px;
+      width:16px; height:16px; border-radius:50%;
+      background:var(--cyan); color:#000;
+      font-family:var(--mono); font-size:9px; font-weight:700;
+      display:flex; align-items:center; justify-content:center;
     }
   </style>
 </head>
@@ -589,6 +699,13 @@
               Connexion Producteur
             </button>
           </div>
+          <div class="cart-badge-wrap">
+            <button class="btn-auth" onclick="openCart()" style="gap:6px;" title="Panier">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+              Panier
+            </button>
+            <span class="cart-badge" id="cart-badge" style="display:none;">0</span>
+          </div>
           <button class="btn-sell" onclick="onSellClick()">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
             Vendre mes beats
@@ -619,6 +736,14 @@
           <option value="price-asc">Prix ↑</option>
           <option value="price-desc">Prix ↓</option>
         </select>
+        <div class="view-toggle">
+          <button class="btn-view" id="btn-view-list" onclick="setView('list')" title="Vue liste">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <button class="btn-view active" id="btn-view-grid" onclick="setView('grid')" title="Vue grille">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -906,6 +1031,30 @@
   </div>
 </div>
 
+<!-- ── Cart drawer ── -->
+<div id="cart-drawer">
+  <div class="cart-hd">
+    <div>
+      <div class="cart-title">Mon Panier</div>
+      <div class="cart-count" id="cart-count-label">0 article</div>
+    </div>
+    <button class="btn-cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cart-body">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      <div class="cart-empty-txt">Ton panier est vide — ajoute des beats !</div>
+    </div>
+  </div>
+  <div class="cart-ft" id="cart-ft" style="display:none;">
+    <div class="cart-total-row">
+      <div class="cart-total-lbl">Total</div>
+      <div class="cart-total-val" id="cart-total">0€</div>
+    </div>
+    <button class="btn-checkout" id="btn-checkout" onclick="checkoutCart()">Procéder au paiement</button>
+  </div>
+</div>
+
 <script>
 // ── Cursor ──
 const dot=document.getElementById('c-dot'),ring=document.getElementById('c-ring');
@@ -924,10 +1073,36 @@ function _drawPts(){_cx.clearRect(0,0,_W,_H);_pts.forEach(p=>{p.update();_cx.beg
 _drawPts();
 
 // ═══════════════════════════════════════════════════════════
-//  BEAT DATA
+//  BEAT DATA — 6 demo beats (used when Supabase returns nothing)
 // ═══════════════════════════════════════════════════════════
-// Beats chargés depuis Supabase — tableau vide au démarrage
-const BEATS = [];
+const DEMO_BEATS = [
+  { id:1, title:'NIGHT CRAWLER', producer:'MayanaBeat', genre:'Trap', bpm:140, key:'Fm', mood:'Sombre',
+    plays:4821, sales:23, accent:'#00F0FF',
+    prices:{ lease:29, trackout:59, exclu:199 }, dur:187,
+    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+  { id:2, title:'DARK MATTER', producer:'MayanaBeat', genre:'Drill', bpm:145, key:'Cm', mood:'Agressif',
+    plays:3209, sales:17, accent:'#BF5FFF',
+    prices:{ lease:35, trackout:69, exclu:249 }, dur:203,
+    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+  { id:3, title:'LOTUS FIELDS', producer:'MayanaBeat', genre:'Lo-Fi', bpm:88, key:'G', mood:'Détendu',
+    plays:6012, sales:41, accent:'#00FF88',
+    prices:{ lease:19, trackout:39, exclu:149 }, dur:215,
+    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+  { id:4, title:'AFRO ECLIPSE', producer:'MayanaBeat', genre:'Afrobeats', bpm:105, key:'Am', mood:'Festif',
+    plays:2741, sales:11, accent:'#FFD700',
+    prices:{ lease:29, trackout:59, exclu:199 }, dur:192,
+    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
+  { id:5, title:'PHARAOH WAVE', producer:'MayanaBeat', genre:'Phonk', bpm:130, key:'Dm', mood:'Puissant',
+    plays:5334, sales:28, accent:'#FF6B35',
+    prices:{ lease:32, trackout:65, exclu:229 }, dur:178,
+    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
+  { id:6, title:'VELVET GROOVE', producer:'MayanaBeat', genre:'R&B', bpm:92, key:'Bb', mood:'Romantique',
+    plays:1887, sales:8, accent:'#FF6B9D',
+    prices:{ lease:25, trackout:49, exclu:179 }, dur:224,
+    audioUrl:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3' },
+];
+
+const BEATS = [...DEMO_BEATS];
 
 // ── Pseudo-random waveform (seeded)
 function seededRandom(n) { const x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); }
@@ -955,73 +1130,91 @@ function drawPlayerWave(accent, seed, progress = 0) {
   drawWaveform(canvas, accent, seed, progress);
 }
 
-// ── Player state
+// ── Player state (real HTML5 Audio)
 let currentBeat = null;
 let isPlaying = false;
-let fakeProgress = 0;
-let rafId = null;
-let lastTs = null;
+const _audio = new Audio();
+_audio.preload = 'metadata';
+let _waveRafId = null;
 
 function fmtTime(sec) {
+  if (!isFinite(sec) || isNaN(sec)) return '0:00';
   const m = Math.floor(sec / 60), s = Math.floor(sec % 60);
   return `${m}:${s.toString().padStart(2,'0')}`;
 }
 
+// Audio event listeners
+_audio.addEventListener('timeupdate', () => {
+  if (!currentBeat) return;
+  const dur  = _audio.duration || currentBeat.dur;
+  const prog = dur > 0 ? _audio.currentTime / dur : 0;
+  document.getElementById('time-cur').textContent  = fmtTime(_audio.currentTime);
+  document.getElementById('time-tot').textContent  = fmtTime(dur);
+  document.getElementById('player-seek').value     = prog;
+  drawPlayerWave(currentBeat.accent, currentBeat.id * 7 + 3, prog);
+});
+_audio.addEventListener('loadedmetadata', () => {
+  document.getElementById('time-tot').textContent = fmtTime(_audio.duration);
+});
+_audio.addEventListener('ended', () => {
+  isPlaying = false;
+  updatePlayIcon();
+  // Auto-next
+  if (currentBeat) {
+    const idx = filtered.findIndex(b => b.id === currentBeat.id);
+    if (idx < filtered.length - 1) playBeat(filtered[idx + 1]);
+  }
+});
+_audio.addEventListener('error', () => {
+  // Audio URL unavailable (e.g. demo URL blocked) — degrade gracefully
+  console.warn('[Audio] Cannot load:', _audio.src);
+});
+
 function playBeat(beat) {
-  // Mark cards
-  document.querySelectorAll('.beat-card').forEach(c => c.classList.remove('playing'));
-  const card = document.querySelector(`.beat-card[data-id="${beat.id}"]`);
+  // Mark cards / rows
+  document.querySelectorAll('.beat-card,.beat-row').forEach(c => c.classList.remove('playing'));
+  const card = document.querySelector(`.beat-card[data-id="${beat.id}"], .beat-row[data-id="${beat.id}"]`);
   if (card) card.classList.add('playing');
 
+  const isSameBeat = currentBeat && currentBeat.id === beat.id;
   currentBeat = beat;
+
+  if (!isSameBeat) {
+    _audio.src = beat.audioUrl || '';
+    _audio.load();
+  }
+
+  _audio.play().catch(() => {
+    // Play blocked (e.g. autoplay policy) — still show bar
+  });
   isPlaying = true;
-  fakeProgress = 0;
-  lastTs = null;
 
   // Update UI
   document.getElementById('player-title').textContent = beat.title;
-  document.getElementById('player-meta').textContent = `${beat.producer} · ${beat.genre} · ${beat.bpm} BPM · ${beat.key}`;
-  document.getElementById('time-tot').textContent = fmtTime(beat.dur);
+  document.getElementById('player-meta').textContent  = `${beat.producer} · ${beat.genre} · ${beat.bpm} BPM · ${beat.key}`;
+  document.getElementById('time-tot').textContent     = fmtTime(beat.dur);
   document.getElementById('pl-lease-btn').textContent = `Lease ${beat.prices.lease}€`;
   document.getElementById('pl-exclu-btn').textContent = `Exclu ${beat.prices.exclu}€`;
   document.getElementById('player-bar').classList.add('visible');
   updatePlayIcon();
-  animatePlayer();
-}
-
-function animatePlayer() {
-  if (rafId) cancelAnimationFrame(rafId);
-  function tick(ts) {
-    if (!isPlaying) return;
-    if (lastTs) {
-      const delta = (ts - lastTs) / 1000;
-      fakeProgress = Math.min(1, fakeProgress + delta / currentBeat.dur);
-    }
-    lastTs = ts;
-
-    const cur = fakeProgress * currentBeat.dur;
-    document.getElementById('time-cur').textContent = fmtTime(cur);
-    document.getElementById('player-seek').value = fakeProgress;
-
-    // Redraw waveform
-    requestAnimationFrame(() => drawPlayerWave(currentBeat.accent, currentBeat.id * 7 + 3, fakeProgress));
-
-    if (fakeProgress >= 1) { isPlaying = false; fakeProgress = 0; updatePlayIcon(); return; }
-    rafId = requestAnimationFrame(tick);
-  }
-  rafId = requestAnimationFrame(tick);
+  if (!isSameBeat) trackPlay(beat); // async, non bloquant
 }
 
 function togglePlay() {
   if (!currentBeat) return;
-  isPlaying = !isPlaying;
-  if (isPlaying) { lastTs = null; animatePlayer(); }
+  if (_audio.paused) {
+    _audio.play().catch(() => {});
+    isPlaying = true;
+  } else {
+    _audio.pause();
+    isPlaying = false;
+  }
   updatePlayIcon();
 }
 
 function updatePlayIcon() {
   const icon = document.getElementById('play-icon');
-  if (isPlaying) {
+  if (isPlaying && !_audio.paused) {
     icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/>';
   } else {
     icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>';
@@ -1040,18 +1233,27 @@ function nextBeat() {
 }
 
 function onSeek(val) {
-  fakeProgress = parseFloat(val);
-  lastTs = null;
-  document.getElementById('time-cur').textContent = fmtTime(fakeProgress * currentBeat.dur);
-  drawPlayerWave(currentBeat.accent, currentBeat.id * 7 + 3, fakeProgress);
+  const prog = parseFloat(val);
+  if (_audio.duration) _audio.currentTime = prog * _audio.duration;
+  drawPlayerWave(currentBeat.accent, currentBeat.id * 7 + 3, prog);
 }
 
 function closePlayer() {
+  _audio.pause();
+  _audio.src = '';
   isPlaying = false;
-  if (rafId) cancelAnimationFrame(rafId);
   document.getElementById('player-bar').classList.remove('visible');
-  document.querySelectorAll('.beat-card').forEach(c => c.classList.remove('playing'));
+  document.querySelectorAll('.beat-card,.beat-row').forEach(c => c.classList.remove('playing'));
   currentBeat = null;
+}
+
+// ── View toggle (grid / list)
+let currentView = 'grid';
+function setView(v) {
+  currentView = v;
+  document.getElementById('btn-view-grid').classList.toggle('active', v === 'grid');
+  document.getElementById('btn-view-list').classList.toggle('active', v === 'list');
+  renderGrid();
 }
 
 // ── Filters
@@ -1086,61 +1288,103 @@ function applyFilters() {
 // ── Render
 function formatNum(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : n; }
 
+const PLAY_ICON_SVG = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>`;
+const PAUSE_ICON_SVG = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 9v6m4-6v6"/></svg>`;
+
 function renderGrid() {
   const grid = document.getElementById('beat-grid');
   if (filtered.length === 0) {
     const isFiltered = document.getElementById('search-input').value || activeGenre !== 'all';
+    grid.className = 'beat-grid';
     grid.innerHTML = `<div class="empty-state">
       <div class="empty-icon">${isFiltered ? '🔍' : '🎵'}</div>
       <div class="empty-text">${isFiltered
         ? 'Aucun beat trouvé pour cette recherche'
-        : 'Aucun beat disponible pour l\'instant — sois le premier à en publier !'
+        : "Aucun beat disponible pour l'instant — sois le premier à en publier !"
       }</div>
     </div>`;
     return;
   }
 
-  grid.innerHTML = filtered.map(b => {
-    const isNow = currentBeat && currentBeat.id === b.id;
-    return `<div class="beat-card${isNow?' playing':''}" data-id="${b.id}">
-      <div class="beat-cover" onclick="playBeat(BEATS.find(x=>x.id===${b.id}))" role="img" aria-label="${b.title} — beat ${b.genre}">
-        <canvas id="wv-${b.id}" width="260" height="100" aria-hidden="true"></canvas>
-        <div class="beat-now"><div class="now-dot"></div>EN LECTURE</div>
-        <div class="beat-play-btn">
-          <div class="beat-play-icon">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
-          </div>
+  if (currentView === 'list') {
+    grid.className = 'beat-list';
+    grid.innerHTML = filtered.map((b, idx) => {
+      const isNow = currentBeat && currentBeat.id === b.id;
+      return `<div class="beat-row${isNow?' playing':''}" data-id="${b.id}">
+        <div class="row-num">${idx + 1}</div>
+        <button class="row-play" onclick="playBeat(BEATS.find(x=>x.id===${b.id}))" title="Écouter ${b.title}">
+          ${isNow && isPlaying ? PAUSE_ICON_SVG : PLAY_ICON_SVG}
+        </button>
+        <canvas class="row-wave" id="wv-${b.id}" width="80" height="28" aria-hidden="true"></canvas>
+        <div class="row-info">
+          <div class="row-title">${b.title}</div>
+          <div class="row-producer">${b.producer}</div>
         </div>
-        <div class="beat-duration">${fmtTime(b.dur)}</div>
-      </div>
-      <div class="beat-body">
-        <div class="beat-title">${b.title}</div>
-        <div class="beat-producer">${b.producer}</div>
-        <div class="beat-tags">
+        <div class="row-tags">
           <span class="beat-tag tag-genre">${b.genre}</span>
-          <span class="beat-tag tag-bpm">${b.bpm} BPM</span>
+          <span class="beat-tag tag-bpm">${b.bpm}</span>
           <span class="beat-tag tag-key">${b.key}</span>
         </div>
-        <div class="beat-meta-row">
-          <div class="beat-stat">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
-            ${formatNum(b.plays)}
+        <div class="row-dur">${fmtTime(b.dur)}</div>
+        <div class="row-price">${b.prices.lease}€</div>
+        <div class="row-actions">
+          <button class="btn-row-cart" onclick="addToCart(${b.id},'lease')" title="Ajouter au panier">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="width:11px;height:11px;display:inline;margin-right:3px"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            Panier
+          </button>
+          <button class="btn-row-buy" onclick="openLicenseFor(${b.id})">Acheter</button>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    grid.className = 'beat-grid';
+    grid.innerHTML = filtered.map(b => {
+      const isNow = currentBeat && currentBeat.id === b.id;
+      return `<div class="beat-card${isNow?' playing':''}" data-id="${b.id}">
+        <div class="beat-cover" onclick="playBeat(BEATS.find(x=>x.id===${b.id}))" role="img" aria-label="${b.title} — beat ${b.genre}">
+          <canvas id="wv-${b.id}" width="260" height="100" aria-hidden="true"></canvas>
+          <div class="beat-now"><div class="now-dot"></div>EN LECTURE</div>
+          <div class="beat-play-btn">
+            <div class="beat-play-icon">
+              ${PLAY_ICON_SVG}
+            </div>
           </div>
-          <div class="beat-stat">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-            ${b.sales} ventes
+          <div class="beat-duration">${fmtTime(b.dur)}</div>
+        </div>
+        <div class="beat-body">
+          <div class="beat-title">${b.title}</div>
+          <div class="beat-producer">${b.producer}</div>
+          <div class="beat-tags">
+            <span class="beat-tag tag-genre">${b.genre}</span>
+            <span class="beat-tag tag-bpm">${b.bpm} BPM</span>
+            <span class="beat-tag tag-key">${b.key}</span>
+          </div>
+          <div class="beat-meta-row">
+            <div class="beat-stat">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
+              ${formatNum(b.plays)}
+            </div>
+            <div class="beat-stat">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+              ${b.sales} ventes
+            </div>
           </div>
         </div>
-      </div>
-      <div class="beat-footer">
-        <div class="beat-prices">
-          <div class="price-lease">${b.prices.lease}€ <span style="font-size:9px;color:var(--muted);font-weight:400;">lease</span></div>
-          <div class="price-exclu">Exclu: ${b.prices.exclu}€</div>
+        <div class="beat-footer">
+          <div class="beat-prices">
+            <div class="price-lease">${b.prices.lease}€ <span style="font-size:9px;color:var(--muted);font-weight:400;">lease</span></div>
+            <div class="price-exclu">Exclu: ${b.prices.exclu}€</div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn-buy" style="padding:7px 10px;" onclick="addToCart(${b.id},'lease')" title="Ajouter au panier">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="width:11px;height:11px;"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            </button>
+            <button class="btn-buy" onclick="openLicenseFor(${b.id})">Acheter</button>
+          </div>
         </div>
-        <button class="btn-buy" onclick="openLicenseFor(${b.id})">Acheter</button>
-      </div>
-    </div>`;
-  }).join('');
+      </div>`;
+    }).join('');
+  }
 
   // Draw waveforms after DOM update
   requestAnimationFrame(() => {
@@ -1224,6 +1468,151 @@ async function buyBeat(tier) {
   }
 }
 
+// ══════════════════════════════════════════════════════════════
+//  CART — localStorage-backed
+// ══════════════════════════════════════════════════════════════
+
+const CART_KEY = 'mayanabeat_cart';
+
+function cartLoad() {
+  try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+  catch(e) { return []; }
+}
+function cartSave(items) {
+  localStorage.setItem(CART_KEY, JSON.stringify(items));
+}
+
+function addToCart(beatId, tier) {
+  const beat = BEATS.find(b => b.id === beatId);
+  if (!beat) return;
+  const items = cartLoad();
+  // Avoid duplicate (same beat + same tier)
+  const dup = items.find(i => i.beatId === beatId && i.tier === tier);
+  if (dup) {
+    showToast(`"${beat.title}" est déjà dans ton panier.`, 'var(--yellow)');
+    openCart();
+    return;
+  }
+  items.push({
+    beatId,
+    tier,
+    title:    beat.title,
+    producer: beat.producer,
+    price:    beat.prices[tier] || beat.prices.lease,
+    accent:   beat.accent,
+  });
+  cartSave(items);
+  renderCartBadge();
+  renderCartDrawer();
+  showToast(`✓ "${beat.title}" ajouté au panier`, 'var(--cyan)');
+  openCart();
+}
+
+function removeFromCart(idx) {
+  const items = cartLoad();
+  items.splice(idx, 1);
+  cartSave(items);
+  renderCartBadge();
+  renderCartDrawer();
+}
+
+function renderCartBadge() {
+  const items = cartLoad();
+  const badge = document.getElementById('cart-badge');
+  if (items.length > 0) {
+    badge.style.display = 'flex';
+    badge.textContent = items.length;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function renderCartDrawer() {
+  const items = cartLoad();
+  const body  = document.getElementById('cart-body');
+  const ft    = document.getElementById('cart-ft');
+  const countLbl = document.getElementById('cart-count-label');
+
+  countLbl.textContent = items.length === 0
+    ? '0 article'
+    : `${items.length} article${items.length > 1 ? 's' : ''}`;
+
+  if (items.length === 0) {
+    body.innerHTML = `<div class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      <div class="cart-empty-txt">Ton panier est vide — ajoute des beats !</div>
+    </div>`;
+    ft.style.display = 'none';
+    return;
+  }
+
+  const TIER_LABELS = { lease:'Lease non-exclusif', trackout:'Trackout Premium', exclu:'Exclusivité totale' };
+  const total = items.reduce((s, i) => s + i.price, 0);
+
+  body.innerHTML = items.map((item, idx) => `
+    <div class="cart-item">
+      <div style="width:6px;height:36px;border-radius:2px;background:${item.accent};flex-shrink:0;"></div>
+      <div class="cart-item-info">
+        <div class="cart-item-title">${item.title}</div>
+        <div class="cart-item-sub">${item.producer} · ${TIER_LABELS[item.tier] || item.tier}</div>
+      </div>
+      <div class="cart-item-price">${item.price}€</div>
+      <button class="btn-cart-remove" onclick="removeFromCart(${idx})" title="Retirer">✕</button>
+    </div>
+  `).join('');
+
+  document.getElementById('cart-total').textContent = `${total}€`;
+  ft.style.display = 'block';
+}
+
+function openCart() {
+  renderCartDrawer();
+  document.getElementById('cart-drawer').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cart-drawer').classList.remove('open');
+}
+
+async function checkoutCart() {
+  const items = cartLoad();
+  if (items.length === 0) return;
+
+  if (!SUPABASE_READY) {
+    alert('⚠️ Stripe non encore configuré.\nDéploie les Edge Functions Supabase et ajoute tes clés Stripe pour activer les paiements.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-checkout');
+  btn.disabled = true;
+  btn.textContent = '⏳ Redirection…';
+
+  try {
+    // For multi-beat cart, redirect to license modal of first item
+    // (full multi-item Stripe session requires backend implementation)
+    if (items.length === 1) {
+      closeCart();
+      openLicenseFor(items[0].beatId);
+      btn.disabled = false;
+      btn.textContent = 'Procéder au paiement';
+      return;
+    }
+
+    const { data, error } = await db.functions.invoke('stripe-checkout-cart', {
+      body: { items, origin: window.location.origin }
+    });
+    if (error) throw error;
+    if (!data?.url) throw new Error('URL Stripe manquante');
+    window.location.href = data.url;
+  } catch (err) {
+    console.error('[checkoutCart]', err);
+    btn.disabled = false;
+    btn.textContent = 'Procéder au paiement';
+    // Fallback: open license modal for first item
+    closeCart();
+    openLicenseFor(items[0].beatId);
+  }
+}
+
 // ── Upload modal
 function openUpload() { document.getElementById('upload-overlay').classList.add('open'); }
 function closeUpload(e) {
@@ -1257,7 +1646,17 @@ function showToast(msg, color) {
 // ══════════════════════════════════════════════════════════════
 
 async function loadBeats() {
-  if (!SUPABASE_READY) { applyFilters(); return; }
+  if (!SUPABASE_READY) {
+    // No Supabase — keep demo beats and render
+    BEATS.length = 0;
+    DEMO_BEATS.forEach(b => BEATS.push(b));
+    applyFilters();
+    // update stats from demo
+    document.getElementById('stat-beats').textContent = BEATS.length;
+    document.getElementById('stat-prod').textContent  = 1;
+    document.getElementById('stat-sales').textContent = BEATS.reduce((s,b) => s + b.sales, 0);
+    return;
+  }
 
   try {
     const { data, error } = await db
@@ -1268,7 +1667,13 @@ async function loadBeats() {
       .order('plays', { ascending: false })
       .limit(100);
 
-    if (error || !data || data.length === 0) { applyFilters(); return; }
+    if (error || !data || data.length === 0) {
+      // Fall back to demo beats
+      BEATS.length = 0;
+      DEMO_BEATS.forEach(b => BEATS.push(b));
+      applyFilters();
+      return;
+    }
 
     // Transformer les données Supabase
     BEATS.length = 0;
@@ -1719,17 +2124,6 @@ function getAudioDuration(file) {
   });
 }
 
-// ══════════════════════════════════════════════════════════════
-//  OVERRIDE playBeat : tracking réel
-// ══════════════════════════════════════════════════════════════
-
-const _origPlayBeat = playBeat;
-// Wrap playBeat pour tracker les écoutes
-function playBeat(beat) {
-  _origPlayBeat(beat);
-  trackPlay(beat); // async, non bloquant
-}
-
 // ── Récupère un JWT valide (refresh auto si expiré)
 async function getValidJWT() {
   const storageKey = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
@@ -1836,6 +2230,7 @@ async function connectStripe() {
 loadBeats();
 loadStats();
 checkAuth();
+renderCartBadge();
 
 // Resize player waveform on window resize
 window.addEventListener('resize', () => {
