@@ -71,76 +71,6 @@
     body:has(a:hover) #c-ring,
     body:has(button:hover) #c-ring { width:48px; height:48px; border-color:rgba(191,95,255,.6); }
 
-    /* ══════════════════════════════════════════════
-       MOBILE TOPBAR
-    ══════════════════════════════════════════════ */
-    .topbar{
-      display:none;position:fixed;top:0;left:0;right:0;height:var(--topbar-h);
-      background:rgba(3,5,13,.88);backdrop-filter:blur(24px);
-      border-bottom:1px solid rgba(0,240,255,.08);
-      align-items:center;justify-content:space-between;
-      padding:0 20px;z-index:200;
-    }
-    .topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:none;}
-    .topbar-icon{
-      width:36px;height:36px;
-      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));
-      background:linear-gradient(135deg,var(--cyan2),var(--purple2));
-      display:flex;align-items:center;justify-content:center;
-      box-shadow:0 0 12px rgba(0,240,255,.2);
-    }
-    .topbar-name{
-      font-size:14px;font-weight:800;color:var(--text);letter-spacing:-.2px;
-    }
-    .topbar-name span{color:var(--cyan);}
-
-    .hamburger{
-      width:40px;height:40px;border-radius:10px;
-      background:rgba(0,240,255,.05);border:1px solid rgba(0,240,255,.12);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:5px;cursor:none;transition:background .15s,border-color .15s;
-    }
-    .hamburger:hover{background:rgba(0,240,255,.1);border-color:rgba(0,240,255,.25);}
-    .hamburger span{
-      display:block;width:18px;height:1.5px;
-      background:var(--cyan);border-radius:2px;
-      transition:transform .25s,opacity .25s;
-      box-shadow:0 0 4px var(--cyan);
-    }
-    .hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
-    .hamburger.open span:nth-child(2){opacity:0;}
-    .hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-
-    /* ══════════════════════════════════════════════
-       MOBILE DRAWER
-    ══════════════════════════════════════════════ */
-    .backdrop{
-      display:none;position:fixed;inset:0;
-      background:rgba(3,5,13,.8);backdrop-filter:blur(8px);
-      z-index:190;opacity:0;transition:opacity .3s;
-    }
-    .backdrop.open{opacity:1;}
-    .drawer{
-      position:fixed;top:0;left:0;bottom:0;width:280px;
-      background:var(--sidebar);
-      border-right:1px solid rgba(0,240,255,.1);
-      z-index:195;transform:translateX(-100%);
-      transition:transform .3s cubic-bezier(.4,0,.2,1);
-      padding:80px 16px 24px;
-      display:flex;flex-direction:column;gap:4px;
-    }
-    .drawer.open{transform:translateX(0);}
-    .drawer-item{
-      display:flex;align-items:center;gap:12px;
-      padding:12px 14px;border-radius:10px;
-      color:rgba(180,210,255,.4);text-decoration:none;
-      font-size:13px;font-weight:600;cursor:none;
-      transition:background .15s,color .15s;
-      border:1px solid transparent;
-    }
-    .drawer-item:hover{background:rgba(0,240,255,.05);color:var(--cyan);border-color:rgba(0,240,255,.1);}
-    .drawer-item.active{background:rgba(0,240,255,.07);color:var(--cyan);border-color:rgba(0,240,255,.15);}
-    .drawer-label{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:12px 14px 6px;margin-top:8px;}
 
     /* ══════════════════════════════════════════════
        MAIN LAYOUT
@@ -615,8 +545,7 @@
       .hud-cell:nth-child(4){border-top:1px solid rgba(0,240,255,.06);border-right:none;}
     }
     @media(max-width:768px){
-      .topbar{display:flex;}
-      .main{margin-left:0;padding-top:var(--topbar-h);padding-bottom:60px;}
+      .main{margin-left:0;padding-top:0;padding-bottom:60px;}
       body{cursor:auto;}
       #c-dot,#c-ring{display:none;}
 
@@ -664,50 +593,6 @@
 <div id="c-dot"></div>
 <div id="c-ring"></div>
 
-<!-- ════════════════════════════════════════
-     MOBILE TOPBAR
-════════════════════════════════════════ -->
-<header class="topbar" id="topbar">
-  <a href="index.html" class="topbar-logo">
-    <div class="topbar-icon">
-      <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:11px;color:#000;">FL</span>
-    </div>
-    <span class="topbar-name">FL Studio <span>Toolkit</span></span>
-  </a>
-  <button class="hamburger" id="hamburger" onclick="toggleDrawer()">
-    <span></span><span></span><span></span>
-  </button>
-</header>
-
-<!-- Mobile drawer -->
-<div class="backdrop" id="backdrop" onclick="closeDrawer()"></div>
-<nav class="drawer" id="drawer">
-  <div class="drawer-label">Navigation</div>
-  <a href="index.html" class="drawer-item active">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9"/></svg>
-    Accueil
-  </a>
-  <a href="fl-studio-cheatsheet.html" class="drawer-item">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path stroke-linecap="round" d="M7 9h.01M11 9h2m4 0h.01M7 13h4m6 0h.01"/></svg>
-    Raccourcis Clavier
-  </a>
-  <a href="fl-studio-tips.html" class="drawer-item">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-    Tips & Astuces
-  </a>
-  <a href="beatscan.html" class="drawer-item">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    BeatScan
-  </a>
-  <a href="mastering.html" class="drawer-item">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-    Mastering Pro
-  </a>
-  <a href="songstats.html" class="drawer-item">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    Songstats
-  </a>
-</nav>
 
 <!-- ════════════════════════════════════════
      MAIN
@@ -1078,22 +963,6 @@ const fillIO = new IntersectionObserver(entries=>{
 },{threshold:.3});
 document.querySelectorAll('.hud-cell').forEach(el=>fillIO.observe(el));
 
-/* ── Mobile drawer ── */
-function toggleDrawer(){
-  const open=document.getElementById('drawer').classList.toggle('open');
-  document.getElementById('backdrop').classList.toggle('open',open);
-  document.getElementById('backdrop').style.display=open?'block':'none';
-  document.getElementById('hamburger').classList.toggle('open',open);
-  document.body.style.overflow=open?'hidden':'';
-}
-function closeDrawer(){
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('backdrop').classList.remove('open');
-  document.getElementById('backdrop').style.display='none';
-  document.getElementById('hamburger').classList.remove('open');
-  document.body.style.overflow='';
-}
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
 
 /* ── Mouse parallax on orb ── */
 const orb=document.querySelector('.hero-orb');
