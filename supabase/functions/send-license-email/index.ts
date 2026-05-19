@@ -10,16 +10,15 @@
 //    SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (auto-injectés)
 // ══════════════════════════════════════════════════════════════
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { SMTPClient } from "https://deno.land/x/denomailer@1.3.0/mod.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
+import nodemailer from "npm:nodemailer";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   try {
     const { purchase_id } = await req.json();
@@ -32,7 +31,14 @@ serve(async (req) => {
 
     const { data: purchase, error: pErr } = await sb
       .from("purchases")
-      .select("*, beats(*, producers(username, display_name))")
+      .select(`
+        *,
+        beats(
+          id, title, genre, bpm, key, audio_url,
+          audio_path, untagged_path, stems_path, has_stems,
+          producers(username, display_name)
+        )
+      `)
       .eq("id", purchase_id)
       .single();
 
@@ -41,16 +47,39 @@ serve(async (req) => {
 
     const beat = purchase.beats;
     const producer = beat?.producers;
+    const tier = purchase.license_tier; // 'lease' | 'trackout' | 'exclu'
 
-    // Lien signé 7 jours
-    let downloadUrl = beat?.audio_url || null;
-    if (beat?.audio_path) {
-      const { data: signed } = await sb.storage
-        .from("beats-audio")
-        .createSignedUrl(beat.audio_path, 604800);
+    // ── Sélectionne le bon fichier selon la licence
+    // Règle : trackout/exclu → stems si disponibles, sinon fichier propre
+    //         lease          → toujours le fichier propre (untagged)
+    // JAMAIS le fichier taggué (audio_path) — c'est la démo streaming uniquement.
+
+    const wantsStems = (tier === "trackout" || tier === "exclu") && beat?.has_stems && beat?.stems_path;
+    const bucket     = wantsStems ? "beats-stems"    : "beats-untagged";
+    const filePath   = wantsStems ? beat?.stems_path  : beat?.untagged_path;
+
+    if (!filePath) {
+      // Fallback : si le producteur a uploadé avant la migration v3, on essaie l'ancien audio_url
+      if (beat?.audio_url) {
+        console.warn("[send-license-email] Fallback sur audio_url (fichier taggué) — beat non migré");
+      } else {
+        throw new Error("Fichier de téléchargement introuvable pour cet achat");
+      }
+    }
+
+    // Lien signé 7 jours (bucket privé — accès limité)
+    let downloadUrl: string | null = null;
+    if (filePath) {
+      const { data: signed, error: signErr } = await sb.storage
+        .from(bucket)
+        .createSignedUrl(filePath, 604800); // 7 jours
+      if (signErr) console.error("[send-license-email] createSignedUrl:", signErr.message);
       if (signed?.signedUrl) downloadUrl = signed.signedUrl;
     }
-    if (!downloadUrl) throw new Error("Fichier audio introuvable");
+
+    // Fallback sur l'audio_url public si rien d'autre (beats pré-migration)
+    if (!downloadUrl && beat?.audio_url) downloadUrl = beat.audio_url;
+    if (!downloadUrl) throw new Error("Impossible de générer le lien de téléchargement");
 
     const TIER_LABELS: Record<string, string> = {
       lease: "Lease Non-Exclusif",
@@ -63,7 +92,6 @@ serve(async (req) => {
       exclu: ["MP3 + WAV + Stems", "Streams illimités", "Tous droits transférés", "Sync TV / Film / Pub"],
     };
 
-    const tier = purchase.license_tier;
     const tierLabel = TIER_LABELS[tier] || tier;
     const rights = TIER_RIGHTS[tier] || [];
     const priceEur = (purchase.amount_cents / 100).toFixed(2);
@@ -124,27 +152,23 @@ serve(async (req) => {
 </td></tr>
 </table></td></tr></table></body></html>`;
 
-    // ── Connexion SMTP OVHcloud
-    const client = new SMTPClient({
-      connection: {
-        hostname: Deno.env.get("SMTP_HOST") || "ssl0.ovh.net",
-        port: parseInt(Deno.env.get("SMTP_PORT") || "465"),
-        tls: true,
-        auth: {
-          username: Deno.env.get("SMTP_USER")!,
-          password: Deno.env.get("SMTP_PASS")!,
-        },
+    // ── Connexion SMTP OVHcloud via nodemailer
+    const transporter = nodemailer.createTransport({
+      host: Deno.env.get("SMTP_HOST") || "ssl0.ovh.net",
+      port: parseInt(Deno.env.get("SMTP_PORT") || "465"),
+      secure: true,
+      auth: {
+        user: Deno.env.get("SMTP_USER")!,
+        pass: Deno.env.get("SMTP_PASS")!,
       },
     });
 
-    await client.send({
+    await transporter.sendMail({
       from: "MayanaBeat <noreply@mayanabeat.fr>",
       to: purchase.buyer_email,
       subject: `🎵 Ton beat "${beat?.title || ""}" est prêt — ${tierLabel}`,
       html,
     });
-
-    await client.close();
 
     // Sauvegarde le lien de téléchargement
     await sb.from("purchases").update({ license_pdf_url: downloadUrl }).eq("id", purchase_id);

@@ -12,11 +12,10 @@
 //  Événements à écouter : checkout.session.completed
 // ══════════════════════════════════════════════════════════════
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import Stripe from "https://esm.sh/stripe@14.21.0?target=deno&no-check";
+import { createClient } from "npm:@supabase/supabase-js@2";
+import Stripe from "npm:stripe";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const sig = req.headers.get("stripe-signature");
   const body = await req.text();
 
@@ -52,6 +51,7 @@ serve(async (req) => {
     const { purchase_id } = session.metadata ?? {};
 
     if (purchase_id) {
+      // 1. Marque l'achat comme complété
       const { error } = await sb
         .from("purchases")
         .update({ status: "completed", stripe_session_id: session.id })
@@ -63,6 +63,30 @@ serve(async (req) => {
       }
 
       console.log(`[stripe-webhook] ✅ Achat ${purchase_id} → completed`);
+
+      // 2. Déclenche l'envoi de l'email + lien de téléchargement
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceKey  = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const emailFnUrl  = `${supabaseUrl}/functions/v1/send-license-email`;
+
+      const emailResp = await fetch(emailFnUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${serviceKey}`,
+          "apikey": serviceKey,
+        },
+        body: JSON.stringify({ purchase_id }),
+      });
+
+      if (!emailResp.ok) {
+        const errText = await emailResp.text().catch(() => "unknown");
+        console.error("[stripe-webhook] send-license-email failed:", errText);
+        // On ne bloque pas — Stripe a déjà reçu le 200, l'achat est complété.
+        // L'admin peut relancer manuellement via le Dashboard.
+      } else {
+        console.log(`[stripe-webhook] 📧 Email envoyé pour achat ${purchase_id}`);
+      }
     }
   }
 
