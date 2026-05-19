@@ -98,6 +98,10 @@ Deno.serve(async (req) => {
     const buyerName = purchase.buyer_name || purchase.buyer_email.split("@")[0];
     const producerName = producer?.display_name || producer?.username || "Producteur";
 
+    const purchaseDate = new Date(purchase.created_at);
+    const dateStr = purchaseDate.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+    const invoiceNum = `MB-${purchaseDate.getFullYear()}${String(purchaseDate.getMonth() + 1).padStart(2, "0")}-${purchase.id.slice(0, 8).toUpperCase()}`;
+
     const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/></head>
 <body style="margin:0;padding:0;background:#03050D;font-family:'Segoe UI',Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:40px 20px;">
@@ -138,15 +142,75 @@ Deno.serve(async (req) => {
       · Réf. : <code>${purchase.id.slice(0, 8).toUpperCase()}</code>
     </p>
   </td></tr></table>
-  <p style="color:rgba(180,210,255,.35);font-size:12px;line-height:1.7;margin:0;">
+  <p style="color:rgba(180,210,255,.35);font-size:12px;line-height:1.7;margin:0 0 28px;">
     Sauvegarde ton fichier — le lien expire dans 7 jours.<br/>
     Des questions ? Réponds à cet email. Bonne création 🎧
   </p>
+
+  <!-- ── Facture / Reçu ── -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#080C1A;border:1px solid rgba(0,240,255,.08);margin-bottom:24px;">
+  <tr><td style="padding:14px 24px;border-bottom:1px solid rgba(0,240,255,.08);">
+    <table width="100%"><tr>
+      <td>
+        <p style="margin:0 0 2px;font-family:'Courier New',monospace;font-size:9px;color:rgba(180,210,255,.35);text-transform:uppercase;letter-spacing:.12em;">Reçu de paiement</p>
+        <p style="margin:0;font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:#E8F0FF;">${invoiceNum}</p>
+      </td>
+      <td style="text-align:right;">
+        <p style="margin:0;font-size:11px;color:rgba(180,210,255,.4);">${dateStr}</p>
+      </td>
+    </tr></table>
+  </td></tr>
+  <tr><td style="padding:16px 24px;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td style="width:50%;vertical-align:top;padding-right:12px;">
+        <p style="margin:0 0 4px;font-family:'Courier New',monospace;font-size:9px;color:rgba(180,210,255,.3);text-transform:uppercase;letter-spacing:.1em;">Vendeur</p>
+        <p style="margin:0 0 2px;font-size:12px;font-weight:600;color:#E8F0FF;">MayanaBeat</p>
+        <p style="margin:0;font-size:11px;color:rgba(180,210,255,.35);">mayanabeat.fr</p>
+      </td>
+      <td style="width:50%;vertical-align:top;padding-left:12px;border-left:1px solid rgba(0,240,255,.06);">
+        <p style="margin:0 0 4px;font-family:'Courier New',monospace;font-size:9px;color:rgba(180,210,255,.3);text-transform:uppercase;letter-spacing:.1em;">Acheteur</p>
+        <p style="margin:0 0 2px;font-size:12px;font-weight:600;color:#E8F0FF;">${buyerName}</p>
+        <p style="margin:0;font-size:11px;color:rgba(180,210,255,.35);">${purchase.buyer_email}</p>
+      </td>
+    </tr>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(0,240,255,.06);">
+    <tr>
+      <td style="font-size:12px;color:#E8F0FF;padding-bottom:4px;">
+        Beat <strong>"${beat?.title || "—"}"</strong> — ${tierLabel}
+        <br/><span style="font-size:10px;color:rgba(180,210,255,.4);">Par ${producerName} · ${beat?.genre || ""} · ${beat?.bpm || ""}BPM</span>
+      </td>
+      <td style="text-align:right;font-family:'Courier New',monospace;font-size:14px;font-weight:700;color:#FFD700;white-space:nowrap;vertical-align:top;">${priceEur} €</td>
+    </tr>
+    <tr>
+      <td colspan="2" style="padding-top:10px;border-top:1px solid rgba(0,240,255,.06);">
+        <table width="100%"><tr>
+          <td style="font-family:'Courier New',monospace;font-size:11px;font-weight:700;color:#E8F0FF;text-transform:uppercase;letter-spacing:.06em;">Total TTC</td>
+          <td style="text-align:right;font-family:'Courier New',monospace;font-size:15px;font-weight:700;color:#FFD700;">${priceEur} €</td>
+        </tr></table>
+        <p style="margin:6px 0 0;font-size:10px;color:rgba(180,210,255,.25);font-style:italic;">TVA non applicable — Article 293B du CGI</p>
+      </td>
+    </tr>
+    </table>
+  </td></tr>
+  </table>
+
+  <!-- ── Lien portail client ── -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:4px;">
+  <tr><td style="background:rgba(0,240,255,.03);border:1px solid rgba(0,240,255,.08);padding:14px 20px;text-align:center;">
+    <p style="margin:0;font-size:12px;color:rgba(180,210,255,.4);">
+      Retrouve tous tes achats et re-télécharge tes fichiers sur
+      <a href="https://mayanabeat.fr/client.html" style="color:#00F0FF;text-decoration:none;">mayanabeat.fr/client.html</a>
+    </p>
+  </td></tr>
+  </table>
+
 </td></tr>
 <tr><td style="background:#080C1A;border:1px solid rgba(0,240,255,.15);border-top:2px solid rgba(0,240,255,.12);padding:18px 40px;text-align:center;">
   <p style="color:rgba(180,210,255,.25);font-size:11px;font-family:'Courier New',monospace;margin:0;">
     MAYANABEAT ·
-    <a href="https://curry-976.github.io/fl-studio-toolkit/beatstore.html" style="color:rgba(0,240,255,.4);text-decoration:none;">Beat Store</a>
+    <a href="https://mayanabeat.fr/beatstore.html" style="color:rgba(0,240,255,.4);text-decoration:none;">Beat Store</a>
     · noreply@mayanabeat.fr
   </p>
 </td></tr>

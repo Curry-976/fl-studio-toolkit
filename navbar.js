@@ -320,9 +320,10 @@
 
   // Items secondaires (sidebar desktop seulement + drawer mobile)
   const moreLinks = [
-    { href: 'beatscan.html',  tip: 'BeatScan', label: 'BeatScan', svg: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>` },
-    { href: 'mastering.html', tip: 'Mastering', label: 'Mastering',svg: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>` },
-    { href: 'songstats.html', tip: 'Stats',     label: 'Stats',    svg: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>` },
+    { href: 'client.html',    tip: 'Mes Achats', label: 'Achats',   svg: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4M7 21H4a1 1 0 01-1-1V4a1 1 0 011-1h10l5 5v13a1 1 0 01-1 1h-3"/></svg>` },
+    { href: 'beatscan.html',  tip: 'BeatScan',   label: 'BeatScan', svg: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>` },
+    { href: 'mastering.html', tip: 'Mastering',  label: 'Mastering',svg: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>` },
+    { href: 'songstats.html', tip: 'Stats',      label: 'Stats',    svg: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>` },
   ];
 
   const moreActive = moreLinks.some(l => l.href === page);
@@ -379,8 +380,7 @@
   // ── Injection ─────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('shared-sidebar')) return;
-    const target = document.querySelector('.layout') || document.body;
-    target.insertAdjacentHTML('afterbegin', html);
+    document.body.insertAdjacentHTML('afterbegin', html);
 
     // Injecte le curseur s'il n'existe pas déjà dans la page
     if (!document.getElementById('c-dot')) {
