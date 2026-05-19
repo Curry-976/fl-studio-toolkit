@@ -9,8 +9,8 @@
 //  5. Storage → New bucket "beats-audio" (public) + "beats-covers" (public)
 // ══════════════════════════════════════════════════════════════
 
-const SUPABASE_URL  = 'https://fjwftrucqerwshhpmezl.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqd2Z0cnVjcWVyd3NoaHBtZXpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwMTY5MTYsImV4cCI6MjA5NDU5MjkxNn0.Lhc2F9LeqRQOqcnOSiF46pvwwIMXgnnNAI0YRmjkpWU';
+const SUPABASE_URL  = 'https://cvmcdnkfrfhhlzwlekab.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2bWNkbmtmcmZoaGx6d2xla2FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NDA5MjQsImV4cCI6MjA5NDUxNjkyNH0.ioVN9bOD3FyNLfLHAyf2Twhsls09XLYSkky9Hxt92uE';
 
 // Couleurs par genre (utilisées pour les waveforms)
 const GENRE_COLORS = {
