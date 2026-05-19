@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Conseils Beatmaking Logic Pro — Guides &amp; Astuces | MayanaBeat</title>
+  <meta name="description" content="Conseils et techniques de beatmaking pour Logic Pro sur macOS. Drums, sampling, 808, mixage — guides pratiques pour progresser rapidement.">
+  <meta name="keywords" content="conseils Logic Pro, astuces Logic Pro, beatmaking Logic Pro, guide beatmaker mac, Logic Pro tips, MayanaBeat">
+  <meta name="author" content="MayanaBeat">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mayanabeat.fr/logic-pro-tips.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MayanaBeat">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="Conseils Beatmaking Logic Pro — Guides &amp; Astuces | MayanaBeat">
+  <meta property="og:description" content="Conseils et techniques de beatmaking pour Logic Pro sur macOS.">
+  <meta property="og:url" content="https://mayanabeat.fr/logic-pro-tips.html">
+  <meta property="og:image" content="https://mayanabeat.fr/mayanabeat-icon.svg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@mayanabeat">
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://mayanabeat.fr/"},{"@type":"ListItem","position":2,"name":"Conseils Logic Pro","item":"https://mayanabeat.fr/logic-pro-tips.html"}]}
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="theme-color" content="#03050D">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    body { min-height: 100vh; }
+    .layout { display:flex; min-height:100vh; position:relative; z-index:2; }
+
+    .main { margin-left:var(--sidebar-w); flex:1; padding:28px 28px 60px; }
+
+    .page-header { margin-bottom:24px; }
+    .page-title { font-family:var(--mono); font-size:20px; font-weight:700; letter-spacing:.02em; text-transform:uppercase; }
+    .page-title em { color:var(--cyan); font-style:normal; }
+    .page-sub { font-size:12px; color:var(--muted); margin-top:6px; font-family:var(--mono); }
+    .page-sub a { color:rgba(0,240,255,.5); text-decoration:none; }
+    .page-sub a:hover { color:var(--cyan); }
+
+    .filter-bar { display:flex; align-items:center; gap:10px; margin-bottom:24px; flex-wrap:wrap; }
+    .search-wrap { position:relative; flex:1; max-width:340px; }
+    .search-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--muted); pointer-events:none; }
+    .search-input {
+      width:100%; height:40px; padding:0 38px 0 38px;
+      border:1px solid var(--border2); background:var(--surface);
+      font-size:12px; font-family:var(--mono); color:var(--text); outline:none;
+      transition:border-color .2s, box-shadow .2s;
+      clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
+    }
+    .search-input::placeholder { color:var(--muted2); }
+    .search-input:focus { border-color:var(--cyan); box-shadow:0 0 16px rgba(0,240,255,.12); }
+    .search-clear { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:none; color:var(--muted); padding:4px; display:none; }
+    .pills { display:flex; flex-wrap:wrap; gap:6px; }
+    .pill {
+      padding:5px 12px; font-size:10px; font-weight:700; font-family:var(--mono);
+      border:1px solid var(--border2); background:transparent;
+      color:var(--muted); cursor:none; transition:all .2s; white-space:nowrap;
+      text-transform:uppercase; letter-spacing:.06em;
+    }
+    .pill:hover { border-color:var(--cyan); color:var(--cyan); background:rgba(0,240,255,.04); }
+    .pill.active { background:rgba(0,240,255,.1); border-color:var(--cyan); color:var(--cyan);
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%); }
+    .count-badge { display:none; font-size:10px; font-weight:700; color:var(--cyan); background:rgba(0,240,255,.07); border:1px solid rgba(0,240,255,.2); padding:4px 10px; white-space:nowrap; font-family:var(--mono); text-transform:uppercase; }
+
+    .cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+
+    .tip-card {
+      background:var(--card); overflow:hidden;
+      border:1px solid var(--border);
+      clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+      transition:box-shadow .2s, border-color .2s; display:flex; flex-direction:column;
+    }
+    .tip-card:hover { border-color:var(--border2); box-shadow:0 0 30px rgba(0,240,255,.07); }
+    .tip-card.featured { grid-column:1/-1; }
+
+    .card-strip { height:3px; width:100%; }
+
+    .card-head { padding:14px 16px 12px; border-bottom:1px solid var(--border); background:rgba(0,240,255,.015); }
+    .card-head-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .icon-badge {
+      width:34px; height:34px; border-radius:4px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:17px; flex-shrink:0;
+    }
+    .card-title { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.04em; }
+    .level {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:10px; font-weight:700; padding:3px 8px; font-family:var(--mono);
+    }
+    .level-dot { width:5px; height:5px; border-radius:50%; }
+    .level-debutant { background:rgba(0,255,135,.08); color:var(--green); border:1px solid rgba(0,255,135,.2); }
+    .level-debutant .level-dot { background:var(--green); box-shadow:0 0 4px var(--green); }
+    .level-intermediaire { background:rgba(255,215,0,.08); color:var(--yellow); border:1px solid rgba(255,215,0,.2); }
+    .level-intermediaire .level-dot { background:var(--yellow); box-shadow:0 0 4px var(--yellow); }
+    .level-avance { background:rgba(236,72,153,.08); color:var(--pink); border:1px solid rgba(236,72,153,.2); }
+    .level-avance .level-dot { background:var(--pink); box-shadow:0 0 4px var(--pink); }
+
+    .vis-block { background:var(--bg2); margin:0; padding:10px 12px; border-bottom:1px solid var(--border); overflow:hidden; }
+    .vis-block svg { display:block; }
+
+    .yt-btn {
+      display:inline-flex; align-items:center; gap:6px;
+      margin:10px 16px 0; padding:5px 12px;
+      background:rgba(255,51,102,.06); border:1px solid rgba(255,51,102,.2);
+      color:#FF3366; font-size:11px; font-weight:700; font-family:var(--mono);
+      text-decoration:none; transition:all .2s; width:fit-content;
+      text-transform:uppercase; letter-spacing:.04em;
+    }
+    .yt-btn:hover { background:rgba(255,51,102,.12); border-color:rgba(255,51,102,.4); }
+
+    .tips-body { padding:12px 16px 16px; flex:1; }
+    .tip-item { display:flex; gap:10px; margin-bottom:10px; }
+    .tip-item:last-child { margin-bottom:0; }
+    .tip-num {
+      width:20px; height:20px; border-radius:2px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:10px; font-weight:700; flex-shrink:0; margin-top:2px; font-family:var(--mono);
+    }
+    .tip-text { font-size:13px; color:var(--text2); line-height:1.6; }
+    .tip-text strong { color:var(--text); font-weight:600; }
+    .tip-text code {
+      font-family:var(--mono); font-size:11px;
+      background:rgba(0,240,255,.06); border:1px solid rgba(0,240,255,.15);
+      color:var(--cyan); padding:1px 6px;
+    }
+
+    .pro-tip {
+      display:flex; gap:10px; align-items:flex-start; margin:12px 16px 0;
+      padding:10px 12px; background:rgba(0,240,255,.04); border:1px solid rgba(0,240,255,.12);
+      font-size:12px; color:var(--text2); line-height:1.55;
+    }
+    .pro-tip-icon { color:var(--cyan); flex-shrink:0; margin-top:1px; width:14px; height:14px; }
+    .pro-tip strong { color:var(--cyan); }
+
+    .featured-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:16px; }
+    .featured-cell { background:var(--bg2); border:1px solid var(--border); padding:14px; }
+    .featured-cell .emoji { font-size:20px; margin-bottom:8px; }
+    .featured-cell .fc-title { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text); margin-bottom:6px; text-transform:uppercase; letter-spacing:.04em; }
+    .featured-cell .fc-text { font-size:12px; color:var(--text2); line-height:1.6; }
+
+    .empty-state { display:none; flex-direction:column; align-items:center; justify-content:center; padding:60px; gap:10px; color:var(--muted); }
+
+    .footer { margin-top:32px; text-align:center; font-size:10px; color:var(--muted2); padding-top:16px; border-top:1px solid var(--border); font-family:var(--mono); text-transform:uppercase; letter-spacing:.08em; }
+    .footer a { color:rgba(0,240,255,.4); text-decoration:none; }
+    .footer a:hover { color:var(--cyan); }
+
+    @media(max-width:1100px){ .cards-grid { grid-template-columns:1fr 1fr; } .featured-grid { grid-template-columns:1fr 1fr; } }
+    @media(max-width:768px){
+      body { cursor:auto; }
+      #c-dot,#c-ring { display:none; }
+      .main { padding:16px 16px 80px !important; margin-left:0 !important; }
+      .cards-grid { grid-template-columns:1fr; }
+      .featured-grid { grid-template-columns:1fr 1fr; }
+      .page-title { font-size:18px; }
+      .filter-bar { gap:8px; }
+      .search-wrap { max-width:100%; }
+    }
+    @media(max-width:480px){ .featured-grid { grid-template-columns:1fr; } .cards-grid { grid-template-columns:1fr; } }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script defer src="navbar.js"></script>
+</head>
+<body>
+<div id="bg-grid"></div>
+<canvas id="bg-particles" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></canvas>
+<div id="c-dot"></div>
+<div id="c-ring"></div>
+<div class="layout">
+
+<main class="main">
+  <div class="page-header">
+    <h1 class="page-title"><em>Conseils</em> Logic Pro</h1>
+    <div class="page-sub">40+ astuces pour progresser en beatmaking sur macOS · <a href="logic-pro-cheatsheet.html">Voir les raccourcis →</a></div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input id="search" type="text" class="search-input" placeholder="Rechercher un conseil…" autocomplete="off" spellcheck="false"/>
+      <button id="clear-btn" class="search-clear" onclick="clearSearch()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="pills">
+      <button class="pill active" data-cat="all"        onclick="filter(this)">Tout</button>
+      <button class="pill"        data-cat="workflow"   onclick="filter(this)">Workflow</button>
+      <button class="pill"        data-cat="drums"      onclick="filter(this)">Drums</button>
+      <button class="pill"        data-cat="sampling"   onclick="filter(this)">Sampling</button>
+      <button class="pill"        data-cat="mixing"     onclick="filter(this)">Mixage</button>
+      <button class="pill"        data-cat="production" onclick="filter(this)">Production</button>
+      <button class="pill"        data-cat="sound"      onclick="filter(this)">Sound Design</button>
+    </div>
+    <span id="count-badge" class="count-badge"></span>
+  </div>
+
+  <div id="empty" class="empty-state">
+    <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <p style="font-weight:600;">Aucun conseil trouvé</p>
+    <p style="font-size:13px;">Essayez un autre terme</p>
+  </div>
+
+  <div id="grid" class="cards-grid">
+
+    <!-- ══ TEMPLATE & WORKFLOW ══ -->
+    <div class="tip-card" data-cat="workflow" data-search="workflow template session projet organisation track stack freeze low latency">
+      <div class="card-strip" style="background:linear-gradient(90deg,#FF6B35,#FF9966);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(255,107,53,.1);">⚙️</div>
+          <div>
+            <h2 class="card-title">Template &amp; Session</h2>
+            <span class="level level-debutant"><span class="level-dot"></span>Débutant</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <!-- Template stack layers -->
+          <rect x="8"  y="10" width="200" height="14" rx="3" fill="rgba(255,107,53,.18)" stroke="rgba(255,107,53,.4)" stroke-width="1"/>
+          <text x="16" y="21" fill="rgba(255,107,53,.75)" font-size="7" font-family="Inter,sans-serif" font-weight="700">MASTER CHAIN</text>
+          <rect x="8"  y="27" width="200" height="12" rx="3" fill="rgba(255,107,53,.12)" stroke="rgba(255,107,53,.3)" stroke-width="1"/>
+          <text x="16" y="36" fill="rgba(255,107,53,.6)"  font-size="7" font-family="Inter,sans-serif" font-weight="600">SUMMING STACK — DRUMS</text>
+          <rect x="8"  y="42" width="200" height="12" rx="3" fill="rgba(255,107,53,.08)" stroke="rgba(255,107,53,.2)" stroke-width="1"/>
+          <text x="16" y="51" fill="rgba(255,107,53,.5)"  font-size="7" font-family="Inter,sans-serif" font-weight="600">SUMMING STACK — MELO</text>
+          <rect x="8"  y="57" width="200" height="12" rx="3" fill="rgba(255,107,53,.05)" stroke="rgba(255,107,53,.15)" stroke-width="1"/>
+          <text x="16" y="66" fill="rgba(255,107,53,.4)"  font-size="7" font-family="Inter,sans-serif" font-weight="600">SUMMING STACK — BASS</text>
+          <!-- Badge macOS -->
+          <rect x="222" y="20" width="70" height="20" rx="4" fill="rgba(255,107,53,.1)" stroke="rgba(255,107,53,.3)" stroke-width="1"/>
+          <text x="257" y="33" fill="rgba(255,107,53,.7)" font-size="7.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">macOS · Logic</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=Logic+Pro+template+setup+beatmaking+track+stack" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">1</div><p class="tip-text"><strong>Crée un template</strong> avec tes Summing Stacks Drums/Mélo/Basse déjà configurés, ta chaîne master et le Gain de calibration. Tu gagnes 10 min à chaque session.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">2</div><p class="tip-text"><strong>Freeze les pistes lourdes</strong> (clic droit → Freeze) pour libérer le CPU sans désactiver les plugins. Unfreeze seulement quand tu retouches la piste.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">3</div><p class="tip-text"><strong>Active Low Latency Mode</strong> (bouton tortue dans la toolbar) quand tu joues en live avec un clavier MIDI pour éviter la latence de monitoring.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>File → Save as Template après avoir configuré ta session idéale. Logic l'affiche dans l'écran de démarrage à chaque nouveau projet.</span>
+      </div>
+    </div>
+
+    <!-- ══ DRUM MACHINE DESIGNER ══ -->
+    <div class="tip-card" data-cat="drums" data-search="drums drum machine designer DMD step sequencer pad batterie kit sample">
+      <div class="card-strip" style="background:linear-gradient(90deg,#EC4899,#BE185D);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(236,72,153,.1);">🥁</div>
+          <div>
+            <h2 class="card-title">Drum Machine Designer</h2>
+            <span class="level level-debutant"><span class="level-dot"></span>Débutant</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <!-- Step grid 16 steps -->
+          <text x="8" y="18" fill="rgba(236,72,153,.5)" font-size="6" font-family="Inter,sans-serif" font-weight="700">KICK</text>
+          <text x="8" y="35" fill="rgba(236,72,153,.4)" font-size="6" font-family="Inter,sans-serif" font-weight="700">SNARE</text>
+          <text x="8" y="52" fill="rgba(236,72,153,.35)" font-size="6" font-family="Inter,sans-serif" font-weight="700">HH</text>
+          <text x="8" y="69" fill="rgba(236,72,153,.3)" font-size="6" font-family="Inter,sans-serif" font-weight="700">PERC</text>
+          <!-- Kick steps: 1, 5, 9, 13 active -->
+          <g>
+            <rect x="32" y="8"  width="13" height="13" rx="2" fill="rgba(236,72,153,.8)" stroke="rgba(236,72,153,.9)" stroke-width="1"/>
+            <rect x="47" y="8"  width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="62" y="8"  width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="77" y="8"  width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="92" y="8"  width="13" height="13" rx="2" fill="rgba(236,72,153,.7)" stroke="rgba(236,72,153,.8)" stroke-width="1"/>
+            <rect x="107" y="8" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="122" y="8" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="137" y="8" width="13" height="13" rx="2" fill="rgba(236,72,153,.3)" stroke="rgba(236,72,153,.5)" stroke-width=".8"/>
+            <rect x="152" y="8" width="13" height="13" rx="2" fill="rgba(236,72,153,.8)" stroke="rgba(236,72,153,.9)" stroke-width="1"/>
+            <rect x="167" y="8" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="182" y="8" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="197" y="8" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="212" y="8" width="13" height="13" rx="2" fill="rgba(236,72,153,.7)" stroke="rgba(236,72,153,.8)" stroke-width="1"/>
+            <rect x="227" y="8" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="242" y="8" width="13" height="13" rx="2" fill="rgba(236,72,153,.4)" stroke="rgba(236,72,153,.6)" stroke-width=".8"/>
+            <rect x="257" y="8" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+          </g>
+          <!-- Snare: 5, 13 -->
+          <g>
+            <rect x="32"  y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="47"  y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="62"  y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="77"  y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="92"  y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.75)" stroke="rgba(236,72,153,.9)" stroke-width="1"/>
+            <rect x="107" y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="122" y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="137" y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="152" y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="167" y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="182" y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="197" y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="212" y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.75)" stroke="rgba(236,72,153,.9)" stroke-width="1"/>
+            <rect x="227" y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="242" y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+            <rect x="257" y="25" width="13" height="13" rx="2" fill="rgba(236,72,153,.1)" stroke="rgba(236,72,153,.2)" stroke-width=".8"/>
+          </g>
+          <!-- HH: every other -->
+          <g>
+            <rect x="32"  y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.5)" stroke="rgba(236,72,153,.7)" stroke-width=".8"/>
+            <rect x="47"  y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.15)" stroke="rgba(236,72,153,.25)" stroke-width=".8"/>
+            <rect x="62"  y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.45)" stroke="rgba(236,72,153,.65)" stroke-width=".8"/>
+            <rect x="77"  y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.2)"  stroke="rgba(236,72,153,.3)"  stroke-width=".8"/>
+            <rect x="92"  y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.5)"  stroke="rgba(236,72,153,.7)"  stroke-width=".8"/>
+            <rect x="107" y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.15)" stroke="rgba(236,72,153,.25)" stroke-width=".8"/>
+            <rect x="122" y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.45)" stroke="rgba(236,72,153,.65)" stroke-width=".8"/>
+            <rect x="137" y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.1)"  stroke="rgba(236,72,153,.2)"  stroke-width=".8"/>
+            <rect x="152" y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.5)"  stroke="rgba(236,72,153,.7)"  stroke-width=".8"/>
+            <rect x="167" y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.15)" stroke="rgba(236,72,153,.25)" stroke-width=".8"/>
+            <rect x="182" y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.45)" stroke="rgba(236,72,153,.65)" stroke-width=".8"/>
+            <rect x="197" y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.1)"  stroke="rgba(236,72,153,.2)"  stroke-width=".8"/>
+            <rect x="212" y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.5)"  stroke="rgba(236,72,153,.7)"  stroke-width=".8"/>
+            <rect x="227" y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.15)" stroke="rgba(236,72,153,.25)" stroke-width=".8"/>
+            <rect x="242" y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.35)" stroke="rgba(236,72,153,.5)"  stroke-width=".8"/>
+            <rect x="257" y="42" width="13" height="9" rx="2" fill="rgba(236,72,153,.1)"  stroke="rgba(236,72,153,.2)"  stroke-width=".8"/>
+          </g>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=Logic+Pro+Drum+Machine+Designer+beatmaking+tutorial" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#BE185D;">1</div><p class="tip-text"><strong>Ouvre le Step Sequencer</strong> via le bouton en haut du DMD pour programmer tes patterns en mode grille, comme un 808-style beatmaker.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#BE185D;">2</div><p class="tip-text"><strong>Chaque pad a son propre canal Mixer</strong> — clic sur un pad et ouvre l'Inspector. Tu peux applique EQ, compresseur et automation séparément sur chaque élément.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#BE185D;">3</div><p class="tip-text"><strong>Drag &amp; drop</strong> un sample depuis le Finder directement sur un pad pour remplacer le son du kit sans quitter la session.</p></div>
+      </div>
+    </div>
+
+    <!-- ══ HUMANISATION ══ -->
+    <div class="tip-card" data-cat="drums" data-search="drums humanize humanisation vélocité groove timing nudge snare décaler naturel vivant">
+      <div class="card-strip" style="background:linear-gradient(90deg,#EC4899,#BE185D);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(236,72,153,.1);">🎛️</div>
+          <div>
+            <h2 class="card-title">Humanisation &amp; Groove</h2>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <!-- Velocity bars with slight variation -->
+          <text x="10" y="12" fill="rgba(236,72,153,.4)" font-size="6" font-family="Inter,sans-serif" font-weight="700">AVANT — identique</text>
+          <rect x="10"  y="16" width="8" height="28" rx="1" fill="rgba(236,72,153,.5)"/>
+          <rect x="22"  y="16" width="8" height="28" rx="1" fill="rgba(236,72,153,.5)"/>
+          <rect x="34"  y="16" width="8" height="28" rx="1" fill="rgba(236,72,153,.5)"/>
+          <rect x="46"  y="16" width="8" height="28" rx="1" fill="rgba(236,72,153,.5)"/>
+          <rect x="58"  y="16" width="8" height="28" rx="1" fill="rgba(236,72,153,.5)"/>
+          <rect x="70"  y="16" width="8" height="28" rx="1" fill="rgba(236,72,153,.5)"/>
+          <rect x="82"  y="16" width="8" height="28" rx="1" fill="rgba(236,72,153,.5)"/>
+          <rect x="94"  y="16" width="8" height="28" rx="1" fill="rgba(236,72,153,.5)"/>
+          <line x1="130" y1="8" x2="130" y2="72" stroke="rgba(236,72,153,.15)" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="150" y="12" fill="rgba(236,72,153,.6)" font-size="6" font-family="Inter,sans-serif" font-weight="700">APRÈS — humanisé</text>
+          <rect x="150" y="22" width="8" height="24" rx="1" fill="rgba(236,72,153,.7)"/>
+          <rect x="162" y="18" width="8" height="28" rx="1" fill="rgba(236,72,153,.55)"/>
+          <rect x="174" y="20" width="8" height="26" rx="1" fill="rgba(236,72,153,.65)"/>
+          <rect x="186" y="24" width="8" height="22" rx="1" fill="rgba(236,72,153,.45)"/>
+          <rect x="198" y="19" width="8" height="27" rx="1" fill="rgba(236,72,153,.72)"/>
+          <rect x="210" y="21" width="8" height="25" rx="1" fill="rgba(236,72,153,.58)"/>
+          <rect x="222" y="17" width="8" height="29" rx="1" fill="rgba(236,72,153,.8)"/>
+          <rect x="234" y="23" width="8" height="23" rx="1" fill="rgba(236,72,153,.5)"/>
+          <text x="150" y="58" fill="rgba(236,72,153,.4)" font-size="6" font-family="Inter,sans-serif">Functions → Humanize</text>
+          <text x="150" y="68" fill="rgba(236,72,153,.3)" font-size="6" font-family="Inter,sans-serif">Vel ±10 · Time ±5ms</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=Logic+Pro+humanize+drums+velocity+groove+tutorial" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#BE185D;">1</div><p class="tip-text"><strong>Functions → Humanize</strong> dans le Piano Roll : randomise vélocité et timing légèrement. Règle Velocity ±10 et Time ±5ms pour commencer.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#BE185D;">2</div><p class="tip-text"><strong>Décale la snare de +5ms</strong> manuellement dans le Piano Roll. Elle pousse légèrement en arrière et donne du pocket au groove.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(236,72,153,.1);color:#BE185D;">3</div><p class="tip-text"><strong>Velocity aléatoire sur les hi-hats</strong> : sélectionne toutes les notes HH → clic droit → Velocity → randomise ±15. Résultat immédiatement plus vivant.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Dans le Step Sequencer, clic droit sur un step → <strong>Velocity</strong> pour l'ajuster individuellement. Beaucoup plus rapide que le Piano Roll pour les patterns répétitifs.</span>
+      </div>
+    </div>
+
+    <!-- ══ QUICK SAMPLER ══ -->
+    <div class="tip-card" data-cat="sampling" data-search="sampling quick sampler sample chop chopper waveform drag drop slice boucle loop">
+      <div class="card-strip" style="background:linear-gradient(90deg,#8B7FFF,#5B50CC);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(139,127,255,.1);">🎵</div>
+          <div>
+            <h2 class="card-title">Quick Sampler</h2>
+            <span class="level level-debutant"><span class="level-dot"></span>Débutant</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <!-- Waveform -->
+          <path d="M10,40 L20,25 L28,48 L36,18 L44,52 L52,22 L60,46 L68,30 L76,50 L84,20 L92,44 L100,32 L108,48 L116,24 L124,42 L132,35 L140,45 L148,28 L156,46 L164,32 L172,40" fill="none" stroke="rgba(139,127,255,.6)" stroke-width="1.5"/>
+          <!-- Classic mode label -->
+          <rect x="178" y="12" width="56" height="14" rx="3" fill="rgba(139,127,255,.15)" stroke="rgba(139,127,255,.3)" stroke-width="1"/>
+          <text x="206" y="22" fill="rgba(139,127,255,.7)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">CLASSIC</text>
+          <!-- Tune knob area -->
+          <rect x="178" y="30" width="56" height="14" rx="3" fill="rgba(139,127,255,.08)" stroke="rgba(139,127,255,.2)" stroke-width="1"/>
+          <text x="206" y="40" fill="rgba(139,127,255,.5)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle">TUNE : ON</text>
+          <!-- Drag arrow -->
+          <text x="8" y="72" fill="rgba(139,127,255,.35)" font-size="6" font-family="Inter,sans-serif">drag &amp; drop → Quick Sampler s'ouvre auto</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=Logic+Pro+Quick+Sampler+tutorial+beatmaking+sample" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">1</div><p class="tip-text"><strong>Drag &amp; drop depuis le Finder</strong> sur une piste vide — Logic ouvre automatiquement le Quick Sampler avec le sample chargé. Zéro clic inutile.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">2</div><p class="tip-text"><strong>Mode Slice</strong> : Logic détecte les transitoires et crée un pad par tranche. Joue les slices depuis le Piano Roll pour chopper un sample rapidement.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(139,127,255,.1);color:#5B50CC;">3</div><p class="tip-text"><strong>Smart Tempo</strong> (File → Project Settings → Smart Tempo) : importe un sample, Logic ajuste automatiquement son tempo au projet. Fini les calculs de BPM.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Utilise le <strong>Sampler</strong> (anciennement EXS24) pour les kits complexes avec mapping de vélocité multi-couche. Quick Sampler pour les samples uniques, Sampler pour les instruments complets.</span>
+      </div>
+    </div>
+
+    <!-- ══ 808 & SUB BASS ══ -->
+    <div class="tip-card" data-cat="sound" data-search="808 sub bass basse pitch glide sidechain compresseur tune accorder tonalité">
+      <div class="card-strip" style="background:linear-gradient(90deg,#F59E0B,#D97706);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(245,158,11,.1);">🔊</div>
+          <div>
+            <h2 class="card-title">808 &amp; Sub Bass</h2>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <!-- Piano roll with pitched 808 line -->
+          <rect x="8" y="8" width="180" height="60" rx="3" fill="rgba(0,0,0,.2)" stroke="rgba(245,158,11,.15)" stroke-width="1"/>
+          <!-- Grid lines -->
+          <line x1="53"  y1="8" x2="53"  y2="68" stroke="rgba(245,158,11,.08)" stroke-width=".5"/>
+          <line x1="98"  y1="8" x2="98"  y2="68" stroke="rgba(245,158,11,.08)" stroke-width=".5"/>
+          <line x1="143" y1="8" x2="143" y2="68" stroke="rgba(245,158,11,.08)" stroke-width=".5"/>
+          <!-- 808 gliding notes -->
+          <rect x="12" y="44" width="40" height="8" rx="2" fill="rgba(245,158,11,.7)" stroke="rgba(245,158,11,.9)" stroke-width="1"/>
+          <rect x="56" y="32" width="20" height="8" rx="2" fill="rgba(245,158,11,.65)" stroke="rgba(245,158,11,.85)" stroke-width="1"/>
+          <rect x="80" y="38" width="30" height="8" rx="2" fill="rgba(245,158,11,.7)" stroke="rgba(245,158,11,.9)" stroke-width="1"/>
+          <rect x="114" y="24" width="25" height="8" rx="2" fill="rgba(245,158,11,.6)" stroke="rgba(245,158,11,.8)" stroke-width="1"/>
+          <rect x="143" y="36" width="42" height="8" rx="2" fill="rgba(245,158,11,.75)" stroke="rgba(245,158,11,.95)" stroke-width="1"/>
+          <!-- Pitch envelope curve -->
+          <text x="12" y="22" fill="rgba(245,158,11,.4)" font-size="6" font-family="Inter,sans-serif">Pitch glide → Piano Roll</text>
+          <!-- Sidechain info -->
+          <rect x="196" y="12" width="96" height="28" rx="3" fill="rgba(245,158,11,.06)" stroke="rgba(245,158,11,.2)" stroke-width="1"/>
+          <text x="244" y="23" fill="rgba(245,158,11,.6)"  font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">SIDECHAIN</text>
+          <text x="244" y="33" fill="rgba(245,158,11,.4)"  font-size="6"   font-family="Inter,sans-serif" text-anchor="middle">Kick → 808 Compressor</text>
+          <text x="244" y="42" fill="rgba(245,158,11,.35)" font-size="6"   font-family="Inter,sans-serif" text-anchor="middle">External Side Chain</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=Logic+Pro+808+sub+bass+sidechain+tutorial+trap+beatmaking" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(245,158,11,.1);color:#D97706;">1</div><p class="tip-text"><strong>Quick Sampler en mode Classic</strong> : active <code>Tune</code>, joue les notes dans le Piano Roll pour faire glisser le 808 sur la mélodie du beat.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(245,158,11,.1);color:#D97706;">2</div><p class="tip-text"><strong>Sidechain kick → 808</strong> : insère le <em>Compressor</em> sur le canal 808, active External Side Chain, sélectionne le canal kick. La pompe est naturelle et contrôlée.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(245,158,11,.1);color:#D97706;">3</div><p class="tip-text"><strong>High-pass à 35Hz</strong> sur le 808 pour éviter l'infra-grave qui sature le master sur les petites enceintes et les téléphones.</p></div>
+      </div>
+    </div>
+
+    <!-- ══ FLEX TIME ══ -->
+    <div class="tip-card" data-cat="production" data-search="flex time audio quantiser quantize timing correction live rythmique monophonic rhythmic">
+      <div class="card-strip" style="background:linear-gradient(90deg,#0EA5E9,#0369A1);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(14,165,233,.1);">⏱️</div>
+          <div>
+            <h2 class="card-title">Flex Time</h2>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <!-- Audio waveform before -->
+          <text x="8" y="12" fill="rgba(14,165,233,.4)" font-size="6" font-family="Inter,sans-serif" font-weight="700">AVANT FLEX</text>
+          <path d="M8,32 L18,22 L24,36 L30,18 L38,34 L50,28 L58,38 L64,24 L70,32" fill="none" stroke="rgba(14,165,233,.4)" stroke-width="1.2"/>
+          <!-- Grid line -->
+          <line x1="30" y1="14" x2="30" y2="70" stroke="rgba(14,165,233,.2)" stroke-width=".5" stroke-dasharray="2,2"/>
+          <line x1="64" y1="14" x2="64" y2="70" stroke="rgba(14,165,233,.2)" stroke-width=".5" stroke-dasharray="2,2"/>
+          <!-- Flex markers -->
+          <line x1="38" y1="14" x2="38" y2="70" stroke="rgba(14,165,233,.6)" stroke-width="1"/>
+          <polygon points="38,14 35,8 41,8" fill="rgba(14,165,233,.7)"/>
+          <!-- Arrow -->
+          <text x="90" y="38" fill="rgba(14,165,233,.5)" font-size="14" font-family="Inter,sans-serif">→</text>
+          <!-- Audio waveform after -->
+          <text x="112" y="12" fill="rgba(14,165,233,.6)" font-size="6" font-family="Inter,sans-serif" font-weight="700">APRÈS FLEX</text>
+          <path d="M112,32 L122,22 L128,36 L134,18 L142,34 L154,28 L162,38 L168,24 L174,32" fill="none" stroke="rgba(14,165,233,.7)" stroke-width="1.5"/>
+          <line x1="134" y1="14" x2="134" y2="70" stroke="rgba(14,165,233,.6)" stroke-width="1"/>
+          <polygon points="134,14 131,8 137,8" fill="rgba(14,165,233,.7)"/>
+          <!-- Mode labels -->
+          <rect x="196" y="14" width="96" height="46" rx="3" fill="rgba(14,165,233,.04)" stroke="rgba(14,165,233,.15)" stroke-width="1"/>
+          <text x="244" y="26" fill="rgba(14,165,233,.5)"  font-size="6.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">MODES FLEX</text>
+          <text x="244" y="37" fill="rgba(14,165,233,.6)"  font-size="6"   font-family="Inter,sans-serif" text-anchor="middle">Rhythmic — drums &amp; perc</text>
+          <text x="244" y="47" fill="rgba(14,165,233,.45)" font-size="6"   font-family="Inter,sans-serif" text-anchor="middle">Monophonic — voix / basse</text>
+          <text x="244" y="57" fill="rgba(14,165,233,.3)"  font-size="6"   font-family="Inter,sans-serif" text-anchor="middle">Slicing — polyphonique</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=Logic+Pro+Flex+Time+tutorial+quantize+audio" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(14,165,233,.1);color:#0369A1;">1</div><p class="tip-text"><strong>Flex Time = quantisation de l'audio</strong>. Active le bouton Flex sur la piste → choisis le mode → la waveform se déforme pour s'aligner à la grille MIDI.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(14,165,233,.1);color:#0369A1;">2</div><p class="tip-text"><strong>Mode Rhythmic</strong> pour les drums et percussions, <strong>Monophonic</strong> pour les lignes de basse et voix. Le mode Slicing découpe l'audio entre les transitoires.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(14,165,233,.1);color:#0369A1;">3</div><p class="tip-text"><strong>Corriger le timing d'un sample live</strong> sans le recouper : active Flex, glisse le marqueur de transitoire sur la grille. Non destructif.</p></div>
+      </div>
+    </div>
+
+    <!-- ══ CHANNEL EQ & MIXAGE ══ -->
+    <div class="tip-card" data-cat="mixing" data-search="mixage channel EQ equalizer high pass filtre fréquences basses médiums aigus gain staging">
+      <div class="card-strip" style="background:linear-gradient(90deg,#00F0FF,#00B8CC);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(0,240,255,.08);">🎚️</div>
+          <div>
+            <h2 class="card-title">Channel EQ &amp; Gain</h2>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <!-- EQ curve -->
+          <path d="M8,55 L30,55 L40,50 Q55,28 75,35 Q100,42 130,30 Q160,20 190,32 Q220,40 250,28 L280,25" fill="none" stroke="rgba(0,240,255,.6)" stroke-width="1.5"/>
+          <!-- HP slope -->
+          <path d="M8,55 Q18,54 30,55" fill="none" stroke="rgba(0,240,255,.3)" stroke-width="1" stroke-dasharray="2,2"/>
+          <!-- HP cutoff marker -->
+          <line x1="40" y1="20" x2="40" y2="65" stroke="rgba(0,240,255,.25)" stroke-width=".8" stroke-dasharray="2,2"/>
+          <text x="30" y="19" fill="rgba(0,240,255,.45)" font-size="5.5" font-family="Inter,sans-serif">HP 80Hz</text>
+          <!-- Grid -->
+          <line x1="8" y1="20" x2="285" y2="20" stroke="rgba(0,240,255,.06)" stroke-width=".5"/>
+          <line x1="8" y1="40" x2="285" y2="40" stroke="rgba(0,240,255,.06)" stroke-width=".5"/>
+          <line x1="8" y1="60" x2="285" y2="60" stroke="rgba(0,240,255,.06)" stroke-width=".5"/>
+          <!-- Freq labels -->
+          <text x="40"  y="73" fill="rgba(0,240,255,.25)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">100</text>
+          <text x="95"  y="73" fill="rgba(0,240,255,.25)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">500</text>
+          <text x="155" y="73" fill="rgba(0,240,255,.25)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">2k</text>
+          <text x="215" y="73" fill="rgba(0,240,255,.25)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">8k</text>
+          <text x="265" y="73" fill="rgba(0,240,255,.25)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">16k</text>
+          <text x="8"   y="19" fill="rgba(0,240,255,.2)"  font-size="5.5" font-family="Inter,sans-serif">+6</text>
+          <text x="8"   y="40" fill="rgba(0,240,255,.2)"  font-size="5.5" font-family="Inter,sans-serif">0</text>
+          <text x="8"   y="61" fill="rgba(0,240,255,.2)"  font-size="5.5" font-family="Inter,sans-serif">-6</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=Logic+Pro+Channel+EQ+mixing+tutorial+beatmaking" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(0,240,255,.06);color:var(--cyan);">1</div><p class="tip-text"><strong>High-pass tout sauf la basse</strong> en dessous de 80–120Hz. Active d'abord l'Analyzer pour visualiser ce que tu coupes. Double-clic sur une bande pour taper la fréquence exacte.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(0,240,255,.06);color:var(--cyan);">2</div><p class="tip-text"><strong>Gain (premier insert)</strong> : normalise chaque piste à environ −6dBFS avant tes plugins. Le channel EQ sonne mieux à un niveau d'entrée cohérent.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(0,240,255,.06);color:var(--cyan);">3</div><p class="tip-text"><strong>Dégager les basses-médiums 200–400Hz</strong> sur les éléments qui se gênent. C'est là que la "boue" s'accumule dans un mix trap dense.</p></div>
+      </div>
+      <div class="pro-tip">
+        <svg class="pro-tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Le Channel EQ de Logic a un <strong>Analyzer stéréo en temps réel</strong> — active-le (bouton Analyzer) pour voir la réponse en fréquence pendant la lecture avant de toucher aux bandes.</span>
+      </div>
+    </div>
+
+    <!-- ══ LOGIC REMOTE ══ -->
+    <div class="tip-card" data-cat="workflow" data-search="logic remote ipad tablette contrôleur smart controls mixer touch clavier midi sans fil">
+      <div class="card-strip" style="background:linear-gradient(90deg,#84CC16,#4D7C0F);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(132,204,22,.1);">📱</div>
+          <div>
+            <h2 class="card-title">Logic Remote</h2>
+            <span class="level level-debutant"><span class="level-dot"></span>Débutant</span>
+          </div>
+        </div>
+      </div>
+      <div class="vis-block">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="100%" height="80">
+          <!-- iPad outline -->
+          <rect x="10" y="8" width="80" height="60" rx="6" fill="rgba(132,204,22,.06)" stroke="rgba(132,204,22,.3)" stroke-width="1.5"/>
+          <!-- Screen -->
+          <rect x="15" y="14" width="70" height="48" rx="3" fill="rgba(0,0,0,.25)"/>
+          <!-- Mixer faders on iPad -->
+          <rect x="19" y="20" width="8" height="36" rx="2" fill="rgba(132,204,22,.08)" stroke="rgba(132,204,22,.2)" stroke-width=".8"/>
+          <rect x="21" y="32" width="4" height="4"  rx="1" fill="rgba(132,204,22,.6)"/>
+          <rect x="30" y="20" width="8" height="36" rx="2" fill="rgba(132,204,22,.08)" stroke="rgba(132,204,22,.2)" stroke-width=".8"/>
+          <rect x="32" y="28" width="4" height="4"  rx="1" fill="rgba(132,204,22,.6)"/>
+          <rect x="41" y="20" width="8" height="36" rx="2" fill="rgba(132,204,22,.08)" stroke="rgba(132,204,22,.2)" stroke-width=".8"/>
+          <rect x="43" y="38" width="4" height="4"  rx="1" fill="rgba(132,204,22,.6)"/>
+          <rect x="52" y="20" width="8" height="36" rx="2" fill="rgba(132,204,22,.08)" stroke="rgba(132,204,22,.2)" stroke-width=".8"/>
+          <rect x="54" y="24" width="4" height="4"  rx="1" fill="rgba(132,204,22,.6)"/>
+          <rect x="63" y="20" width="8" height="36" rx="2" fill="rgba(132,204,22,.08)" stroke="rgba(132,204,22,.2)" stroke-width=".8"/>
+          <rect x="65" y="30" width="4" height="4"  rx="1" fill="rgba(132,204,22,.6)"/>
+          <rect x="74" y="20" width="8" height="36" rx="2" fill="rgba(132,204,22,.08)" stroke="rgba(132,204,22,.2)" stroke-width=".8"/>
+          <rect x="76" y="35" width="4" height="4"  rx="1" fill="rgba(132,204,22,.6)"/>
+          <!-- WiFi icon -->
+          <text x="50" y="72" fill="rgba(132,204,22,.35)" font-size="6" font-family="Inter,sans-serif" text-anchor="middle">WiFi</text>
+          <!-- Features list -->
+          <rect x="105" y="8" width="185" height="62" rx="3" fill="rgba(132,204,22,.04)" stroke="rgba(132,204,22,.15)" stroke-width="1"/>
+          <text x="115" y="22" fill="rgba(132,204,22,.7)" font-size="7" font-family="Inter,sans-serif" font-weight="700">LOGIC REMOTE (gratuit)</text>
+          <text x="115" y="34" fill="rgba(132,204,22,.45)" font-size="6.5" font-family="Inter,sans-serif">▸ Mixer complet touch</text>
+          <text x="115" y="45" fill="rgba(132,204,22,.4)"  font-size="6.5" font-family="Inter,sans-serif">▸ Smart Controls / Knobs</text>
+          <text x="115" y="56" fill="rgba(132,204,22,.35)" font-size="6.5" font-family="Inter,sans-serif">▸ Clavier MIDI tactile</text>
+          <text x="115" y="67" fill="rgba(132,204,22,.3)"  font-size="6.5" font-family="Inter,sans-serif">▸ Transport &amp; marqueurs</text>
+        </svg>
+      </div>
+      <a href="https://www.youtube.com/results?search_query=Logic+Remote+iPad+tutorial+Logic+Pro+controller" target="_blank" rel="noopener noreferrer" class="yt-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Voir un tutoriel
+      </a>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">1</div><p class="tip-text"><strong>Logic Remote sur iPad = surface de contrôle gratuite</strong>. Installe depuis l'App Store, même WiFi que ton Mac — connexion automatique.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">2</div><p class="tip-text"><strong>Vue Mixer</strong> : ajuste les volumes et pans directement depuis l'iPad pendant l'écoute sur enceintes, sans toucher la souris.</p></div>
+        <div class="tip-item"><div class="tip-num" style="background:rgba(132,204,22,.1);color:#4D7C0F;">3</div><p class="tip-text"><strong>Clavier MIDI tactile</strong> et pads de batterie intégrés — joue des notes dans Logic sans clavier physique. Latence imperceptible en WiFi local.</p></div>
+      </div>
+    </div>
+
+    <!-- ══ TRACK STACKS & ORGANISATION (FEATURED) ══ -->
+    <div class="tip-card featured" data-cat="workflow" data-search="track stacks organisation grouper folder summing bus markers navigation cmd g arrangement sections">
+      <div class="card-strip" style="background:linear-gradient(90deg,#FF6B35,#FF9966);"></div>
+      <div class="card-head">
+        <div class="card-head-row">
+          <div class="icon-badge" style="background:rgba(255,107,53,.1);">🗂️</div>
+          <div>
+            <h2 class="card-title">Track Stacks &amp; Organisation</h2>
+            <span class="level level-intermediaire"><span class="level-dot"></span>Intermédiaire</span>
+          </div>
+          <span style="margin-left:auto;font-size:10px;font-family:var(--mono);color:rgba(255,107,53,.5);text-transform:uppercase;letter-spacing:.06em;">Guide complet</span>
+        </div>
+      </div>
+      <div class="featured-grid">
+        <div class="featured-cell">
+          <div class="emoji">📁</div>
+          <div class="fc-title">Folder Stack</div>
+          <div class="fc-text">Regroupe des pistes en dossier sans créer de bus. Idéal pour réduire la vue — Ctrl+clic sur les pistes voulues → Create Track Stack → Folder.</div>
+        </div>
+        <div class="featured-cell">
+          <div class="emoji">🔀</div>
+          <div class="fc-title">Summing Stack</div>
+          <div class="fc-text">Groupe + bus automatique. Toutes les pistes enfant routent vers une piste mère. Applique EQ, compression et reverb sur le groupe entier.</div>
+        </div>
+        <div class="featured-cell">
+          <div class="emoji">📍</div>
+          <div class="fc-title">Marqueurs (K)</div>
+          <div class="fc-text">Appuie sur <code>K</code> pour afficher la piste marqueurs. Crée des zones Intro / Drop / Verse pour naviguer d'un clic sur un long projet.</div>
+        </div>
+        <div class="featured-cell">
+          <div class="emoji">⌘G</div>
+          <div class="fc-title">Grouper des régions</div>
+          <div class="fc-text"><code>⌘+G</code> fusionne les régions sélectionnées en une seule. Pratique pour regrouper les éléments d'une batterie multi-micros avant de les déplacer.</div>
+        </div>
+      </div>
+      <div class="tips-body">
+        <div class="tip-item"><div class="tip-num" style="background:rgba(255,107,53,.1);color:#C44000;">→</div><p class="tip-text"><strong>Workflow recommandé</strong> : Summing Stack pour Drums, Mélo, Basse, FX · Marqueurs pour les sections · ⌘+G pour grouper les régions du même moment avant de les déplacer dans l'arrangement.</p></div>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+
+  <div class="footer">
+    Logic Pro 11+ · macOS · MayanaBeat ·
+    <a href="logic-pro-cheatsheet.html">Raccourcis Logic Pro</a> ·
+    <a href="fl-studio-tips.html">Conseils FL Studio</a>
+  </div>
+</main>
+</div>
+
+<script>
+  // ── Cursor ──
+  const dot=document.getElementById('c-dot'),ring=document.getElementById('c-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+
+  // ── Particles ──
+  const canvas=document.getElementById('bg-particles');
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  class Particle{constructor(){this.reset();}reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()*1.5+.5;this.a=Math.random()*.4+.1;}update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1;}}
+  for(let i=0;i<60;i++)particles.push(new Particle());
+  function drawParticles(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.update();ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(0,240,255,${p.a})`;ctx.fill();});
+  for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<120){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(0,240,255,${.06*(1-dist/120)})`;ctx.lineWidth=.5;ctx.stroke();}}
+  requestAnimationFrame(drawParticles);}
+  drawParticles();
+
+  // ── Search & Filter ──
+  const searchInput = document.getElementById('search');
+  const clearBtn    = document.getElementById('clear-btn');
+  const emptyEl     = document.getElementById('empty');
+  const gridEl      = document.getElementById('grid');
+  const countBadge  = document.getElementById('count-badge');
+  const allCards    = document.querySelectorAll('.tip-card');
+  let activeCat     = 'all';
+
+  searchInput.addEventListener('input', () => {
+    clearBtn.style.display = searchInput.value ? 'block' : 'none';
+    applyFilters();
+  });
+
+  function clearSearch() {
+    searchInput.value = '';
+    clearBtn.style.display = 'none';
+    applyFilters();
+    searchInput.focus();
+  }
+
+  function filter(el) {
+    activeCat = el.dataset.cat;
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const q = searchInput.value.toLowerCase().trim();
+    let count = 0;
+    allCards.forEach(card => {
+      const catOk = activeCat === 'all' || card.dataset.cat === activeCat;
+      const text  = (card.dataset.search + ' ' + card.textContent).toLowerCase();
+      const show  = catOk && (!q || text.includes(q));
+      card.style.display = show ? '' : 'none';
+      if (show) count++;
+    });
+    emptyEl.style.display  = count === 0 ? 'flex' : 'none';
+    gridEl.style.display   = count === 0 ? 'none' : '';
+    if (q || activeCat !== 'all') {
+      countBadge.style.display = 'inline-block';
+      countBadge.textContent   = count + (count > 1 ? ' conseils' : ' conseil');
+    } else {
+      countBadge.style.display = 'none';
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== searchInput) {
+      e.preventDefault(); searchInput.focus(); searchInput.select();
+    }
+    if (e.key === 'Escape' && document.activeElement === searchInput) {
+      clearSearch(); searchInput.blur();
+    }
+  });
+</script>
+</body>
+</html>
