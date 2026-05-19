@@ -862,7 +862,11 @@
   </div>
   <div class="player-wave-wrap">
     <canvas id="player-wave" height="44"></canvas>
-    <input id="player-seek" type="range" min="0" max="1" step="0.001" value="0" oninput="onSeek(this.value)" />
+    <input id="player-seek" type="range" min="0" max="1" step="0.001" value="0"
+           oninput="onSeekMove(this.value)"
+           onmousedown="onSeekStart()" ontouchstart="onSeekStart()"
+           onchange="onSeekEnd(this.value)"
+           onmouseup="onSeekEnd(this.value)" ontouchend="onSeekEnd(this.value)" />
   </div>
   <div class="player-time">
     <span class="player-time-cur" id="time-cur">0:00</span>
@@ -1339,9 +1343,31 @@ function fmtTime(sec) {
   return `${m}:${s.toString().padStart(2,'0')}`;
 }
 
+// ── Seek drag : flag pour éviter que timeupdate écrase le slider pendant le drag
+let _isSeeking = false;
+
+function onSeekStart() {
+  _isSeeking = true;
+}
+function onSeekMove(val) {
+  // Pendant le drag : mise à jour visuelle uniquement (pas de currentTime)
+  if (!currentBeat) return;
+  const prog = parseFloat(val);
+  document.getElementById('time-cur').textContent = fmtTime(prog * (_audio.duration || currentBeat.dur));
+  drawPlayerWave(currentBeat.accent, currentBeat.id * 7 + 3, prog);
+}
+function onSeekEnd(val) {
+  if (!currentBeat) return;
+  const prog = parseFloat(val);
+  // Seek audio réel uniquement à la fin du drag
+  if (_audio.duration) _audio.currentTime = prog * _audio.duration;
+  drawPlayerWave(currentBeat.accent, currentBeat.id * 7 + 3, prog);
+  _isSeeking = false;
+}
+
 // Audio event listeners
 _audio.addEventListener('timeupdate', () => {
-  if (!currentBeat) return;
+  if (!currentBeat || _isSeeking) return;   // ← bloque la réécriture pendant le drag
   const dur  = _audio.duration || currentBeat.dur;
   const prog = dur > 0 ? _audio.currentTime / dur : 0;
   document.getElementById('time-cur').textContent  = fmtTime(_audio.currentTime);
@@ -1433,11 +1459,7 @@ function nextBeat() {
   if (idx < filtered.length - 1) playBeat(filtered[idx + 1]);
 }
 
-function onSeek(val) {
-  const prog = parseFloat(val);
-  if (_audio.duration) _audio.currentTime = prog * _audio.duration;
-  drawPlayerWave(currentBeat.accent, currentBeat.id * 7 + 3, prog);
-}
+
 
 function closePlayer() {
   _audio.pause();
