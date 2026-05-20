@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <title>MayanaBeat — Achetez des Beats Rap, Trap &amp; Drill en Ligne</title>
-  <meta name="description" content="Découvrez MayanaBeat : achetez des beats rap, trap et drill de producteurs indépendants. Outils gratuits pour beatmakers FL Studio.">
-  <meta name="keywords" content="beats rap, beats trap, beats drill, acheter beats, beatmaker, FL Studio, producteur indépendant, MayanaBeat">
+  <meta name="description" content="MayanaBeat — beats rap, trap, drill & afro pour les beatmakers de Mayotte et de la diaspora. Outils gratuits FL Studio & Logic Pro. Livraison instantanée, 100% en ligne.">
+  <meta name="keywords" content="beats rap, beats trap, beats drill, acheter beats, beatmaker, FL Studio, producteur indépendant, MayanaBeat, beats Mayotte, beatmaker Mayotte, beat 976, beat drill Mayotte, rap Mayotte, afro drill Mayotte, producteur Mayotte, beat Mamoudzou, beat Mahorais">
   <meta name="author" content="MayanaBeat">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://mayanabeat.fr/">
@@ -60,7 +60,7 @@
   "email": "noreply@mayanabeat.fr",
   "foundingDate": "2024",
   "knowsLanguage": "fr",
-  "areaServed": "FR",
+  "areaServed": ["FR", "YT"],
   "sameAs": [
     "https://www.instagram.com/mayanabeat",
     "https://www.youtube.com/@mayanabeat",
@@ -163,6 +163,14 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "La cheatsheet FL Studio de MayanaBeat liste 66 raccourcis en 5 catégories (Navigation, Playlist, Piano Roll, Mixer, Step Sequencer) avec un toggle Windows / Mac et une recherche interactive."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "MayanaBeat livre-t-il des beats à Mayotte (976) ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, MayanaBeat fonctionne 100% en ligne. Que vous soyez à Mamoudzou, Petite-Terre, Koungou ou en diaspora, vous pouvez acheter et télécharger vos beats instantanément après paiement, sans restrictions géographiques."
       }
     }
   ]
@@ -695,6 +703,105 @@
     @media(min-width:1280px){
       .tools-grid{grid-template-columns:repeat(5,1fr);}
     }
+
+    /* ══════════════════════════════════════════════
+       MAHORAIS SECTION
+    ══════════════════════════════════════════════ */
+    .mahorais-section{padding:0 60px 56px;}
+    .mahorais-banner{
+      position:relative;overflow:hidden;
+      background:linear-gradient(135deg,rgba(0,240,255,.05) 0%,rgba(0,255,135,.04) 50%,rgba(0,240,255,.03) 100%);
+      border:1px solid rgba(0,240,255,.2);
+      clip-path:polygon(0 0,calc(100% - 28px) 0,100% 28px,100% 100%,28px 100%,0 calc(100% - 28px));
+      padding:44px 52px;
+      display:flex;align-items:center;gap:48px;
+    }
+    .mahorais-banner::before{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(90deg,rgba(0,240,255,.04) 0%,transparent 55%);
+      pointer-events:none;
+    }
+    /* Giant 976 watermark */
+    .mahorais-banner::after{
+      content:'976';
+      position:absolute;right:-12px;top:50%;transform:translateY(-50%);
+      font-family:var(--mono);font-size:200px;font-weight:900;
+      color:rgba(0,240,255,.05);letter-spacing:-.06em;
+      pointer-events:none;line-height:1;user-select:none;
+    }
+    /* Scan line */
+    .mahorais-banner .scan{
+      position:absolute;left:0;right:0;height:1px;top:0;
+      background:linear-gradient(90deg,transparent,rgba(0,240,255,.4),transparent);
+      animation:mh-scan 4s ease-in-out infinite;
+    }
+    @keyframes mh-scan{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+    .mh-content{flex:1;position:relative;z-index:2;}
+    .mh-tag{
+      display:inline-flex;align-items:center;gap:8px;
+      font-family:var(--mono);font-size:10px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.14em;color:var(--green);
+      margin-bottom:14px;
+    }
+    .mh-dot{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--green);box-shadow:0 0 10px var(--green);
+      animation:pulse 2s ease-in-out infinite;
+      flex-shrink:0;
+    }
+    .mh-title{
+      font-size:clamp(24px,3vw,40px);font-weight:900;
+      letter-spacing:-.03em;line-height:1.1;margin-bottom:16px;
+    }
+    .mh-title em{
+      font-style:normal;
+      background:linear-gradient(90deg,#00F0FF 0%,#00FF87 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .mh-text{
+      font-size:13.5px;color:var(--muted);line-height:1.8;
+      max-width:500px;margin-bottom:28px;
+    }
+    .mh-text strong{color:rgba(0,240,255,.7);font-weight:600;}
+    .mh-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+
+    .mh-nums{
+      display:flex;flex-direction:column;gap:0;flex-shrink:0;
+      position:relative;z-index:2;
+      border-left:1px solid rgba(0,240,255,.1);
+      padding-left:48px;
+    }
+    .mhn-item{
+      padding:16px 0;
+      border-bottom:1px solid rgba(0,240,255,.06);
+    }
+    .mhn-item:last-child{border-bottom:none;}
+    .mhn-val{
+      font-family:var(--mono);font-size:36px;font-weight:900;
+      color:var(--cyan);letter-spacing:-.04em;line-height:1;margin-bottom:4px;
+    }
+    .mhn-label{
+      font-family:var(--mono);font-size:9px;font-weight:700;
+      color:var(--muted2);text-transform:uppercase;letter-spacing:.12em;
+    }
+
+    @media(max-width:1024px){
+      .mahorais-section{padding:0 40px 48px;}
+      .mahorais-banner{padding:36px 40px;gap:32px;}
+      .mahorais-banner::after{font-size:140px;}
+      .mh-nums{padding-left:32px;}
+      .mhn-val{font-size:28px;}
+    }
+    @media(max-width:768px){
+      .mahorais-section{padding:0 20px 36px;}
+      .mahorais-banner{padding:28px 24px;flex-direction:column;align-items:flex-start;gap:28px;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));}
+      .mahorais-banner::after{font-size:100px;right:-8px;bottom:-10px;top:auto;transform:none;}
+      .mh-nums{flex-direction:row;border-left:none;border-top:1px solid rgba(0,240,255,.1);padding-left:0;padding-top:24px;width:100%;gap:0;}
+      .mhn-item{flex:1;text-align:center;border-bottom:none;border-right:1px solid rgba(0,240,255,.06);padding:0 16px;}
+      .mhn-item:last-child{border-right:none;}
+      .mhn-val{font-size:24px;}
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
@@ -733,7 +840,7 @@
       <div class="hero-sys">
         <div class="sys-dot"></div>
         <div class="sys-line"></div>
-        SYS_ONLINE · FL Studio 21
+        SYS_ONLINE · 🏝️ Mayotte · 976
       </div>
 
       <h1 class="hero-title">
@@ -742,8 +849,8 @@
       </h1>
 
       <p class="hero-sub">
-        Raccourcis clavier, <span>analyse BPM/tonalité</span>, mastering audio
-        et stats streaming. Ton arsenal complet de beatmaker, 100% en ligne.
+        Fait pour les beatmakers <span>Mahorais</span> — et tous ceux qui veulent progresser.
+        Beats, raccourcis, analyse BPM, mastering. Ton arsenal complet, 100% en ligne.
       </p>
 
       <div class="hero-actions">
@@ -932,6 +1039,51 @@
 
     </div>
   </section>
+
+  <!-- MAHORAIS -->
+  <section class="mahorais-section">
+    <div class="mahorais-banner reveal">
+      <div class="scan"></div>
+      <div class="mh-content">
+        <div class="mh-tag">
+          <div class="mh-dot"></div>
+          🏝️ 101ème département · Mayotte
+        </div>
+        <h2 class="mh-title">Fait pour les beatmakers <em>Mahorais.</em></h2>
+        <p class="mh-text">
+          Mamoudzou, Petite-Terre, Koungou, Bandraboua — ou en diaspora.
+          Des beats <strong>drill, trap &amp; afro</strong> prêts à poser, livrés instantanément.
+          Aucune limite géographique. Aucun intermédiaire.
+        </p>
+        <div class="mh-actions">
+          <a href="beatstore.html" class="btn-primary">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+            Trouver mon beat
+          </a>
+          <a href="beatscan.html" class="btn-ghost">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Analyser mon son
+          </a>
+        </div>
+      </div>
+      <div class="mh-nums">
+        <div class="mhn-item">
+          <div class="mhn-val">976</div>
+          <div class="mhn-label">Code Dep.</div>
+        </div>
+        <div class="mhn-item">
+          <div class="mhn-val">50+</div>
+          <div class="mhn-label">Beats Dispo</div>
+        </div>
+        <div class="mhn-item">
+          <div class="mhn-val">24/7</div>
+          <div class="mhn-label">Accès</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="v-sep"></div>
 
   <!-- SHORTCUTS -->
   <section class="section" style="padding-top:0;">
