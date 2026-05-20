@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — MayanaBeat</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="navbar.js" defer></script>
+  <script src="supabase.js"></script>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    :root {
+      --bg: #0a0a0f; --surface: #111118; --border: rgba(255,255,255,.07);
+      --cyan: #00F0FF; --green: #00FF88; --pink: #FF6B9D; --yellow: #FFD700;
+      --muted: rgba(255,255,255,.35); --mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: #fff; font-family: var(--mono), monospace; min-height: 100vh; }
+
+    .admin-layout { display: flex; flex-direction: column; min-height: 100vh; padding-left: var(--sidebar-w, 72px); }
+
+    /* ── Header ── */
+    .admin-header {
+      padding: 32px 40px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .admin-header h1 { font-size: 20px; font-weight: 700; letter-spacing: .05em; }
+    .admin-header h1 span { color: var(--cyan); }
+    .admin-badge { background: rgba(255,107,157,.15); color: var(--pink); border: 1px solid rgba(255,107,157,.3); padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+
+    /* ── Stats bar ── */
+    .stats-bar { display: flex; gap: 16px; padding: 20px 40px; border-bottom: 1px solid var(--border); }
+    .stat-chip {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+      padding: 10px 20px; display: flex; flex-direction: column; gap: 4px;
+    }
+    .stat-chip .val { font-size: 22px; font-weight: 700; }
+    .stat-chip .lbl { font-size: 10px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+    .val.pending { color: var(--yellow); }
+    .val.active  { color: var(--green); }
+    .val.flagged { color: var(--pink); }
+
+    /* ── Tabs ── */
+    .tabs { display: flex; gap: 0; padding: 0 40px; border-bottom: 1px solid var(--border); }
+    .tab-btn {
+      padding: 14px 20px; background: none; border: none; border-bottom: 2px solid transparent;
+      color: var(--muted); font-family: var(--mono); font-size: 11px; font-weight: 700;
+      letter-spacing: .08em; cursor: pointer; text-transform: uppercase; transition: all .15s;
+    }
+    .tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+    .tab-btn:hover:not(.active) { color: #fff; }
+    .tab-count { display: inline-block; background: rgba(255,215,0,.15); color: var(--yellow); border-radius: 10px; padding: 1px 7px; font-size: 9px; margin-left: 6px; }
+    .tab-count.green { background: rgba(0,255,136,.15); color: var(--green); }
+
+    /* ── Content ── */
+    .admin-content { padding: 30px 40px; flex: 1; }
+
+    /* ── Beat cards ── */
+    .beat-list { display: flex; flex-direction: column; gap: 12px; }
+    .beat-row {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 16px 20px; display: flex; align-items: center; gap: 16px;
+      transition: border-color .15s;
+    }
+    .beat-row:hover { border-color: rgba(255,255,255,.15); }
+    .beat-row.flagged { border-left: 3px solid var(--pink); }
+
+    .beat-info { flex: 1; }
+    .beat-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .beat-meta { font-size: 11px; color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap; }
+    .beat-meta span { display: flex; align-items: center; gap: 4px; }
+
+    .beat-cert {
+      font-size: 10px; padding: 3px 8px; border-radius: 3px; font-weight: 700;
+      letter-spacing: .06em; white-space: nowrap;
+    }
+    .cert-yes { background: rgba(0,255,136,.12); color: var(--green); border: 1px solid rgba(0,255,136,.25); }
+    .cert-no  { background: rgba(255,107,157,.12); color: var(--pink); border: 1px solid rgba(255,107,157,.25); }
+
+    .beat-date { font-size: 10px; color: var(--muted); white-space: nowrap; }
+
+    .beat-actions { display: flex; gap: 8px; }
+    .btn-approve, .btn-reject, .btn-flag, .btn-restore {
+      padding: 7px 14px; border: none; border-radius: 4px; font-family: var(--mono);
+      font-size: 10px; font-weight: 700; letter-spacing: .06em; cursor: pointer;
+      text-transform: uppercase; transition: all .15s;
+      clip-path: polygon(0 0,calc(100% - 4px) 0,100% 4px,100% 100%,0 100%);
+    }
+    .btn-approve { background: rgba(0,255,136,.15); color: var(--green); border: 1px solid rgba(0,255,136,.3); }
+    .btn-approve:hover { background: rgba(0,255,136,.3); }
+    .btn-reject  { background: rgba(255,107,157,.12); color: var(--pink); border: 1px solid rgba(255,107,157,.3); }
+    .btn-reject:hover  { background: rgba(255,107,157,.25); }
+    .btn-flag    { background: rgba(255,215,0,.1); color: var(--yellow); border: 1px solid rgba(255,215,0,.25); }
+    .btn-flag:hover    { background: rgba(255,215,0,.2); }
+    .btn-restore { background: rgba(0,240,255,.1); color: var(--cyan); border: 1px solid rgba(0,240,255,.25); }
+    .btn-restore:hover { background: rgba(0,240,255,.2); }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-state p { font-size: 13px; }
+
+    /* ── Auth gate ── */
+    #auth-gate {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 100vh; gap: 16px; padding: 40px;
+    }
+    #auth-gate h2 { font-size: 18px; color: var(--pink); }
+    #auth-gate p  { font-size: 12px; color: var(--muted); text-align: center; max-width: 400px; }
+
+    /* ── Toast ── */
+    #admin-toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      background: #1a1a2e; border: 1px solid var(--border); border-radius: 6px;
+      padding: 12px 18px; font-size: 12px; opacity: 0; transform: translateY(10px);
+      transition: all .25s; pointer-events: none; max-width: 320px;
+    }
+    #admin-toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── Audio player inline ── */
+    audio { height: 28px; border-radius: 4px; opacity: .8; }
+
+    @media (max-width: 768px) {
+      .admin-layout { padding-left: 0; padding-bottom: 60px; }
+      .admin-header, .stats-bar, .admin-content, .tabs { padding-left: 16px; padding-right: 16px; }
+      .beat-row { flex-direction: column; align-items: flex-start; }
+      .beat-actions { width: 100%; }
+      .btn-approve, .btn-reject, .btn-flag, .btn-restore { flex: 1; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+
+<div id="auth-gate" style="display:none;">
+  <h2>🔒 Accès refusé</h2>
+  <p>Cette page est réservée aux administrateurs MayanaBeat. Connecte-toi avec un compte admin.</p>
+  <button onclick="location.href='beatstore.html'" style="padding:10px 24px;background:rgba(0,240,255,.1);color:var(--cyan);border:1px solid rgba(0,240,255,.3);border-radius:4px;font-family:monospace;cursor:pointer;">
+    Retour au store
+  </button>
+</div>
+
+<div id="admin-app" class="admin-layout" style="display:none;">
+
+  <div class="admin-header">
+    <h1>MayanaBeat <span>Admin</span></h1>
+    <div class="admin-badge">MODÉRATION</div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-chip"><div class="val pending" id="count-pending">—</div><div class="lbl">En attente</div></div>
+    <div class="stat-chip"><div class="val active"  id="count-active">—</div><div class="lbl">Actifs</div></div>
+    <div class="stat-chip"><div class="val flagged" id="count-flagged">—</div><div class="lbl">Signalés</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('pending')" id="tab-pending">
+      En attente <span class="tab-count" id="badge-pending">0</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('active')" id="tab-active">
+      Actifs <span class="tab-count green" id="badge-active">0</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('flagged')" id="tab-flagged">
+      Signalés <span class="tab-count" id="badge-flagged">0</span>
+    </button>
+  </div>
+
+  <div class="admin-content">
+    <div class="beat-list" id="beat-list">
+      <div class="empty-state"><div class="icon">⏳</div><p>Chargement…</p></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="admin-toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+//  Admin IDs autorisés (producer_id Supabase)
+// ══════════════════════════════════════════
+const ADMIN_IDS = [
+  'f6fc1bba-62b5-45ee-960a-a42fc0f7e13b', // bendofahel111
+  '570b1014-254b-4a29-8947-fcfcd5a7979c', // fahelahamadi (admin)
+];
+
+let currentTab = 'pending';
+let allBeats = { pending: [], active: [], flagged: [] };
+
+// ── Auth check
+async function checkAdminAuth() {
+  if (!SUPABASE_READY) { showAuthGate(); return; }
+  const { data: { session } } = await db.auth.getSession();
+  if (!session || !ADMIN_IDS.includes(session.user.id)) {
+    showAuthGate(); return;
+  }
+  document.getElementById('auth-gate').style.display = 'none';
+  document.getElementById('admin-app').style.display = 'flex';
+  loadAllBeats();
+}
+
+function showAuthGate() {
+  document.getElementById('auth-gate').style.display = 'flex';
+  document.getElementById('admin-app').style.display = 'none';
+}
+
+// ── Chargement
+async function loadAllBeats() {
+  try {
+    const { data, error } = await db
+      .from('beats')
+      .select('*, producers(username, display_name)')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    allBeats.pending = data.filter(b => b.status === 'pending');
+    allBeats.active  = data.filter(b => b.status === 'active');
+    allBeats.flagged = data.filter(b => b.status === 'flagged');
+
+    // Compteurs
+    document.getElementById('count-pending').textContent = allBeats.pending.length;
+    document.getElementById('count-active').textContent  = allBeats.active.length;
+    document.getElementById('count-flagged').textContent = allBeats.flagged.length;
+    document.getElementById('badge-pending').textContent = allBeats.pending.length;
+    document.getElementById('badge-active').textContent  = allBeats.active.length;
+    document.getElementById('badge-flagged').textContent = allBeats.flagged.length;
+
+    renderTab(currentTab);
+  } catch(e) {
+    console.error('[admin] loadAllBeats:', e);
+    toast('❌ Erreur chargement : ' + e.message, 'var(--pink)');
+  }
+}
+
+// ── Rendu
+function switchTab(tab) {
+  currentTab = tab;
+  ['pending','active','flagged'].forEach(t => {
+    document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
+  });
+  renderTab(tab);
+}
+
+function renderTab(tab) {
+  const list = document.getElementById('beat-list');
+  const beats = allBeats[tab];
+
+  if (!beats.length) {
+    const msgs = { pending: '✅ Aucun beat en attente', active: 'Aucun beat actif', flagged: 'Aucun beat signalé' };
+    list.innerHTML = `<div class="empty-state"><div class="icon">✨</div><p>${msgs[tab]}</p></div>`;
+    return;
+  }
+
+  list.innerHTML = beats.map(b => buildBeatRow(b, tab)).join('');
+}
+
+function buildBeatRow(b, tab) {
+  const producer = b.producers?.display_name || b.producers?.username || 'Inconnu';
+  const date = new Date(b.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric' });
+  const certBadge = b.certified_owner
+    ? `<span class="beat-cert cert-yes">✓ Certifié</span>`
+    : `<span class="beat-cert cert-no">✗ Non certifié</span>`;
+  const audioEl = b.audio_url
+    ? `<audio controls src="${b.audio_url}" preload="none"></audio>`
+    : `<span style="font-size:10px;color:var(--muted);">Pas d'audio</span>`;
+
+  let actions = '';
+  const deleteBtn = `<button class="btn-reject" onclick="deleteBeat('${b.id}','${b.audio_path || ''}')">🗑 Supprimer</button>`;
+  if (tab === 'pending') {
+    actions = `
+      <button class="btn-approve" onclick="moderateBeat('${b.id}','active')">✓ Approuver</button>
+      <button class="btn-reject"  onclick="moderateBeat('${b.id}','flagged')">✗ Rejeter</button>
+      ${deleteBtn}`;
+  } else if (tab === 'active') {
+    actions = `
+      <button class="btn-flag"   onclick="moderateBeat('${b.id}','flagged')">⚑ Signaler</button>
+      <button class="btn-reject" onclick="moderateBeat('${b.id}','pending')">↩ Repasser en attente</button>
+      ${deleteBtn}`;
+  } else if (tab === 'flagged') {
+    actions = `
+      <button class="btn-restore" onclick="moderateBeat('${b.id}','active')">✓ Restaurer</button>
+      ${deleteBtn}`;
+  }
+
+  return `
+    <div class="beat-row ${tab === 'flagged' ? 'flagged' : ''}" id="row-${b.id}">
+      <div class="beat-info">
+        <div class="beat-title">${b.title}</div>
+        <div class="beat-meta">
+          <span>👤 ${producer}</span>
+          <span>🎵 ${b.genre}</span>
+          <span>⚡ ${b.bpm} BPM · ${b.key}</span>
+          <span>💶 ${(b.price_lease/100).toFixed(0)}€ lease</span>
+        </div>
+        <div style="margin-top:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          ${certBadge}
+          ${audioEl}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
+        <span class="beat-date">${date}</span>
+        <div class="beat-actions">${actions}</div>
+      </div>
+    </div>`;
+}
+
+// ── Actions de modération
+async function moderateBeat(beatId, newStatus) {
+  try {
+    const { error } = await db
+      .from('beats')
+      .update({ status: newStatus })
+      .eq('id', beatId);
+    if (error) throw error;
+
+    const msgs = { active: '✅ Beat approuvé', pending: '↩ Beat remis en attente', flagged: '⚑ Beat signalé' };
+    toast(msgs[newStatus] || 'Mis à jour', 'var(--green)');
+    await loadAllBeats();
+  } catch(e) {
+    toast('❌ Erreur : ' + e.message, 'var(--pink)');
+  }
+}
+
+async function deleteBeat(beatId, audioPath) {
+  if (!confirm('Supprimer définitivement ce beat ? Cette action est irréversible.')) return;
+  try {
+    // Supprimer l'audio du storage (erreur non bloquante)
+    if (audioPath) {
+      const { error: storErr } = await db.storage.from('beats-audio').remove([audioPath]);
+      if (storErr) console.warn('[deleteBeat] storage:', storErr.message);
+    }
+
+    // Supprimer le beat en DB
+    const { error, count } = await db
+      .from('beats')
+      .delete({ count: 'exact' })
+      .eq('id', beatId);
+
+    if (error) throw new Error(error.message + ' (code: ' + error.code + ')');
+    if (count === 0) throw new Error('Aucune ligne supprimée — vérifie les RLS policies dans Supabase SQL Editor.');
+
+    toast('🗑 Beat supprimé', 'var(--pink)');
+    await loadAllBeats();
+  } catch(e) {
+    console.error('[deleteBeat]', e);
+    alert('❌ Erreur suppression :\n\n' + e.message);
+  }
+}
+
+// ── Toast
+function toast(msg, color = 'var(--cyan)') {
+  const el = document.getElementById('admin-toast');
+  el.textContent = msg;
+  el.style.borderColor = color;
+  el.style.color = color;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ── Init
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(checkAdminAuth, 300);
+});
+</script>
+</body>
+</html>

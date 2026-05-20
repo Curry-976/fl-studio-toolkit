@@ -1,0 +1,16 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="#0D1228"/>
+  <rect x="1" y="1" width="62" height="62" rx="13" fill="none" stroke="rgba(0,240,255,0.15)" stroke-width="0.8"/>
+  <!-- Outer diamond -->
+  <polygon points="32,7 57,32 32,57 7,32" fill="none" stroke="#BF5FFF" stroke-width="1.8"/>
+  <!-- Middle diamond -->
+  <polygon points="32,17 47,32 32,47 17,32" fill="#BF5FFF" opacity="0.12"/>
+  <polygon points="32,17 47,32 32,47 17,32" fill="none" stroke="#BF5FFF" stroke-width="0.8" opacity="0.45"/>
+  <!-- Cross lines -->
+  <line x1="7" y1="32" x2="57" y2="32" stroke="#BF5FFF" stroke-width="0.7" opacity="0.3"/>
+  <line x1="32" y1="7" x2="32" y2="57" stroke="#BF5FFF" stroke-width="0.7" opacity="0.3"/>
+  <!-- Cyan center -->
+  <circle cx="32" cy="32" r="4.5" fill="#00F0FF" opacity="0.85"/>
+  <circle cx="32" cy="32" r="7" fill="none" stroke="#00F0FF" stroke-width="0.8" opacity="0.25"/>
+</svg>

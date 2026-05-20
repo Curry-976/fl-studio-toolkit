@@ -1,0 +1,2622 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Beat Store | Acheter des Beats Rap &amp; Trap — MayanaBeat</title>
+  <meta name="description" content="Beats rap, trap, drill &amp; afro pour les artistes de Mayotte et d'ailleurs. Licences lease et exclusives — téléchargement instantané, livraison directe au 976.">
+  <meta name="keywords" content="acheter beats rap, beats trap, beats drill, licence beat, lease beat, beat exclusif, MayanaBeat beat store, beats Mayotte, beat 976, beat Mahorais, acheter beat Mayotte, beat drill Mayotte, beat trap Mayotte, beat afro Mayotte, instru Mayotte, instru rap 976, instru drill 976, instru afro drill Mayotte, instrumentale Mayotte, rap Mayotte, drill 976, afro drill Mayotte, rappeur Mayotte, artiste mahorais, Mamoudzou, Petite-Terre, Koungou, diaspora mahoraise, beat exclusif Mayotte, prod mahorais, son Mayotte">
+  <meta name="author" content="MayanaBeat">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mayanabeat.fr/beatstore.html">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MayanaBeat">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="Beat Store | Acheter des Beats Rap &amp; Trap — MayanaBeat">
+  <meta property="og:description" content="Achetez des beats rap, trap, drill et lo-fi de qualité professionnelle. Licences lease et exclusives disponibles immédiatement.">
+  <meta property="og:url" content="https://mayanabeat.fr/beatstore.html">
+  <meta property="og:image" content="https://mayanabeat.fr/mayanabeat-icon.svg">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@mayanabeat">
+  <meta name="twitter:title" content="Beat Store | Acheter des Beats Rap &amp; Trap — MayanaBeat">
+  <meta name="twitter:description" content="Achetez des beats rap, trap, drill et lo-fi de qualité professionnelle. Licences lease et exclusives disponibles immédiatement.">
+  <meta name="twitter:image" content="https://mayanabeat.fr/mayanabeat-icon.svg">
+  <!-- JSON-LD WebPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Beat Store — Acheter des Beats Rap, Trap & Drill | MayanaBeat",
+  "description": "Achetez des beats rap, trap, drill et lo-fi de qualité professionnelle. Licences Lease, Trackout et Exclusivité disponibles immédiatement. Téléchargement instantané.",
+  "url": "https://mayanabeat.fr/beatstore.html",
+  "inLanguage": "fr-FR",
+  "isPartOf": { "@type": "WebSite", "url": "https://mayanabeat.fr" },
+  "publisher": { "@type": "Organization", "name": "MayanaBeat", "url": "https://mayanabeat.fr" }
+}
+  </script>
+  <!-- JSON-LD ItemList beats -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Catalogue de beats à vendre — MayanaBeat",
+  "description": "Beats rap, trap et drill de producteurs indépendants. Licences lease non-exclusif, trackout premium et exclusivité totale.",
+  "url": "https://mayanabeat.fr/beatstore.html",
+  "numberOfItems": "50+",
+  "itemListOrder": "https://schema.org/ItemListOrderDescending"
+}
+  </script>
+  <!-- JSON-LD Offer / Store -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "name": "MayanaBeat Beat Store",
+  "url": "https://mayanabeat.fr/beatstore.html",
+  "description": "Plateforme de vente de beats rap, trap et drill. Téléchargement immédiat après paiement. Licences claires et transparentes.",
+  "currenciesAccepted": "EUR",
+  "paymentAccepted": "Credit Card, Debit Card",
+  "priceRange": "€€",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Licences de beats",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "name": "Licence Lease Non-Exclusif",
+        "description": "MP3 + WAV · 100 000 streams max · 2 vidéos YouTube monétisées · Usage commercial",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "@type": "Offer",
+        "name": "Licence Trackout Premium",
+        "description": "MP3 + WAV + Stems · 500 000 streams · Distribution digitale · Usage commercial & radio",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "@type": "Offer",
+        "name": "Exclusivité Totale",
+        "description": "MP3 + WAV + Stems · Streams illimités · Tous droits transférés · Sync TV/Film/Pub",
+        "availability": "https://schema.org/InStock"
+      }
+    ]
+  }
+}
+  </script>
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://mayanabeat.fr/"},{"@type":"ListItem","position":2,"name":"Beat Store","item":"https://mayanabeat.fr/beatstore.html"}]}
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="theme-color" content="#03050D">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script defer src="navbar.js"></script>
+  <style>
+    :root {
+      --bg:#03050D; --bg2:#080C1A; --surface:#0D1228; --card:#0F1530;
+      --cyan:#00F0FF; --cyan2:#00C8FF; --purple:#BF5FFF; --purple2:#9B7FFF;
+      --green:#00FF88; --yellow:#FFD700; --pink:#FF6B9D; --orange:#FF6B35;
+      --text:#E8F0FF; --muted:rgba(180,210,255,.35);
+      --border:rgba(0,240,255,.08); --border2:rgba(0,240,255,.15);
+      --mono:'Space Mono',monospace; --sidebar-w:72px;
+    }
+    body { min-height:100vh; }
+    body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:1000;
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px); }
+    #bg-grid { position:fixed; inset:0; z-index:0; pointer-events:none;
+      background-image:linear-gradient(rgba(0,240,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.025) 1px,transparent 1px);
+      background-size:40px 40px; animation:grid-drift 20s linear infinite; }
+    @keyframes grid-drift { 0%{background-position:0 0} 100%{background-position:40px 40px} }
+    #bg-particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+    /* ── Layout ── */
+    .layout { display:flex; min-height:100vh; position:relative; z-index:2; }
+
+    /* ── Main ── */
+    main {
+      margin-left:var(--sidebar-w); flex:1;
+      padding:32px 32px 140px;
+      min-height:100vh; position:relative; z-index:2;
+    }
+
+    /* ── Store header ── */
+    .store-hd { display:flex; flex-direction:column; gap:20px; margin-bottom:28px; }
+    .store-hd-top { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .store-title {
+      font-family:var(--mono); font-size:22px; font-weight:700;
+      color:var(--text); text-transform:uppercase; letter-spacing:.05em;
+    }
+    .store-title span { color:var(--cyan); }
+
+    .hud-stats { display:flex; gap:12px; flex-wrap:wrap; }
+    .stat-chip {
+      display:flex; align-items:center; gap:8px;
+      padding:8px 14px; border-radius:4px;
+      background:rgba(0,240,255,.04); border:1px solid var(--border2);
+      font-family:var(--mono); font-size:11px;
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+    }
+    .stat-chip-val { font-size:15px; font-weight:700; color:var(--cyan); }
+    .stat-chip-lbl { color:var(--muted); font-size:9px; text-transform:uppercase; letter-spacing:.08em; }
+
+    .btn-sell {
+      display:flex; align-items:center; gap:8px;
+      padding:10px 20px; border:none; border-radius:4px; cursor:none;
+      font-family:var(--mono); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2));
+      color:#000; transition:all .2s;
+      clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+    }
+    .btn-sell:hover { box-shadow:0 0 20px rgba(0,240,255,.4); transform:translateY(-1px); }
+    .btn-sell svg { width:14px; height:14px; }
+
+    /* ── Filters ── */
+    .filter-bar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .search-wrap { position:relative; flex:1; min-width:200px; max-width:320px; }
+    .search-wrap svg { position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:var(--muted); }
+    .search-input {
+      width:100%; padding:9px 12px 9px 32px; background:rgba(0,240,255,.04);
+      border:1px solid var(--border2); border-radius:4px; color:var(--text);
+      font-family:var(--mono); font-size:11px;
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+      outline:none; transition:border-color .2s;
+    }
+    .search-input:focus { border-color:var(--cyan); }
+    .search-input::placeholder { color:var(--muted); }
+
+    .genre-pills { display:flex; gap:6px; flex-wrap:wrap; }
+    .genre-pill {
+      padding:6px 12px; border:1px solid var(--border2); border-radius:4px;
+      background:transparent; color:var(--muted); font-family:var(--mono);
+      font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      cursor:none; transition:all .18s;
+    }
+    .genre-pill:hover { border-color:var(--cyan); color:var(--cyan); }
+    .genre-pill.active { background:rgba(0,240,255,.1); border-color:var(--cyan); color:var(--cyan); }
+
+    .sort-select {
+      padding:8px 12px; background:rgba(0,240,255,.04);
+      border:1px solid var(--border2); border-radius:4px;
+      color:var(--muted); font-family:var(--mono); font-size:10px;
+      cursor:none; outline:none; transition:border-color .2s;
+    }
+    .sort-select:focus { border-color:var(--cyan); }
+
+    /* ── Beat grid ── */
+    .beat-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+      gap:16px; margin-top:24px;
+    }
+
+    .beat-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:4px; overflow:hidden; transition:all .2s; position:relative;
+      clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
+    }
+    .beat-card:hover { border-color:var(--border2); box-shadow:0 0 24px rgba(0,240,255,.08); transform:translateY(-2px); }
+    .beat-card.playing { border-color:rgba(0,240,255,.4); box-shadow:0 0 20px rgba(0,240,255,.15); }
+
+    .beat-cover {
+      position:relative; height:100px; background:var(--surface);
+      overflow:hidden; cursor:none;
+    }
+    .beat-cover canvas { width:100%; height:100%; display:block; }
+    .beat-play-btn {
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      background:rgba(3,5,13,.5); opacity:0; transition:opacity .2s; cursor:none;
+    }
+    .beat-cover:hover .beat-play-btn { opacity:1; }
+    .beat-play-icon {
+      width:40px; height:40px; border-radius:50%;
+      background:rgba(0,240,255,.15); border:1.5px solid var(--cyan);
+      display:flex; align-items:center; justify-content:center;
+      color:var(--cyan); transition:all .15s;
+    }
+    .beat-play-icon:hover { background:rgba(0,240,255,.25); transform:scale(1.08); }
+    .beat-play-icon svg { width:16px; height:16px; }
+
+    .beat-now { position:absolute; top:8px; left:8px; display:none;
+      align-items:center; gap:4px; padding:3px 7px;
+      background:rgba(0,240,255,.15); border:1px solid rgba(0,240,255,.4); border-radius:2px;
+      font-family:var(--mono); font-size:8px; font-weight:700; color:var(--cyan);
+      text-transform:uppercase; letter-spacing:.08em;
+    }
+    .beat-card.playing .beat-now { display:flex; }
+    .now-dot { width:5px; height:5px; border-radius:50%; background:var(--cyan); animation:blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .beat-duration { position:absolute; bottom:8px; right:8px;
+      font-family:var(--mono); font-size:9px; color:rgba(255,255,255,.5); }
+
+    .beat-body { padding:12px; }
+    .beat-title { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.03em; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .beat-producer { font-size:11px; color:var(--cyan); margin-bottom:8px; }
+    .beat-tags { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:10px; }
+    .beat-tag { padding:2px 7px; border-radius:2px; font-family:var(--mono); font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+    .tag-genre { background:rgba(0,240,255,.08); color:var(--cyan2); border:1px solid rgba(0,240,255,.12); }
+    .tag-bpm   { background:rgba(191,95,255,.08); color:var(--purple2); border:1px solid rgba(191,95,255,.12); }
+    .tag-key   { background:rgba(0,255,136,.08); color:#00DD77; border:1px solid rgba(0,255,136,.12); }
+
+    .beat-meta-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .beat-stat { display:flex; align-items:center; gap:4px; font-family:var(--mono); font-size:9px; color:var(--muted); }
+    .beat-stat svg { width:10px; height:10px; }
+
+    .beat-footer { border-top:1px solid var(--border); padding:10px 12px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .beat-prices { display:flex; flex-direction:column; }
+    .price-lease { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--cyan); }
+    .price-exclu { font-family:var(--mono); font-size:9px; color:var(--muted); }
+    .btn-buy {
+      padding:7px 14px; border:none; border-radius:4px; cursor:none;
+      font-family:var(--mono); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      background:rgba(0,240,255,.1); color:var(--cyan); border:1px solid rgba(0,240,255,.25);
+      transition:all .18s;
+      clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,0 100%);
+    }
+    .btn-buy:hover { background:rgba(0,240,255,.2); border-color:var(--cyan); box-shadow:0 0 12px rgba(0,240,255,.2); }
+
+    /* ── Bottom player ── */
+    #player-bar {
+      position:fixed; bottom:0; left:var(--sidebar-w); right:0;
+      background:rgba(8,12,26,.95); border-top:1px solid var(--border2);
+      backdrop-filter:blur(20px); z-index:500;
+      display:flex; align-items:center; gap:16px; padding:12px 24px;
+      transform:translateY(100%); transition:transform .3s cubic-bezier(.4,0,.2,1);
+    }
+    #player-bar.visible { transform:translateY(0); }
+
+    .player-controls { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .player-btn {
+      width:34px; height:34px; border-radius:50%; border:1px solid var(--border2);
+      background:rgba(0,240,255,.04); color:var(--muted); cursor:none;
+      display:flex; align-items:center; justify-content:center; transition:all .18s;
+    }
+    .player-btn:hover { border-color:var(--cyan); color:var(--cyan); background:rgba(0,240,255,.08); }
+    .player-btn.play-pause {
+      width:40px; height:40px; border-color:rgba(0,240,255,.35);
+      background:rgba(0,240,255,.1); color:var(--cyan);
+    }
+    .player-btn.play-pause:hover { background:rgba(0,240,255,.2); box-shadow:0 0 16px rgba(0,240,255,.25); }
+    .player-btn svg { width:14px; height:14px; }
+    .player-btn.play-pause svg { width:16px; height:16px; }
+
+    .player-info { flex-shrink:0; min-width:160px; }
+    .player-beat-title { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:200px; }
+    .player-beat-meta { font-size:10px; color:var(--muted); margin-top:2px; }
+
+    .player-wave-wrap { flex:1; position:relative; height:44px; cursor:none; }
+    .player-wave-wrap canvas { width:100%; height:100%; display:block; }
+    #player-seek {
+      position:absolute; inset:0; opacity:0; cursor:none; width:100%; height:100%;
+      -webkit-appearance:none; background:transparent;
+    }
+    .player-time { font-family:var(--mono); font-size:10px; color:var(--muted); flex-shrink:0; display:flex; gap:4px; align-items:center; }
+    .player-time-cur { color:var(--cyan); }
+
+    .player-license { display:flex; gap:8px; flex-shrink:0; }
+    .btn-pl {
+      padding:7px 14px; border-radius:4px; cursor:none; border:none;
+      font-family:var(--mono); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      transition:all .18s;
+      clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,0 100%);
+    }
+    .btn-pl-lease { background:rgba(0,240,255,.1); color:var(--cyan); border:1px solid rgba(0,240,255,.25); }
+    .btn-pl-lease:hover { background:rgba(0,240,255,.2); border-color:var(--cyan); }
+    .btn-pl-exclu { background:linear-gradient(135deg,rgba(0,240,255,.15),rgba(191,95,255,.15)); color:var(--text); border:1px solid rgba(191,95,255,.3); }
+    .btn-pl-exclu:hover { background:linear-gradient(135deg,rgba(0,240,255,.25),rgba(191,95,255,.25)); }
+
+    .player-close { color:var(--muted); cursor:none; font-size:18px; padding:4px; transition:color .18s; background:none; border:none; }
+    .player-close:hover { color:var(--text); }
+
+    /* ── License modal ── */
+    #modal-overlay {
+      position:fixed; inset:0; background:rgba(3,5,13,.85); backdrop-filter:blur(8px);
+      z-index:800; display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:opacity .25s;
+    }
+    #modal-overlay.open { opacity:1; pointer-events:all; }
+
+    .modal {
+      background:var(--bg2); border:1px solid var(--border2);
+      clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+      padding:28px; max-width:720px; width:90vw;
+      transform:translateY(20px); transition:transform .25s;
+    }
+    #modal-overlay.open .modal { transform:translateY(0); }
+
+    .modal-hd { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px; }
+    .modal-beat-title { font-family:var(--mono); font-size:16px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.04em; }
+    .modal-beat-meta { font-size:11px; color:var(--muted); margin-top:4px; }
+    .modal-close { background:none; border:none; color:var(--muted); cursor:none; font-size:20px; transition:color .18s; }
+    .modal-close:hover { color:var(--text); }
+
+    .license-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .license-card {
+      background:rgba(0,0,0,.3); border:1px solid var(--border); border-radius:4px;
+      padding:18px; display:flex; flex-direction:column; gap:10px; transition:all .2s;
+      clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+      position:relative;
+    }
+    .license-card:hover { border-color:var(--border2); }
+    .license-card.popular { border-color:rgba(0,240,255,.3); background:rgba(0,240,255,.04); }
+    .license-card.popular::before {
+      content:'POPULAIRE'; position:absolute; top:-1px; left:50%; transform:translateX(-50%);
+      background:var(--cyan); color:#000; font-family:var(--mono); font-size:8px; font-weight:700;
+      padding:2px 10px; border-radius:0 0 3px 3px; letter-spacing:.1em;
+    }
+    .license-name { font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); }
+    .license-price { font-family:var(--mono); font-size:28px; font-weight:700; color:var(--text); }
+    .license-price span { font-size:14px; color:var(--muted); }
+    .license-features { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px; flex:1; }
+    .license-features li { display:flex; align-items:flex-start; gap:6px; font-size:11px; color:var(--muted); }
+    .license-features li::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--cyan); flex-shrink:0; margin-top:4px; }
+    .license-features li.no::before { background:rgba(255,80,80,.6); }
+    .license-features li.no { color:rgba(180,210,255,.2); text-decoration:line-through; }
+    .btn-license-buy {
+      padding:10px; border:none; border-radius:4px; cursor:none;
+      font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      background:rgba(0,240,255,.08); color:var(--cyan); border:1px solid rgba(0,240,255,.2);
+      transition:all .2s; text-align:center;
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+    }
+    .btn-license-buy:hover { background:rgba(0,240,255,.18); border-color:var(--cyan); box-shadow:0 0 14px rgba(0,240,255,.2); }
+    .license-card.popular .btn-license-buy {
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2)); color:#000; border:none;
+    }
+    .license-card.popular .btn-license-buy:hover { box-shadow:0 0 20px rgba(0,240,255,.4); }
+
+    /* ── Upload modal ── */
+    #upload-overlay {
+      position:fixed; inset:0; background:rgba(3,5,13,.85); backdrop-filter:blur(8px);
+      z-index:800; display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:opacity .25s;
+    }
+    #upload-overlay.open { opacity:1; pointer-events:all; }
+
+    .upload-modal {
+      background:var(--bg2); border:1px solid var(--border2);
+      clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+      padding:28px; max-width:580px; width:90vw;
+      transform:translateY(20px); transition:transform .25s; max-height:90vh; overflow-y:auto;
+    }
+    #upload-overlay.open .upload-modal { transform:translateY(0); }
+
+    .upload-hd { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+    .upload-title { font-family:var(--mono); font-size:15px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.05em; }
+
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-group.full { grid-column:1/-1; }
+    .form-label { font-family:var(--mono); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); }
+    .form-input, .form-select {
+      padding:9px 12px; background:rgba(0,240,255,.04);
+      border:1px solid var(--border2); border-radius:4px;
+      color:var(--text); font-family:var(--mono); font-size:11px;
+      outline:none; transition:border-color .2s; cursor:none;
+    }
+    .form-input:focus, .form-select:focus { border-color:var(--cyan); }
+    .form-input::placeholder { color:var(--muted); }
+    .form-select option { background:#0D1228; color:var(--text); }
+
+    /* ── Stripe Connect ── */
+    .btn-stripe-connect {
+      display:inline-block; margin-top:6px;
+      padding:5px 10px; border-radius:4px; border:none; cursor:none;
+      background:linear-gradient(135deg,rgba(0,240,255,.15),rgba(191,95,255,.15));
+      border:1px solid rgba(0,240,255,.3);
+      color:var(--cyan); font-family:var(--mono); font-size:10px; font-weight:700;
+      letter-spacing:.04em; transition:all .2s; white-space:nowrap;
+    }
+    .btn-stripe-connect:hover { background:rgba(0,240,255,.2); box-shadow:0 0 12px rgba(0,240,255,.2); }
+    .btn-stripe-pending { border-color:rgba(255,215,0,.4); color:var(--yellow);
+      background:rgba(255,215,0,.08); }
+    .btn-stripe-pending:hover { background:rgba(255,215,0,.15); }
+    .stripe-ok { margin-top:5px; font-size:10px; color:var(--green);
+      font-family:var(--mono); letter-spacing:.03em; }
+
+    .drop-zone {
+      border:2px dashed rgba(0,240,255,.2); border-radius:4px; padding:20px;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+      text-align:center; cursor:pointer; transition:all .2s;
+    }
+    .drop-zone:hover, .drop-zone.drag { border-color:rgba(0,240,255,.5); background:rgba(0,240,255,.04); }
+    .drop-zone.has-file { border-color:rgba(0,255,136,.4); background:rgba(0,255,136,.03); }
+    .drop-icon { font-size:24px; }
+    .drop-text { font-family:var(--mono); font-size:11px; color:var(--muted); }
+    .drop-sub { font-size:10px; color:rgba(180,210,255,.2); }
+    .drop-filename { font-family:var(--mono); font-size:10px; color:var(--green); margin-top:2px; }
+
+    /* ── Upload steps ── */
+    .upload-steps { display:flex; flex-direction:column; gap:14px; margin-bottom:18px; }
+    .upload-step {
+      border:1px solid var(--border); border-radius:6px; overflow:hidden;
+      transition:border-color .2s;
+    }
+    .upload-step.required { border-color:rgba(0,240,255,.15); }
+    .upload-step.optional { border-color:rgba(180,210,255,.08); }
+    .upload-step.done    { border-color:rgba(0,255,136,.3); }
+    .step-header {
+      display:flex; align-items:center; gap:12px;
+      padding:10px 14px; background:rgba(0,0,0,.2);
+    }
+    .step-num {
+      width:24px; height:24px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--mono); font-size:11px; font-weight:700;
+      background:rgba(0,240,255,.1); border:1px solid rgba(0,240,255,.3); color:var(--cyan);
+    }
+    .upload-step.done .step-num {
+      background:rgba(0,255,136,.15); border-color:rgba(0,255,136,.4); color:var(--green);
+    }
+    .step-info { flex:1; }
+    .step-title { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text); letter-spacing:.04em; }
+    .step-desc  { font-size:10px; color:var(--muted); margin-top:1px; line-height:1.4; }
+    .step-badge {
+      padding:2px 8px; border-radius:2px; font-family:var(--mono);
+      font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+    }
+    .badge-required { background:rgba(0,240,255,.1); color:var(--cyan); border:1px solid rgba(0,240,255,.25); }
+    .badge-optional  { background:rgba(180,210,255,.05); color:var(--muted); border:1px solid rgba(180,210,255,.12); }
+    .badge-done      { background:rgba(0,255,136,.1); color:var(--green); border:1px solid rgba(0,255,136,.3); }
+    .step-body { padding:12px 14px; }
+    .step-delivery {
+      display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;
+    }
+    .delivery-chip {
+      padding:2px 8px; border-radius:2px; font-size:9px; font-family:var(--mono);
+      background:rgba(191,95,255,.08); color:var(--purple2); border:1px solid rgba(191,95,255,.15);
+    }
+
+    .price-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .price-input-wrap { display:flex; flex-direction:column; gap:4px; }
+    .price-tier { font-family:var(--mono); font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); }
+    .price-field { display:flex; align-items:center; gap:4px; }
+    .price-field span { font-family:var(--mono); font-size:12px; color:var(--cyan); }
+
+    .btn-submit {
+      padding:12px 24px; border:none; border-radius:4px; cursor:none;
+      font-family:var(--mono); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2));
+      color:#000; transition:all .2s; width:100%;
+      clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+    }
+    .btn-submit:hover { box-shadow:0 0 24px rgba(0,240,255,.4); transform:translateY(-1px); }
+
+    /* ── Empty / no results ── */
+    .empty-state { grid-column:1/-1; text-align:center; padding:60px 20px; }
+    .empty-icon { font-size:40px; margin-bottom:12px; }
+    .empty-text { font-family:var(--mono); font-size:13px; color:var(--muted); }
+
+    /* ── Sell CTA banner ── */
+    .sell-banner {
+      margin-top:48px;
+      border:1px solid rgba(0,240,255,.12);
+      border-radius:4px; padding:32px 40px;
+      background:linear-gradient(135deg,rgba(0,240,255,.03),rgba(191,95,255,.03));
+      clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+      display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    }
+    .sell-banner-info {}
+    .sell-banner-title { font-family:var(--mono); font-size:16px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; }
+    .sell-banner-title span { color:var(--cyan); }
+    .sell-banner-desc { font-size:13px; color:var(--muted); line-height:1.6; max-width:480px; }
+    .sell-banner-perks { display:flex; gap:20px; margin-top:14px; flex-wrap:wrap; }
+    .sell-perk { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10px; color:var(--muted); }
+    .sell-perk::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--cyan); flex-shrink:0; }
+
+    /* ── Auth button ── */
+    .btn-auth {
+      display:flex; align-items:center; gap:8px;
+      padding:9px 16px; border-radius:4px; cursor:none;
+      font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      background:rgba(0,240,255,.06); color:var(--muted); border:1px solid var(--border2);
+      transition:all .2s;
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+    }
+    .btn-auth:hover { border-color:var(--cyan); color:var(--cyan); }
+    .btn-auth svg { width:14px; height:14px; }
+
+    .producer-badge {
+      display:flex; align-items:center; gap:10px;
+      padding:6px 14px; border-radius:4px;
+      background:rgba(0,240,255,.06); border:1px solid var(--border2);
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+    }
+    .producer-avatar {
+      width:28px; height:28px; border-radius:50%;
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2));
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--mono); font-size:11px; font-weight:700; color:#000;
+      flex-shrink:0;
+    }
+    .producer-name { font-family:var(--mono); font-size:11px; color:var(--cyan); }
+    .producer-role { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+    .btn-logout { background:none; border:none; color:var(--muted); cursor:none; font-size:14px; padding:2px; transition:color .18s; }
+    .btn-logout:hover { color:#ff6b6b; }
+
+    /* ── Auth modal ── */
+    #auth-overlay {
+      position:fixed; inset:0; background:rgba(3,5,13,.88); backdrop-filter:blur(10px);
+      z-index:900; display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:opacity .25s;
+    }
+    #auth-overlay.open { opacity:1; pointer-events:all; }
+    .auth-modal {
+      background:var(--bg2); border:1px solid var(--border2);
+      clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+      padding:32px; width:380px; max-width:94vw;
+      transform:translateY(16px); transition:transform .25s;
+    }
+    #auth-overlay.open .auth-modal { transform:translateY(0); }
+    .auth-logo { font-family:var(--mono); font-size:22px; font-weight:700; color:var(--cyan); margin-bottom:4px; }
+    .auth-sub { font-size:12px; color:var(--muted); margin-bottom:24px; }
+    .auth-tabs { display:flex; gap:0; margin-bottom:24px; border-bottom:1px solid var(--border2); }
+    .auth-tab {
+      flex:1; padding:10px; text-align:center; cursor:none; border:none; background:none;
+      font-family:var(--mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      color:var(--muted); transition:all .18s; border-bottom:2px solid transparent;
+    }
+    .auth-tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+    .auth-form { display:flex; flex-direction:column; gap:12px; }
+    .auth-err { padding:10px 12px; background:rgba(255,80,80,.1); border:1px solid rgba(255,80,80,.25); border-radius:4px; font-size:11px; color:#ff9999; display:none; }
+    .auth-err.show { display:block; }
+    .auth-success { padding:10px 12px; background:rgba(0,255,136,.1); border:1px solid rgba(0,255,136,.25); border-radius:4px; font-size:11px; color:#00FF88; display:none; }
+    .auth-success.show { display:block; }
+    .btn-auth-submit {
+      padding:12px; border:none; border-radius:4px; cursor:none;
+      font-family:var(--mono); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2));
+      color:#000; transition:all .2s; margin-top:4px;
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+    }
+    .btn-auth-submit:hover { box-shadow:0 0 20px rgba(0,240,255,.4); }
+    .btn-auth-submit:disabled { opacity:.5; cursor:not-allowed; }
+    .auth-sep { text-align:center; font-size:11px; color:var(--muted); position:relative; }
+    .auth-sep::before, .auth-sep::after { content:''; position:absolute; top:50%; width:38%; height:1px; background:var(--border2); }
+    .auth-sep::before { left:0; }
+    .auth-sep::after { right:0; }
+
+    /* ── My beats panel ── */
+    .my-beats-btn {
+      font-family:var(--mono); font-size:9px; font-weight:700; text-transform:uppercase;
+      letter-spacing:.08em; color:var(--muted); background:none; border:none; cursor:none;
+      transition:color .18s; padding:2px 4px;
+    }
+    .my-beats-btn:hover { color:var(--cyan); }
+
+    /* ── Supabase status indicator ── */
+    .db-status {
+      display:inline-flex; align-items:center; gap:5px;
+      font-family:var(--mono); font-size:8px; font-weight:700; text-transform:uppercase;
+      letter-spacing:.08em; color:var(--muted); padding:4px 8px;
+      border:1px solid var(--border); border-radius:2px;
+    }
+    .db-dot { width:5px; height:5px; border-radius:50%; background:rgba(180,210,255,.3); }
+    .db-dot.live { background:var(--green); box-shadow:0 0 6px var(--green); animation:blink 2s infinite; }
+    .db-dot.demo { background:var(--yellow); }
+
+    @media (max-width:1024px) {
+      main { padding:24px 20px 140px; }
+      .beat-grid { grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); }
+    }
+    @media (max-width:768px) {
+      body { cursor:auto; }
+      #c-dot, #c-ring { display:none; }
+      main { padding:20px 16px 80px; }
+      .store-hd-top { flex-direction:column; align-items:flex-start; gap:12px; }
+      .store-title { font-size:18px; }
+      .hud-stats { gap:8px; }
+      .stat-chip { padding:6px 10px; }
+      .filter-bar { gap:8px; }
+      .search-wrap { max-width:100%; }
+      .genre-pills { gap:4px; }
+      .genre-pill { padding:5px 9px; font-size:8px; }
+      .beat-grid { grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
+      /* Player bar stays accessible above bottom nav */
+      #player-bar { left:0; bottom:60px; padding:10px 14px; gap:10px; }
+      .player-info { min-width:120px; }
+      .player-beat-title { max-width:120px; font-size:11px; }
+      .player-license { gap:6px; }
+      .btn-pl { padding:6px 10px; font-size:8px; }
+      .license-grid { grid-template-columns:1fr; }
+      .form-grid { grid-template-columns:1fr; }
+      .modal { padding:20px; }
+    }
+    @media (max-width:480px) {
+      .beat-grid { grid-template-columns:1fr 1fr; gap:10px; }
+      .beat-list .beat-row { flex-wrap:wrap; }
+      .player-wave-wrap { display:none; }
+      .player-time { display:none; }
+      #player-bar { gap:8px; }
+      .stat-chip-val { font-size:13px; }
+    }
+
+    /* ── View toggle ── */
+    .view-toggle { display:flex; gap:4px; }
+    .btn-view {
+      width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+      border:1px solid var(--border2); border-radius:4px; background:transparent;
+      color:var(--muted); cursor:none; transition:all .18s;
+    }
+    .btn-view.active { border-color:var(--cyan); color:var(--cyan); background:rgba(0,240,255,.08); }
+    .btn-view svg { width:14px; height:14px; }
+
+    /* ── Beat list (row) view ── */
+    .beat-list { display:flex; flex-direction:column; gap:2px; margin-top:24px; }
+    .beat-row {
+      display:flex; align-items:center; gap:16px;
+      padding:10px 14px; border-radius:4px;
+      background:var(--card); border:1px solid var(--border);
+      transition:all .18s; position:relative; cursor:default;
+    }
+    .beat-row:hover { border-color:var(--border2); background:rgba(15,21,48,1); }
+    .beat-row.playing { border-color:rgba(0,240,255,.4); background:rgba(0,240,255,.03); }
+    .row-num { font-family:var(--mono); font-size:11px; color:var(--muted); width:22px; text-align:right; flex-shrink:0; }
+    .row-play {
+      width:32px; height:32px; border-radius:50%; border:1px solid var(--border2);
+      background:rgba(0,240,255,.04); color:var(--muted); cursor:none;
+      display:flex; align-items:center; justify-content:center; transition:all .18s; flex-shrink:0;
+    }
+    .row-play:hover, .beat-row.playing .row-play { border-color:var(--cyan); color:var(--cyan); background:rgba(0,240,255,.1); }
+    .row-play svg { width:12px; height:12px; }
+    .row-wave { width:88px; height:32px; flex-shrink:0; border-radius:2px; display:block; }
+
+    /* ── Equalizer animé (remplace la mini-waveform quand en lecture) ── */
+    .eq-bars { display:none; align-items:flex-end; justify-content:center; gap:2px;
+               width:88px; height:32px; flex-shrink:0; }
+    .beat-row.playing .eq-bars  { display:flex; }
+    .beat-row.playing .row-wave { display:none; }
+    .beat-row.paused  .eq-bars  { display:flex; }
+    .beat-row.paused  .row-wave { display:none; }
+    .beat-row.paused  .eq-bar   { animation-play-state:paused; opacity:.45; }
+    .eq-bar {
+      width:4px; border-radius:2px 2px 0 0;
+      background:var(--cyan);
+      animation: eq-dance 0.6s ease-in-out infinite alternate;
+      transform-origin: bottom center;
+    }
+    .eq-bar:nth-child(1){ height:40%; animation-delay:0s;    animation-duration:.5s; }
+    .eq-bar:nth-child(2){ height:80%; animation-delay:.08s;  animation-duration:.7s; }
+    .eq-bar:nth-child(3){ height:55%; animation-delay:.15s;  animation-duration:.4s; }
+    .eq-bar:nth-child(4){ height:95%; animation-delay:.05s;  animation-duration:.6s; }
+    .eq-bar:nth-child(5){ height:65%; animation-delay:.22s;  animation-duration:.5s; }
+    .eq-bar:nth-child(6){ height:45%; animation-delay:.12s;  animation-duration:.8s; }
+    .eq-bar:nth-child(7){ height:75%; animation-delay:.03s;  animation-duration:.45s; }
+    .eq-bar:nth-child(8){ height:50%; animation-delay:.18s;  animation-duration:.65s; }
+    @keyframes eq-dance {
+      from { transform:scaleY(0.25); opacity:.5; }
+      to   { transform:scaleY(1);    opacity:1; }
+    }
+    /* Couleur par genre sur les barres EQ */
+    .beat-row.playing[data-accent] .eq-bar { background: var(--row-accent, var(--cyan)); }
+    .row-info { flex:1; min-width:0; }
+    .row-title { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .row-producer { font-size:11px; color:var(--cyan); margin-top:1px; }
+    .row-tags { display:flex; gap:4px; flex-shrink:0; }
+    .row-dur { font-family:var(--mono); font-size:10px; color:var(--muted); flex-shrink:0; width:34px; text-align:right; }
+    .row-price { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--cyan); flex-shrink:0; min-width:54px; text-align:right; }
+    .row-actions { display:flex; gap:6px; flex-shrink:0; }
+    .btn-row-cart {
+      padding:6px 10px; border:1px solid rgba(0,240,255,.25); border-radius:4px; cursor:none;
+      background:rgba(0,240,255,.08); color:var(--cyan); font-family:var(--mono);
+      font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+      transition:all .15s;
+      clip-path:polygon(0 0,calc(100% - 4px) 0,100% 4px,100% 100%,0 100%);
+    }
+    .btn-row-cart:hover { background:rgba(0,240,255,.18); border-color:var(--cyan); }
+    .btn-row-buy {
+      padding:6px 10px; border:none; border-radius:4px; cursor:none;
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2)); color:#000;
+      font-family:var(--mono); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+      transition:all .15s;
+      clip-path:polygon(0 0,calc(100% - 4px) 0,100% 4px,100% 100%,0 100%);
+    }
+    .btn-row-buy:hover { box-shadow:0 0 12px rgba(0,240,255,.3); transform:translateY(-1px); }
+
+    /* ── Cart drawer ── */
+    #cart-drawer {
+      position:fixed; top:0; right:0; bottom:0; width:360px; max-width:96vw;
+      background:var(--bg2); border-left:1px solid var(--border2);
+      z-index:700; display:flex; flex-direction:column;
+      transform:translateX(100%); transition:transform .3s cubic-bezier(.4,0,.2,1);
+    }
+    #cart-drawer.open { transform:translateX(0); }
+    .cart-hd {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:20px 20px 16px; border-bottom:1px solid var(--border2); flex-shrink:0;
+    }
+    .cart-title { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.05em; }
+    .cart-count { font-family:var(--mono); font-size:11px; color:var(--cyan); }
+    .btn-cart-close { background:none; border:none; color:var(--muted); cursor:none; font-size:18px; transition:color .18s; }
+    .btn-cart-close:hover { color:var(--text); }
+    .cart-body { flex:1; overflow-y:auto; padding:16px 20px; }
+    .cart-empty { text-align:center; padding:40px 20px; }
+    .cart-empty-icon { font-size:32px; margin-bottom:10px; }
+    .cart-empty-txt { font-family:var(--mono); font-size:11px; color:var(--muted); }
+    .cart-item {
+      display:flex; align-items:flex-start; gap:12px;
+      padding:12px 0; border-bottom:1px solid var(--border);
+    }
+    .cart-item-info { flex:1; min-width:0; }
+    .cart-item-title { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.03em; }
+    .cart-item-sub { font-size:10px; color:var(--muted); margin-top:2px; }
+    .cart-item-price { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--cyan); flex-shrink:0; }
+    .btn-cart-remove { background:none; border:none; color:var(--muted); cursor:none; font-size:14px; transition:color .18s; flex-shrink:0; }
+    .btn-cart-remove:hover { color:#ff6b6b; }
+    .cart-ft {
+      padding:16px 20px; border-top:1px solid var(--border2); flex-shrink:0;
+    }
+    .cart-total-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .cart-total-lbl { font-family:var(--mono); font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+    .cart-total-val { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--text); }
+    .btn-checkout {
+      width:100%; padding:13px; border:none; border-radius:4px; cursor:none;
+      font-family:var(--mono); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2)); color:#000;
+      transition:all .2s;
+      clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+    }
+    .btn-checkout:hover { box-shadow:0 0 24px rgba(0,240,255,.4); transform:translateY(-1px); }
+    .btn-checkout:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
+    /* Cart badge on header */
+    .cart-badge-wrap { position:relative; display:inline-flex; }
+    .cart-badge {
+      position:absolute; top:-6px; right:-6px;
+      width:16px; height:16px; border-radius:50%;
+      background:var(--cyan); color:#000;
+      font-family:var(--mono); font-size:9px; font-weight:700;
+      display:flex; align-items:center; justify-content:center;
+    }
+  </style>
+</head>
+<body>
+<canvas id="bg-particles"></canvas>
+<div id="bg-grid"></div>
+
+
+<div class="layout">
+
+  <!-- Sidebar injectée par navbar.js -->
+
+  <!-- ── Main ── -->
+  <main>
+
+    <!-- Header -->
+    <div class="store-hd">
+      <div class="store-hd-top">
+        <div>
+          <h1 class="store-title">Beat <span>Store</span></h1>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+            <span style="font-size:12px;color:var(--muted);">Achetez des beats — vendez vos créations</span>
+            <div class="db-status" id="db-status"><div class="db-dot demo" id="db-dot"></div><span id="db-label">DEMO</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <div class="hud-stats">
+            <div class="stat-chip">
+              <div><div class="stat-chip-val" id="stat-beats">—</div><div class="stat-chip-lbl">Beats</div></div>
+            </div>
+            <div class="stat-chip">
+              <div><div class="stat-chip-val" id="stat-prod">—</div><div class="stat-chip-lbl">Producteurs</div></div>
+            </div>
+            <div class="stat-chip">
+              <div><div class="stat-chip-val" id="stat-sales">—</div><div class="stat-chip-lbl">Ventes aujourd'hui</div></div>
+            </div>
+          </div>
+          <!-- Auth / Producteur -->
+          <div id="auth-area">
+            <button class="btn-auth" onclick="openAuth()">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              Connexion Producteur
+            </button>
+          </div>
+          <div class="cart-badge-wrap">
+            <button class="btn-auth" onclick="openCart()" style="gap:6px;" title="Panier">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+              Panier
+            </button>
+            <span class="cart-badge" id="cart-badge" style="display:none;">0</span>
+          </div>
+          <button class="btn-sell" onclick="onSellClick()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            Vendre mes beats
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/></svg>
+          <input id="search-input" class="search-input" type="text" placeholder="Chercher un beat, un producteur…" oninput="applyFilters()" />
+        </div>
+        <div class="genre-pills" id="genre-pills">
+          <button class="genre-pill active" data-genre="all" onclick="setGenre(this)">Tout</button>
+          <button class="genre-pill" data-genre="Trap" onclick="setGenre(this)">Trap</button>
+          <button class="genre-pill" data-genre="Drill" onclick="setGenre(this)">Drill</button>
+          <button class="genre-pill" data-genre="Boom Bap" onclick="setGenre(this)">Boom Bap</button>
+          <button class="genre-pill" data-genre="Lo-Fi" onclick="setGenre(this)">Lo-Fi</button>
+          <button class="genre-pill" data-genre="Afrobeats" onclick="setGenre(this)">Afrobeats</button>
+          <button class="genre-pill" data-genre="R&B" onclick="setGenre(this)">R&amp;B</button>
+          <button class="genre-pill" data-genre="Phonk" onclick="setGenre(this)">Phonk</button>
+          <button class="genre-pill" data-genre="House" onclick="setGenre(this)">House</button>
+        </div>
+        <select class="sort-select" id="sort-select" onchange="applyFilters()">
+          <option value="plays">Popularité</option>
+          <option value="newest">Plus récent</option>
+          <option value="price-asc">Prix ↑</option>
+          <option value="price-desc">Prix ↓</option>
+        </select>
+        <div class="view-toggle">
+          <button class="btn-view" id="btn-view-list" onclick="setView('list')" title="Vue liste">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <button class="btn-view active" id="btn-view-grid" onclick="setView('grid')" title="Vue grille">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Beat grid -->
+    <div class="beat-grid" id="beat-grid"></div>
+
+    <!-- Sell CTA -->
+    <div class="sell-banner">
+      <div class="sell-banner-info">
+        <div class="sell-banner-title">Vends tes beats <span>dès aujourd'hui</span></div>
+        <div class="sell-banner-desc">Rejoins les producteurs qui monétisent leur talent sur Mayanabeat. Upload en 2 minutes, on s'occupe du reste.</div>
+        <div class="sell-banner-perks">
+          <div class="sell-perk">0€ à l'inscription</div>
+          <div class="sell-perk">Commission 15% seulement</div>
+          <div class="sell-perk">Licences auto-générées</div>
+          <div class="sell-perk">Paiement sous 48h</div>
+        </div>
+      </div>
+      <button class="btn-sell" onclick="openUpload()" style="padding:14px 28px;font-size:12px;">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        Commencer à vendre
+      </button>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── Bottom player ── -->
+<div id="player-bar">
+  <div class="player-controls">
+    <button class="player-btn" id="btn-prev" onclick="prevBeat()" title="Précédent">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+    </button>
+    <button class="player-btn play-pause" id="btn-play" onclick="togglePlay()">
+      <svg id="play-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    </button>
+    <button class="player-btn" id="btn-next" onclick="nextBeat()" title="Suivant">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+  <div class="player-info">
+    <div class="player-beat-title" id="player-title">—</div>
+    <div class="player-beat-meta" id="player-meta">—</div>
+  </div>
+  <div class="player-wave-wrap">
+    <canvas id="player-wave" height="44"></canvas>
+    <input id="player-seek" type="range" min="0" max="1" step="0.001" value="0"
+           oninput="onSeekMove(this.value)"
+           onmousedown="onSeekStart()" ontouchstart="onSeekStart()"
+           onchange="onSeekEnd(this.value)"
+           onmouseup="onSeekEnd(this.value)" ontouchend="onSeekEnd(this.value)" />
+  </div>
+  <div class="player-time">
+    <span class="player-time-cur" id="time-cur">0:00</span>
+    <span>/</span>
+    <span id="time-tot">0:00</span>
+  </div>
+  <div class="player-license">
+    <button class="btn-pl btn-pl-lease" id="pl-lease-btn" onclick="openLicense()">Lease —€</button>
+    <button class="btn-pl btn-pl-exclu" id="pl-exclu-btn" onclick="openLicense()">Exclu —€</button>
+  </div>
+  <button class="player-close" onclick="closePlayer()">✕</button>
+</div>
+
+<!-- ── Auth modal ── -->
+<div id="auth-overlay" onclick="closeAuth(event)">
+  <div class="auth-modal">
+    <div class="auth-logo">MAYANABEAT</div>
+    <div class="auth-sub">Espace producteur — connecte-toi pour vendre tes beats</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Connexion</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Inscription</button>
+    </div>
+    <div class="auth-form" id="auth-form-login">
+      <div class="auth-err" id="login-err"></div>
+      <div class="auth-success" id="login-ok"></div>
+      <div class="form-group">
+        <div class="form-label">Email</div>
+        <input class="form-input" type="email" id="login-email" placeholder="ton@email.com" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <div class="form-label">Mot de passe</div>
+        <input class="form-input" type="password" id="login-pwd" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+      <button class="btn-auth-submit" id="btn-login" onclick="doLogin()">Se connecter</button>
+      <div class="auth-sep">ou</div>
+      <button class="btn-auth-submit" style="background:rgba(0,240,255,.06);color:var(--cyan);border:1px solid var(--border2);" onclick="doLoginGoogle()">
+        Continuer avec Google
+      </button>
+    </div>
+    <div class="auth-form" id="auth-form-signup" style="display:none;">
+      <div class="auth-err" id="signup-err"></div>
+      <div class="auth-success" id="signup-ok"></div>
+      <div class="form-group">
+        <div class="form-label">Nom de producteur</div>
+        <input class="form-input" type="text" id="signup-username" placeholder="@ProdByX" autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <div class="form-label">Email</div>
+        <input class="form-input" type="email" id="signup-email" placeholder="ton@email.com" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <div class="form-label">Mot de passe (min. 8 caractères)</div>
+        <input class="form-input" type="password" id="signup-pwd" placeholder="••••••••" autocomplete="new-password" />
+      </div>
+      <button class="btn-auth-submit" id="btn-signup" onclick="doSignup()">Créer mon compte</button>
+    </div>
+    <div style="margin-top:16px;text-align:center;">
+      <button class="modal-close" onclick="closeAuth()" style="font-size:13px;color:var(--muted);background:none;border:none;cursor:none;">✕ Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── License modal ── -->
+<div id="modal-overlay" onclick="closeLicense(event)">
+  <div class="modal">
+    <div class="modal-hd">
+      <div>
+        <div class="modal-beat-title" id="modal-beat-name">Beat Title</div>
+        <div class="modal-beat-meta" id="modal-beat-info">Producteur · Genre · BPM</div>
+      </div>
+      <button class="modal-close" onclick="closeLicense()">✕</button>
+    </div>
+    <!-- Infos acheteur -->
+    <div id="buyer-form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+      <div>
+        <div class="form-label">Ton prénom / nom</div>
+        <input class="form-input" id="buyer-name" type="text" placeholder="Ex: Kylian M." autocomplete="name" />
+      </div>
+      <div>
+        <div class="form-label">Email (reçois le fichier ici)</div>
+        <input class="form-input" id="buyer-email" type="email" placeholder="ton@email.com" autocomplete="email" />
+      </div>
+    </div>
+
+    <div class="license-grid">
+      <!-- Lease -->
+      <div class="license-card">
+        <div class="license-name">Lease Non-Exclusif</div>
+        <div class="license-price" id="lic-lease-price">29<span>€</span></div>
+        <ul class="license-features">
+          <li>100 000 streams max</li>
+          <li>2 vidéos YouTube monétisées</li>
+          <li>Fichiers MP3 + WAV</li>
+          <li>Usage commercial autorisé</li>
+          <li class="no">Stems / trackout</li>
+          <li class="no">Beat non retiré du store</li>
+        </ul>
+        <button class="btn-license-buy" onclick="buyBeat('lease')">Acheter ce lease</button>
+      </div>
+      <!-- Trackout -->
+      <div class="license-card popular">
+        <div class="license-name">Trackout Premium</div>
+        <div class="license-price" id="lic-track-price">59<span>€</span></div>
+        <ul class="license-features">
+          <li>500 000 streams max</li>
+          <li>5 vidéos YouTube monétisées</li>
+          <li>MP3 + WAV + Stems (trackout)</li>
+          <li>Usage commercial &amp; radio</li>
+          <li>Distribution digitale</li>
+          <li class="no">Beat non retiré du store</li>
+        </ul>
+        <button class="btn-license-buy" onclick="buyBeat('trackout')">Acheter le trackout</button>
+      </div>
+      <!-- Exclusive -->
+      <div class="license-card">
+        <div class="license-name">Exclusivité Totale</div>
+        <div class="license-price" id="lic-exclu-price">199<span>€</span></div>
+        <ul class="license-features">
+          <li>Streams illimités</li>
+          <li>Vidéos YouTube illimitées</li>
+          <li>MP3 + WAV + Stems</li>
+          <li>Tous droits transférés</li>
+          <li>Sync TV / Film / Pub</li>
+          <li>Beat retiré du store</li>
+        </ul>
+        <button class="btn-license-buy" onclick="buyBeat('exclu')">Acheter l'exclusivité</button>
+      </div>
+    </div>
+    <div style="margin-top:16px;padding:12px;background:rgba(0,240,255,.04);border:1px solid var(--border);border-radius:4px;font-size:11px;color:var(--muted);line-height:1.6;">
+      ⚡ <strong style="color:var(--cyan);">Paiement sécurisé Stripe</strong> — PDF de licence envoyé instantanément par email. Le beat est disponible en téléchargement immédiat après paiement.
+    </div>
+  </div>
+</div>
+
+<!-- ── Upload modal ── -->
+<div id="upload-overlay" onclick="closeUpload(event)">
+  <div class="upload-modal">
+    <div class="upload-hd">
+      <div class="upload-title">Mettre un beat en vente</div>
+      <button class="modal-close" onclick="closeUpload()">✕</button>
+    </div>
+
+    <!-- ── 3 étapes d'upload ── -->
+    <div class="upload-steps">
+
+      <!-- ÉTAPE 1 : DÉMO TAGGUÉ -->
+      <div class="upload-step required" id="step-tagged">
+        <div class="step-header">
+          <div class="step-num" id="stepnum-tagged">1</div>
+          <div class="step-info">
+            <div class="step-title">Démo taggué (Voice Tag)</div>
+            <div class="step-desc">Le fichier que les visiteurs écouteront sur le site — avec ton voice tag pour protéger la prod.</div>
+          </div>
+          <span class="step-badge badge-required" id="stepbadge-tagged">Requis</span>
+        </div>
+        <div class="step-body">
+          <input type="file" id="input-tagged" accept=".mp3,.wav,audio/*" style="display:none" onchange="pickFile('tagged',this.files)">
+          <div class="drop-zone" id="drop-tagged"
+            onclick="document.getElementById('input-tagged').click()"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="handleDropFile(event,'tagged')">
+            <div class="drop-icon">🎙️</div>
+            <div class="drop-text">Glisse ou <span style="color:var(--cyan);text-decoration:underline;">parcourir</span></div>
+            <div class="drop-sub">MP3 · WAV — max 50 MB</div>
+            <div class="drop-filename" id="name-tagged"></div>
+          </div>
+          <div class="step-delivery">
+            <span class="delivery-chip">🔊 Streaming sur le store</span>
+            <span class="delivery-chip">Pas livré à l'acheteur</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 2 : FICHIER PROPRE -->
+      <div class="upload-step required" id="step-untagged">
+        <div class="step-header">
+          <div class="step-num" id="stepnum-untagged">2</div>
+          <div class="step-info">
+            <div class="step-title">Fichier propre (Sans tag)</div>
+            <div class="step-desc">La prod haute qualité, sans voice tag. Livrée automatiquement aux acheteurs Lease et Trackout.</div>
+          </div>
+          <span class="step-badge badge-required" id="stepbadge-untagged">Requis</span>
+        </div>
+        <div class="step-body">
+          <input type="file" id="input-untagged" accept=".mp3,.wav,.flac,audio/*" style="display:none" onchange="pickFile('untagged',this.files)">
+          <div class="drop-zone" id="drop-untagged"
+            onclick="document.getElementById('input-untagged').click()"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="handleDropFile(event,'untagged')">
+            <div class="drop-icon">🎵</div>
+            <div class="drop-text">Glisse ou <span style="color:var(--cyan);text-decoration:underline;">parcourir</span></div>
+            <div class="drop-sub">MP3 · WAV · FLAC — max 100 MB</div>
+            <div class="drop-filename" id="name-untagged"></div>
+          </div>
+          <div class="step-delivery">
+            <span class="delivery-chip">📦 Lease</span>
+            <span class="delivery-chip">📦 Trackout (si pas de stems)</span>
+            <span class="delivery-chip">📦 Exclusif</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 3 : STEMS / TRACKOUTS -->
+      <div class="upload-step optional" id="step-stems">
+        <div class="step-header">
+          <div class="step-num" id="stepnum-stems">3</div>
+          <div class="step-info">
+            <div class="step-title">Stems / Trackouts</div>
+            <div class="step-desc">Un ZIP avec chaque piste séparée (kick, basse, mélodie…). Pour les artistes qui veulent mixer en studio.</div>
+          </div>
+          <span class="step-badge badge-optional" id="stepbadge-stems">Optionnel</span>
+        </div>
+        <div class="step-body">
+          <input type="file" id="input-stems" accept=".zip,application/zip,application/x-zip-compressed" style="display:none" onchange="pickFile('stems',this.files)">
+          <div class="drop-zone" id="drop-stems"
+            onclick="document.getElementById('input-stems').click()"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="handleDropFile(event,'stems')">
+            <div class="drop-icon">🗜️</div>
+            <div class="drop-text">Glisse ou <span style="color:var(--cyan);text-decoration:underline;">parcourir</span></div>
+            <div class="drop-sub">ZIP uniquement — max 500 MB</div>
+            <div class="drop-filename" id="name-stems"></div>
+          </div>
+          <div class="step-delivery">
+            <span class="delivery-chip">📦 Trackout (remplace le fichier propre)</span>
+            <span class="delivery-chip">📦 Exclusif</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /upload-steps -->
+
+    <div class="form-grid">
+      <div class="form-group">
+        <div class="form-label">Titre du beat *</div>
+        <input class="form-input" type="text" placeholder="Midnight Trap" id="up-title" />
+      </div>
+      <div class="form-group">
+        <div class="form-label">Ton nom de producteur *</div>
+        <input class="form-input" type="text" placeholder="@ProdByX" id="up-producer" />
+      </div>
+      <div class="form-group">
+        <div class="form-label">Genre</div>
+        <select class="form-select" id="up-genre">
+          <option>Trap</option><option>Drill</option><option>Boom Bap</option>
+          <option>Lo-Fi</option><option>Afrobeats</option><option>R&amp;B</option>
+          <option>Phonk</option><option>House</option><option>Cloud Rap</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <div class="form-label">BPM</div>
+        <input class="form-input" type="number" placeholder="140" id="up-bpm" min="50" max="250" />
+      </div>
+      <div class="form-group">
+        <div class="form-label">Tonalité</div>
+        <select class="form-select" id="up-key">
+          <option>Am</option><option>Bm</option><option>Cm</option><option>Dm</option>
+          <option>Em</option><option>Fm</option><option>Gm</option>
+          <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Mood</div>
+        <select class="form-select" id="up-mood">
+          <option>Sombre</option><option>Festif</option><option>Mélancolique</option>
+          <option>Agressif</option><option>Romantique</option><option>Énergique</option>
+          <option>Détendu</option><option>Puissant</option>
+        </select>
+      </div>
+
+      <!-- Prix -->
+      <div class="form-group full">
+        <div class="form-label">Prix par licence (€)</div>
+        <div class="price-grid">
+          <div class="price-input-wrap">
+            <div class="price-tier">Lease</div>
+            <div class="price-field"><span>€</span><input class="form-input" type="number" value="29" id="up-price-lease" /></div>
+          </div>
+          <div class="price-input-wrap">
+            <div class="price-tier">Trackout</div>
+            <div class="price-field"><span>€</span><input class="form-input" type="number" value="59" id="up-price-track" /></div>
+          </div>
+          <div class="price-input-wrap">
+            <div class="price-tier">Exclusif</div>
+            <div class="price-field"><span>€</span><input class="form-input" type="number" value="199" id="up-price-exclu" /></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <div class="form-label">Email de paiement (Stripe)</div>
+        <input class="form-input" type="email" placeholder="ton@email.com" id="up-email" />
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;">Les paiements seront virés sur ce compte. Vérification Stripe requise.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;cursor:pointer;">
+        <input type="checkbox" id="certified-owner-cb" style="margin-top:3px;accent-color:var(--cyan);width:16px;height:16px;flex-shrink:0;">
+        <span style="font-size:11px;color:var(--muted);line-height:1.5;">
+          Je certifie être l'auteur·e original·e de ce beat, détenir tous les droits de propriété intellectuelle, et qu'aucun sample non clearé n'y est inclus. Toute fausse déclaration engage ma responsabilité légale.
+        </span>
+      </label>
+      <button class="btn-submit" onclick="submitBeat()">
+        Soumettre pour validation — Commission 15%
+      </button>
+      <div style="text-align:center;font-size:10px;color:var(--muted);margin-top:10px;">
+        Ton beat sera examiné par l'équipe MayanaBeat avant d'apparaître dans le store. Délai : 24-48h.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Cart drawer ── -->
+<div id="cart-drawer">
+  <div class="cart-hd">
+    <div>
+      <div class="cart-title">Mon Panier</div>
+      <div class="cart-count" id="cart-count-label">0 article</div>
+    </div>
+    <button class="btn-cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cart-body">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      <div class="cart-empty-txt">Ton panier est vide — ajoute des beats !</div>
+    </div>
+  </div>
+  <div class="cart-ft" id="cart-ft" style="display:none;">
+    <div class="cart-total-row">
+      <div class="cart-total-lbl">Total</div>
+      <div class="cart-total-val" id="cart-total">0€</div>
+    </div>
+    <button class="btn-checkout" id="btn-checkout" onclick="checkoutCart()">Procéder au paiement</button>
+  </div>
+</div>
+
+<script>
+// ── Particles ──
+const _cv=document.getElementById('bg-particles'),_cx=_cv.getContext('2d');
+let _W,_H,_pts=[];
+function _resize(){_W=_cv.width=window.innerWidth;_H=_cv.height=window.innerHeight;}
+_resize();window.addEventListener('resize',_resize);
+class _Pt{constructor(){this.reset();}reset(){this.x=Math.random()*_W;this.y=Math.random()*_H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;this.r=Math.random()*1.5+.5;this.a=Math.random()*.4+.1;}update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>_W)this.vx*=-1;if(this.y<0||this.y>_H)this.vy*=-1;}}
+for(let i=0;i<60;i++)_pts.push(new _Pt());
+function _drawPts(){_cx.clearRect(0,0,_W,_H);_pts.forEach(p=>{p.update();_cx.beginPath();_cx.arc(p.x,p.y,p.r,0,Math.PI*2);_cx.fillStyle=`rgba(0,240,255,${p.a})`;_cx.fill();});for(let i=0;i<_pts.length;i++)for(let j=i+1;j<_pts.length;j++){const dx=_pts[i].x-_pts[j].x,dy=_pts[i].y-_pts[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<120){_cx.beginPath();_cx.moveTo(_pts[i].x,_pts[i].y);_cx.lineTo(_pts[j].x,_pts[j].y);_cx.strokeStyle=`rgba(0,240,255,${.06*(1-dist/120)})`;_cx.lineWidth=.5;_cx.stroke();}}requestAnimationFrame(_drawPts);}
+_drawPts();
+
+// ═══════════════════════════════════════════════════════════
+const BEATS = [];
+
+// ── Pseudo-random waveform (seeded) ─────────────────────────────
+function seededRandom(n) { const x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); }
+
+// Multi-octave noise → courbe plus naturelle (proche d'une vraie forme d'onde)
+function waveNoise(seed, i) {
+  // 3 octaves : basse fréquence (forme globale) + deux harmoniques (détails)
+  const s0 = seededRandom(seed + i * 0.13);
+  const s1 = seededRandom(seed + i * 0.37 + 17.3);
+  const s2 = seededRandom(seed + i * 0.71 + 53.1);
+  return s0 * 0.55 + s1 * 0.30 + s2 * 0.15;   // somme pondérée ∈ [0,1]
+}
+
+// Parse '#RRGGBB' → {r,g,b}
+function hexRgb(hex) {
+  return { r: parseInt(hex.slice(1,3),16), g: parseInt(hex.slice(3,5),16), b: parseInt(hex.slice(5,7),16) };
+}
+
+// Arrondi portable (roundRect dispo Chrome 99+, Safari 15.4+, FF 112+)
+function roundRect(ctx, x, y, w, h, r) {
+  if (ctx.roundRect) { ctx.roundRect(x, y, w, h, r); return; }
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y);
+}
+
+/**
+ * drawWaveform — barres symétriques (miroir haut/bas), dégradé, bords arrondis
+ * @param {HTMLCanvasElement} canvas
+ * @param {string}  accent   '#RRGGBB'
+ * @param {number}  seed     identifiant du beat
+ * @param {number}  progress 0→1
+ * @param {boolean} isPlayer true = player principal (plus large, glow, ligne de curseur)
+ */
+function drawWaveform(canvas, accent, seed, progress = 0, isPlayer = false) {
+  const dpr = window.devicePixelRatio || 1;
+  const dispW = canvas.clientWidth  || canvas.offsetWidth  || (isPlayer ? 400 : 88);
+  const dispH = canvas.clientHeight || canvas.offsetHeight || (isPlayer ? 44  : 32);
+  // évite le flou sur écrans Retina
+  if (canvas.width !== dispW * dpr || canvas.height !== dispH * dpr) {
+    canvas.width  = dispW * dpr;
+    canvas.height = dispH * dpr;
+  }
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, dispW, dispH);
+
+  const W = dispW, H = dispH, cy = H / 2;
+  const bW   = isPlayer ? 3  : 2;   // largeur barre (px logiques)
+  const gap  = isPlayer ? 2  : 1;   // espace entre barres
+  const step = bW + gap;
+  const bars = Math.floor(W / step);
+  const progX = progress * W;
+  const { r, g, b } = hexRgb(accent);
+
+  for (let i = 0; i < bars; i++) {
+    const x   = i * step;
+    const n   = waveNoise(seed, i);
+    const amp = n * cy * 0.82 + cy * 0.10;   // amplitude min 10 % de cy
+
+    const played  = x < progX;
+    const alpha   = played ? 1 : (isPlayer ? 0.18 : 0.22);
+
+    if (played && isPlayer) {
+      // Dégradé vertical : plus vif au centre
+      const grd = ctx.createLinearGradient(x, cy - amp, x, cy + amp);
+      grd.addColorStop(0,   `rgba(${r},${g},${b},0.10)`);
+      grd.addColorStop(0.3, `rgba(${r},${g},${b},0.90)`);
+      grd.addColorStop(0.5, `rgba(${r},${g},${b},1.00)`);
+      grd.addColorStop(0.7, `rgba(${r},${g},${b},0.90)`);
+      grd.addColorStop(1,   `rgba(${r},${g},${b},0.10)`);
+      ctx.fillStyle = grd;
+    } else {
+      ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+    }
+
+    // Barre symétrique (haut + bas)
+    ctx.beginPath();
+    roundRect(ctx, x, cy - amp, bW, amp * 2, bW / 2);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Ligne de curseur dans le player
+  if (isPlayer && progress > 0.001 && progress < 0.999) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+    ctx.lineWidth   = 1.5;
+    ctx.shadowColor = `rgba(${r},${g},${b},0.6)`;
+    ctx.shadowBlur  = 6;
+    ctx.beginPath();
+    ctx.moveTo(progX, 0);
+    ctx.lineTo(progX, H);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+}
+
+function drawPlayerWave(accent, seed, progress = 0) {
+  const canvas = document.getElementById('player-wave');
+  drawWaveform(canvas, accent, seed, progress, true);
+}
+
+// ── Player state (real HTML5 Audio)
+let currentBeat = null;
+let isPlaying = false;
+const _audio = new Audio();
+_audio.preload = 'metadata';
+let _waveRafId = null;
+
+function fmtTime(sec) {
+  if (!isFinite(sec) || isNaN(sec)) return '0:00';
+  const m = Math.floor(sec / 60), s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2,'0')}`;
+}
+
+// ── Seek drag : flag pour éviter que timeupdate écrase le slider pendant le drag
+let _isSeeking = false;
+
+function onSeekStart() {
+  _isSeeking = true;
+}
+function onSeekMove(val) {
+  // Pendant le drag : mise à jour visuelle uniquement (pas de currentTime)
+  if (!currentBeat) return;
+  const prog = parseFloat(val);
+  document.getElementById('time-cur').textContent = fmtTime(prog * (_audio.duration || currentBeat.dur));
+  drawPlayerWave(currentBeat.accent, currentBeat.id * 7 + 3, prog);
+}
+function onSeekEnd(val) {
+  if (!currentBeat) return;
+  const prog = parseFloat(val);
+  // Seek audio réel uniquement à la fin du drag
+  if (_audio.duration) _audio.currentTime = prog * _audio.duration;
+  drawPlayerWave(currentBeat.accent, currentBeat.id * 7 + 3, prog);
+  _isSeeking = false;
+}
+
+// Audio event listeners
+_audio.addEventListener('timeupdate', () => {
+  if (!currentBeat || _isSeeking) return;   // ← bloque la réécriture pendant le drag
+  const dur  = _audio.duration || currentBeat.dur;
+  const prog = dur > 0 ? _audio.currentTime / dur : 0;
+  document.getElementById('time-cur').textContent  = fmtTime(_audio.currentTime);
+  document.getElementById('time-tot').textContent  = fmtTime(dur);
+  document.getElementById('player-seek').value     = prog;
+  drawPlayerWave(currentBeat.accent, currentBeat.id * 7 + 3, prog);
+});
+_audio.addEventListener('loadedmetadata', () => {
+  document.getElementById('time-tot').textContent = fmtTime(_audio.duration);
+});
+_audio.addEventListener('ended', () => {
+  isPlaying = false;
+  updatePlayIcon();
+  if (currentBeat) {
+    const row = document.querySelector(`.beat-row[data-id="${currentBeat.id}"]`);
+    if (row) { row.classList.remove('playing'); row.classList.add('paused'); }
+    // Auto-next
+    const idx = filtered.findIndex(b => b.id === currentBeat.id);
+    if (idx < filtered.length - 1) playBeat(filtered[idx + 1]);
+  }
+});
+_audio.addEventListener('error', () => {
+  // Audio URL unavailable (e.g. demo URL blocked) — degrade gracefully
+  console.warn('[Audio] Cannot load:', _audio.src);
+});
+
+function playBeat(beat) {
+  // Mark cards / rows
+  document.querySelectorAll('.beat-card,.beat-row').forEach(c => c.classList.remove('playing','paused'));
+  const card = document.querySelector(`.beat-card[data-id="${beat.id}"], .beat-row[data-id="${beat.id}"]`);
+  if (card) card.classList.add('playing');
+
+  const isSameBeat = currentBeat && currentBeat.id === beat.id;
+  currentBeat = beat;
+
+  if (!isSameBeat) {
+    _audio.src = beat.audioUrl || '';
+    _audio.load();
+  }
+
+  _audio.play().catch(() => {});   // l'event 'play' mettra isPlaying à true
+
+  // Update UI
+  document.getElementById('player-title').textContent = beat.title;
+  document.getElementById('player-meta').textContent  = `${beat.producer} · ${beat.genre} · ${beat.bpm} BPM · ${beat.key}`;
+  document.getElementById('time-tot').textContent     = fmtTime(beat.dur);
+  document.getElementById('pl-lease-btn').textContent = `Lease ${beat.prices.lease}€`;
+  document.getElementById('pl-exclu-btn').textContent = `Exclu ${beat.prices.exclu}€`;
+  document.getElementById('player-bar').classList.add('visible');
+  updatePlayIcon();
+  if (!isSameBeat) trackPlay(beat); // async, non bloquant
+}
+
+function togglePlay() {
+  if (!currentBeat) return;
+  const row = document.querySelector(`.beat-row[data-id="${currentBeat.id}"]`);
+  if (_audio.paused) {
+    _audio.play().catch(() => {});
+    // l'event 'play' gère isPlaying + updatePlayIcon
+    if (row) { row.classList.remove('paused'); row.classList.add('playing'); }
+  } else {
+    _audio.pause();
+    // l'event 'pause' gère isPlaying + updatePlayIcon
+    if (row) { row.classList.remove('playing'); row.classList.add('paused'); }
+  }
+}
+
+function updatePlayIcon() {
+  const icon = document.getElementById('play-icon');
+  // Source de vérité = état réel de l'audio (pas le flag isPlaying)
+  if (!_audio.paused) {
+    // En lecture → affiche l'icône PAUSE
+    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+  } else {
+    // En pause/arrêt → affiche l'icône PLAY
+    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+  }
+}
+
+// Sync automatique depuis les vrais événements audio
+_audio.addEventListener('play',  () => { isPlaying = true;  updatePlayIcon(); });
+_audio.addEventListener('pause', () => {
+  // Ne pas flipper l'icône si c'est juste un seek en cours
+  if (!_isSeeking) { isPlaying = false; updatePlayIcon(); }
+});
+
+function prevBeat() {
+  if (!currentBeat) return;
+  const idx = filtered.findIndex(b => b.id === currentBeat.id);
+  if (idx > 0) playBeat(filtered[idx - 1]);
+}
+function nextBeat() {
+  if (!currentBeat) return;
+  const idx = filtered.findIndex(b => b.id === currentBeat.id);
+  if (idx < filtered.length - 1) playBeat(filtered[idx + 1]);
+}
+
+
+
+function closePlayer() {
+  _audio.pause();
+  _audio.src = '';
+  isPlaying = false;
+  document.getElementById('player-bar').classList.remove('visible');
+  document.querySelectorAll('.beat-card,.beat-row').forEach(c => c.classList.remove('playing','paused'));
+  currentBeat = null;
+}
+
+// ── View toggle (grid / list)
+let currentView = 'grid';
+function setView(v) {
+  currentView = v;
+  document.getElementById('btn-view-grid').classList.toggle('active', v === 'grid');
+  document.getElementById('btn-view-list').classList.toggle('active', v === 'list');
+  renderGrid();
+}
+
+// ── Filters
+let activeGenre = 'all';
+let filtered = [...BEATS];
+
+function setGenre(btn) {
+  document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  activeGenre = btn.dataset.genre;
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  const sort = document.getElementById('sort-select').value;
+
+  filtered = BEATS.filter(b => {
+    const genreOk = activeGenre === 'all' || b.genre === activeGenre;
+    const searchOk = !q || b.title.toLowerCase().includes(q) || b.producer.toLowerCase().includes(q) || b.genre.toLowerCase().includes(q) || b.key.toLowerCase().includes(q) || String(b.bpm).includes(q);
+    return genreOk && searchOk;
+  });
+
+  if (sort === 'plays')      filtered.sort((a,b) => b.plays - a.plays);
+  if (sort === 'newest')     filtered.sort((a,b) => b.id - a.id);
+  if (sort === 'price-asc')  filtered.sort((a,b) => a.prices.lease - b.prices.lease);
+  if (sort === 'price-desc') filtered.sort((a,b) => b.prices.lease - a.prices.lease);
+
+  renderGrid();
+}
+
+// ── Render
+function formatNum(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : n; }
+
+const PLAY_ICON_SVG = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>`;
+const PAUSE_ICON_SVG = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 9v6m4-6v6"/></svg>`;
+
+function renderGrid() {
+  const grid = document.getElementById('beat-grid');
+  if (filtered.length === 0) {
+    const isFiltered = document.getElementById('search-input').value || activeGenre !== 'all';
+    grid.className = 'beat-grid';
+    grid.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">${isFiltered ? '🔍' : '🎵'}</div>
+      <div class="empty-text">${isFiltered
+        ? 'Aucun beat trouvé pour cette recherche'
+        : "Aucun beat disponible pour l'instant — sois le premier à en publier !"
+      }</div>
+    </div>`;
+    return;
+  }
+
+  if (currentView === 'list') {
+    grid.className = 'beat-list';
+    grid.innerHTML = filtered.map((b, idx) => {
+      const isNow = currentBeat && currentBeat.id === b.id;
+      return `<div class="beat-row${isNow?' playing':''}" data-id="${b.id}" data-accent="${b.accent}" style="--row-accent:${b.accent}">
+        <div class="row-num">${idx + 1}</div>
+        <button class="row-play" onclick="playBeat(BEATS.find(x=>x.id===${b.id}))" title="Écouter ${b.title}">
+          ${isNow && isPlaying ? PAUSE_ICON_SVG : PLAY_ICON_SVG}
+        </button>
+        <canvas class="row-wave" id="wv-${b.id}" aria-hidden="true"></canvas>
+        <div class="eq-bars" aria-hidden="true">
+          <span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span>
+          <span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span>
+          <span class="eq-bar"></span><span class="eq-bar"></span>
+        </div>
+        <div class="row-info">
+          <div class="row-title">${b.title}</div>
+          <div class="row-producer">${b.producer}</div>
+        </div>
+        <div class="row-tags">
+          <span class="beat-tag tag-genre">${b.genre}</span>
+          <span class="beat-tag tag-bpm">${b.bpm}</span>
+          <span class="beat-tag tag-key">${b.key}</span>
+        </div>
+        <div class="row-dur">${fmtTime(b.dur)}</div>
+        <div class="row-price">${b.prices.lease}€</div>
+        <div class="row-actions">
+          <button class="btn-row-cart" onclick="addToCart(${b.id},'lease')" title="Ajouter au panier">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="width:11px;height:11px;display:inline;margin-right:3px"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            Panier
+          </button>
+          <button class="btn-row-buy" onclick="openLicenseFor(${b.id})">Acheter</button>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    grid.className = 'beat-grid';
+    grid.innerHTML = filtered.map(b => {
+      const isNow = currentBeat && currentBeat.id === b.id;
+      return `<div class="beat-card${isNow?' playing':''}" data-id="${b.id}">
+        <div class="beat-cover" onclick="playBeat(BEATS.find(x=>x.id===${b.id}))" role="img" aria-label="${b.title} — beat ${b.genre}">
+          <canvas id="wv-${b.id}" width="260" height="100" aria-hidden="true"></canvas>
+          <div class="beat-now"><div class="now-dot"></div>EN LECTURE</div>
+          <div class="beat-play-btn">
+            <div class="beat-play-icon">
+              ${PLAY_ICON_SVG}
+            </div>
+          </div>
+          <div class="beat-duration">${fmtTime(b.dur)}</div>
+        </div>
+        <div class="beat-body">
+          <div class="beat-title">${b.title}</div>
+          <div class="beat-producer">${b.producer}</div>
+          <div class="beat-tags">
+            <span class="beat-tag tag-genre">${b.genre}</span>
+            <span class="beat-tag tag-bpm">${b.bpm} BPM</span>
+            <span class="beat-tag tag-key">${b.key}</span>
+          </div>
+          <div class="beat-meta-row">
+            <div class="beat-stat">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
+              ${formatNum(b.plays)}
+            </div>
+            <div class="beat-stat">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+              ${b.sales} ventes
+            </div>
+          </div>
+        </div>
+        <div class="beat-footer">
+          <div class="beat-prices">
+            <div class="price-lease">${b.prices.lease}€ <span style="font-size:9px;color:var(--muted);font-weight:400;">lease</span></div>
+            <div class="price-exclu">Exclu: ${b.prices.exclu}€</div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn-buy" style="padding:7px 10px;" onclick="addToCart(${b.id},'lease')" title="Ajouter au panier">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="width:11px;height:11px;"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            </button>
+            <button class="btn-buy" onclick="openLicenseFor(${b.id})">Acheter</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Draw waveforms after DOM update
+  requestAnimationFrame(() => {
+    filtered.forEach(b => {
+      const canvas = document.getElementById(`wv-${b.id}`);
+      if (canvas) drawWaveform(canvas, b.accent, b.id * 7 + 3, 0);
+    });
+  });
+}
+
+// ── License modal
+let activeLicenseBeat = null;
+
+function openLicenseFor(id) {
+  activeLicenseBeat = BEATS.find(b => b.id === id);
+  document.getElementById('modal-beat-name').textContent = activeLicenseBeat.title;
+  document.getElementById('modal-beat-info').textContent = `${activeLicenseBeat.producer} · ${activeLicenseBeat.genre} · ${activeLicenseBeat.bpm} BPM · ${activeLicenseBeat.key}`;
+  document.getElementById('lic-lease-price').innerHTML = `${activeLicenseBeat.prices.lease}<span>€</span>`;
+  document.getElementById('lic-track-price').innerHTML = `${activeLicenseBeat.prices.trackout}<span>€</span>`;
+  document.getElementById('lic-exclu-price').innerHTML = `${activeLicenseBeat.prices.exclu}<span>€</span>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function openLicense() {
+  if (currentBeat) openLicenseFor(currentBeat.id);
+}
+function closeLicense(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+async function buyBeat(tier) {
+  if (!activeLicenseBeat) return;
+
+  const buyerEmail = document.getElementById('buyer-email').value.trim();
+  const buyerName  = document.getElementById('buyer-name').value.trim();
+
+  if (!buyerEmail || !buyerEmail.includes('@')) {
+    document.getElementById('buyer-email').focus();
+    document.getElementById('buyer-email').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('buyer-email').style.borderColor = '', 2000);
+    return;
+  }
+
+  // Bouton en chargement
+  const btns = document.querySelectorAll('.btn-license-buy');
+  btns.forEach(b => { b.disabled = true; b.textContent = '⏳ Redirection…'; });
+
+  try {
+    if (!SUPABASE_READY) throw new Error('Supabase non configuré — mode démo');
+
+    const { data, error } = await db.functions.invoke('stripe-checkout', {
+      body: {
+        beat_id: activeLicenseBeat.dbId || activeLicenseBeat.id,
+        tier,
+        buyer_email: buyerEmail,
+        buyer_name: buyerName,
+        origin: window.location.origin,
+      }
+    });
+
+    if (error) throw error;
+    if (!data?.url) throw new Error('URL Stripe manquante');
+
+    // Redirige vers Stripe Checkout
+    window.location.href = data.url;
+
+  } catch (err) {
+    console.error('[buyBeat]', err);
+    btns.forEach(b => { b.disabled = false; });
+    // Restore les labels
+    document.querySelectorAll('.btn-license-buy')[0].textContent = 'Acheter ce lease';
+    document.querySelectorAll('.btn-license-buy')[1].textContent = 'Acheter le trackout';
+    document.querySelectorAll('.btn-license-buy')[2].textContent = "Acheter l'exclusivité";
+
+    if (err.message?.includes('non configuré') || err.message?.includes('démo')) {
+      alert('⚠️ Stripe non encore configuré.\n\nDéploie les Edge Functions Supabase et ajoute tes clés Stripe pour activer les paiements.');
+    } else {
+      alert('❌ Erreur paiement : ' + (err.message || err));
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  CART — localStorage-backed
+// ══════════════════════════════════════════════════════════════
+
+const CART_KEY = 'mayanabeat_cart';
+
+function cartLoad() {
+  try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+  catch(e) { return []; }
+}
+function cartSave(items) {
+  localStorage.setItem(CART_KEY, JSON.stringify(items));
+}
+
+function addToCart(beatId, tier) {
+  const beat = BEATS.find(b => b.id === beatId);
+  if (!beat) return;
+  const items = cartLoad();
+  // Avoid duplicate (same beat + same tier)
+  const dup = items.find(i => i.beatId === beatId && i.tier === tier);
+  if (dup) {
+    showToast(`"${beat.title}" est déjà dans ton panier.`, 'var(--yellow)');
+    openCart();
+    return;
+  }
+  items.push({
+    beatId,
+    tier,
+    title:    beat.title,
+    producer: beat.producer,
+    price:    beat.prices[tier] || beat.prices.lease,
+    accent:   beat.accent,
+  });
+  cartSave(items);
+  renderCartBadge();
+  renderCartDrawer();
+  showToast(`✓ "${beat.title}" ajouté au panier`, 'var(--cyan)');
+  openCart();
+}
+
+function removeFromCart(idx) {
+  const items = cartLoad();
+  items.splice(idx, 1);
+  cartSave(items);
+  renderCartBadge();
+  renderCartDrawer();
+}
+
+function renderCartBadge() {
+  const items = cartLoad();
+  const badge = document.getElementById('cart-badge');
+  if (items.length > 0) {
+    badge.style.display = 'flex';
+    badge.textContent = items.length;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function renderCartDrawer() {
+  const items = cartLoad();
+  const body  = document.getElementById('cart-body');
+  const ft    = document.getElementById('cart-ft');
+  const countLbl = document.getElementById('cart-count-label');
+
+  countLbl.textContent = items.length === 0
+    ? '0 article'
+    : `${items.length} article${items.length > 1 ? 's' : ''}`;
+
+  if (items.length === 0) {
+    body.innerHTML = `<div class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      <div class="cart-empty-txt">Ton panier est vide — ajoute des beats !</div>
+    </div>`;
+    ft.style.display = 'none';
+    return;
+  }
+
+  const TIER_LABELS = { lease:'Lease non-exclusif', trackout:'Trackout Premium', exclu:'Exclusivité totale' };
+  const total = items.reduce((s, i) => s + i.price, 0);
+
+  body.innerHTML = items.map((item, idx) => `
+    <div class="cart-item">
+      <div style="width:6px;height:36px;border-radius:2px;background:${item.accent};flex-shrink:0;"></div>
+      <div class="cart-item-info">
+        <div class="cart-item-title">${item.title}</div>
+        <div class="cart-item-sub">${item.producer} · ${TIER_LABELS[item.tier] || item.tier}</div>
+      </div>
+      <div class="cart-item-price">${item.price}€</div>
+      <button class="btn-cart-remove" onclick="removeFromCart(${idx})" title="Retirer">✕</button>
+    </div>
+  `).join('');
+
+  document.getElementById('cart-total').textContent = `${total}€`;
+  ft.style.display = 'block';
+}
+
+function openCart() {
+  renderCartDrawer();
+  document.getElementById('cart-drawer').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cart-drawer').classList.remove('open');
+}
+
+async function checkoutCart() {
+  const items = cartLoad();
+  if (items.length === 0) return;
+
+  if (!SUPABASE_READY) {
+    alert('⚠️ Stripe non encore configuré.\nDéploie les Edge Functions Supabase et ajoute tes clés Stripe pour activer les paiements.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-checkout');
+  btn.disabled = true;
+  btn.textContent = '⏳ Redirection…';
+
+  try {
+    // For multi-beat cart, redirect to license modal of first item
+    // (full multi-item Stripe session requires backend implementation)
+    if (items.length === 1) {
+      closeCart();
+      openLicenseFor(items[0].beatId);
+      btn.disabled = false;
+      btn.textContent = 'Procéder au paiement';
+      return;
+    }
+
+    const { data, error } = await db.functions.invoke('stripe-checkout-cart', {
+      body: { items, origin: window.location.origin }
+    });
+    if (error) throw error;
+    if (!data?.url) throw new Error('URL Stripe manquante');
+    window.location.href = data.url;
+  } catch (err) {
+    console.error('[checkoutCart]', err);
+    btn.disabled = false;
+    btn.textContent = 'Procéder au paiement';
+    // Fallback: open license modal for first item
+    closeCart();
+    openLicenseFor(items[0].beatId);
+  }
+}
+
+// ── Upload modal
+function openUpload() { document.getElementById('upload-overlay').classList.add('open'); }
+function closeUpload(e) {
+  if (!e || e.target === document.getElementById('upload-overlay')) {
+    document.getElementById('upload-overlay').classList.remove('open');
+  }
+}
+function handleDrop(e, type) {
+  e.preventDefault();
+  const files = e.dataTransfer.files;
+  if (files.length > 0) {
+    document.getElementById('audio-name').textContent = '✓ ' + files[0].name;
+    document.getElementById('drop-audio').classList.remove('drag');
+  }
+}
+// submitBeat défini plus bas (après handleDrop qui déclare uploadedAudioFile)
+
+function showToast(msg, color) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = `position:fixed;bottom:160px;left:50%;transform:translateX(-50%);
+    background:${color || 'var(--cyan)'};color:#000;font-family:var(--mono);font-size:12px;
+    font-weight:700;padding:12px 24px;border-radius:4px;z-index:9999;
+    box-shadow:0 4px 20px rgba(0,240,255,.4);`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  SUPABASE — Chargement des données
+// ══════════════════════════════════════════════════════════════
+
+async function loadBeats() {
+  if (!SUPABASE_READY) {
+    applyFilters();
+    return;
+  }
+
+  try {
+    const { data, error } = await db
+      .from('beats')
+      .select('*, producers(username, display_name)')
+      .eq('is_active', true)
+      .eq('status', 'active')
+      .order('plays', { ascending: false })
+      .limit(100);
+
+    if (error || !data || data.length === 0) {
+      BEATS.length = 0;
+      applyFilters();
+      return;
+    }
+
+    // Transformer les données Supabase
+    BEATS.length = 0;
+    data.forEach((b, i) => {
+      BEATS.push({
+        id:       i + 1,           // ID numérique pour waveform seed
+        dbId:     b.id,            // UUID Supabase
+        title:    b.title,
+        producer: b.producers?.username || b.producers?.display_name || 'Unknown',
+        genre:    b.genre,
+        bpm:      b.bpm,
+        key:      b.key,
+        mood:     b.mood || '',
+        plays:    b.plays,
+        sales:    b.sales,
+        prices: {
+          lease:    Math.round(b.price_lease    / 100),
+          trackout: Math.round(b.price_trackout / 100),
+          exclu:    Math.round(b.price_exclu    / 100),
+        },
+        accent:   GENRE_COLORS[b.genre] || '#00F0FF',
+        dur:      b.duration || 180,
+        audioUrl: b.audio_url,
+      });
+    });
+
+    applyFilters();
+    setDbStatus('live');
+  } catch (e) {
+    console.error('[Supabase] loadBeats:', e);
+    applyFilters();
+  }
+}
+
+async function loadStats() {
+  if (!SUPABASE_READY) return;
+  try {
+    const [{ count: bc }, { count: pc }, { count: sc }] = await Promise.all([
+      db.from('beats').select('*', { count:'exact', head:true }).eq('is_active', true).eq('status', 'active'),
+      db.from('producers').select('*', { count:'exact', head:true }),
+      db.from('purchases').select('*', { count:'exact', head:true })
+        .eq('status','completed')
+        .gte('created_at', new Date().toISOString().split('T')[0]),
+    ]);
+    if (bc !== null) document.getElementById('stat-beats').textContent = bc;
+    if (pc !== null) document.getElementById('stat-prod').textContent  = pc;
+    if (sc !== null) document.getElementById('stat-sales').textContent = sc;
+  } catch(e) { /* silently ignore */ }
+}
+
+function setDbStatus(state) {
+  const dot = document.getElementById('db-dot');
+  const lbl = document.getElementById('db-label');
+  dot.className = 'db-dot ' + state;
+  lbl.textContent = state === 'live' ? 'LIVE' : 'DEMO';
+}
+
+// ── Incrémenter les écoutes
+async function trackPlay(beat) {
+  if (!SUPABASE_READY || !beat.dbId) return;
+  try { await db.rpc('increment_plays', { beat_id: beat.dbId }); } catch(e) {}
+}
+
+// ══════════════════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════════════════
+
+let currentUser = null;
+let currentProducer = null;
+
+async function checkAuth() {
+  // Force HTTPS en production
+  if (location.protocol === 'http:' && location.hostname !== 'localhost') {
+    location.replace(location.href.replace('http:', 'https:'));
+    return;
+  }
+  if (!SUPABASE_READY) return;
+
+  const STORAGE_KEY = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
+
+  // ── 1. Retour OAuth Google : échange le code PKCE manuellement
+  const urlParams = new URLSearchParams(location.search);
+  const oauthCode = urlParams.get('code');
+
+  // Cas implicit (hash) — au cas où
+  const hashParams = new URLSearchParams(location.hash.slice(1));
+  const hashToken  = hashParams.get('access_token');
+
+  if (oauthCode || hashToken) {
+    try {
+      let access_token, refresh_token, expires_in, user;
+
+      if (oauthCode) {
+        // PKCE : échange code + verifier contre les tokens
+        const codeVerifier = localStorage.getItem('supabase_pkce_verifier');
+        localStorage.removeItem('supabase_pkce_verifier');
+        const resp = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=pkce`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON },
+          body: JSON.stringify({ auth_code: oauthCode, code_verifier: codeVerifier })
+        });
+        const data = await resp.json();
+        if (data.error) throw new Error(data.error_description || data.error);
+        access_token  = data.access_token;
+        refresh_token = data.refresh_token;
+        expires_in    = data.expires_in || 3600;
+        user          = data.user;
+      } else {
+        // Implicit : token direct dans le hash
+        access_token  = hashToken;
+        refresh_token = hashParams.get('refresh_token');
+        expires_in    = parseInt(hashParams.get('expires_in') || '3600');
+        const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+          headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${access_token}` }
+        });
+        user = await r.json();
+      }
+
+      if (user?.id) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          access_token, refresh_token,
+          expires_at: Math.floor(Date.now() / 1000) + expires_in,
+          user
+        }));
+        history.replaceState(null, '', location.pathname);
+        console.log('[Auth] OAuth Google OK:', user.email);
+        await onAuthChange(user);
+        return;
+      }
+    } catch(e) {
+      console.warn('[Auth] Échange OAuth échoué:', e.message);
+    }
+  }
+
+  // ── 2. Fallback localStorage : session existante
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const now = Math.floor(Date.now() / 1000);
+      if (parsed?.user && parsed?.expires_at > now - 300) {
+        // Token encore valide (ou presque — on rafraîchit en arrière-plan)
+        console.log('[Auth] Session locale:', parsed.user.email);
+        await onAuthChange(parsed.user);
+        // Refresh silencieux si expiré
+        if (parsed.expires_at < now && parsed.refresh_token) {
+          const r = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON },
+            body: JSON.stringify({ refresh_token: parsed.refresh_token })
+          });
+          if (r.ok) {
+            const fresh = await r.json();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+              ...parsed,
+              access_token: fresh.access_token,
+              refresh_token: fresh.refresh_token,
+              expires_at: Math.floor(Date.now() / 1000) + fresh.expires_in
+            }));
+          }
+        }
+        return;
+      }
+    }
+  } catch(e) {
+    console.warn('[Auth] Fallback localStorage échoué:', e.message);
+  }
+
+  // ── 3. Écoute les changements SDK (logout principalement)
+  db.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_OUT') { onAuthSignOut(); return; }
+    if (session?.user && !currentUser) await onAuthChange(session.user);
+  });
+}
+
+async function onAuthChange(user) {
+  if (currentUser?.id === user.id) return; // déjà chargé — évite les doublons
+  currentUser = user;
+  renderAuthArea(); // affiche immédiatement l'avatar/initial sans attendre le producer
+  closeAuth();
+
+  // Charge le profil producer en arrière-plan
+  try {
+    const storageKey = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
+    const raw = localStorage.getItem(storageKey);
+    const jwt = raw ? JSON.parse(raw)?.access_token : null;
+
+    const resp = await fetch(
+      `${SUPABASE_URL}/rest/v1/producers?id=eq.${user.id}&select=*&limit=1`,
+      { headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${jwt || SUPABASE_ANON}`,
+          'Accept': 'application/json'
+        }
+      }
+    );
+    const rows = await resp.json();
+    currentProducer = rows?.[0] || null;
+    if (currentProducer) console.log('[Auth] Producteur:', currentProducer.username);
+  } catch(e) {
+    console.warn('[Auth] Chargement producer échoué:', e.message);
+  }
+  renderAuthArea(); // re-render avec les données producer
+}
+
+function onAuthSignOut() {
+  currentUser = null;
+  currentProducer = null;
+  renderAuthArea();
+}
+
+function renderAuthArea() {
+  const area = document.getElementById('auth-area');
+  if (!currentUser) {
+    area.innerHTML = `<button class="btn-auth" onclick="openAuth()">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      Connexion Producteur
+    </button>`;
+  } else {
+    const initial = (currentProducer?.username || currentUser.email || '?')[0].toUpperCase();
+    const name    = currentProducer?.username || currentUser.email.split('@')[0];
+    const stripeVerified  = currentProducer?.stripe_verified;
+    const stripeAccount   = currentProducer?.stripe_account;
+
+    let stripeBadge = '';
+    if (!stripeAccount) {
+      stripeBadge = `<button class="btn-stripe-connect" onclick="connectStripe()">
+        💳 Connecter Stripe pour être payé
+      </button>`;
+    } else if (!stripeVerified) {
+      stripeBadge = `<button class="btn-stripe-connect btn-stripe-pending" onclick="connectStripe()">
+        ⏳ Finaliser l'onboarding Stripe
+      </button>`;
+    } else {
+      stripeBadge = `<div class="stripe-ok">✅ Stripe Connect actif — tu reçois 85% de chaque vente</div>`;
+    }
+
+    area.innerHTML = `<div class="producer-badge">
+      <div class="producer-avatar">${initial}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="producer-name">${name}</div>
+        <div class="producer-role">Producteur</div>
+        ${stripeBadge}
+      </div>
+      <button class="btn-logout" onclick="doLogout()" title="Déconnexion">✕</button>
+    </div>`;
+  }
+}
+
+function openAuth() {
+  if (!SUPABASE_READY) {
+    alert('⚠️ Supabase non configuré.\nOuvre supabase.js et renseigne ton URL + clé anon.');
+    return;
+  }
+  document.getElementById('auth-overlay').classList.add('open');
+}
+function closeAuth(e) {
+  if (!e || e.target === document.getElementById('auth-overlay'))
+    document.getElementById('auth-overlay').classList.remove('open');
+}
+
+function switchTab(tab) {
+  document.getElementById('auth-form-login').style.display  = tab === 'login'  ? 'flex' : 'none';
+  document.getElementById('auth-form-signup').style.display = tab === 'signup' ? 'flex' : 'none';
+  document.getElementById('tab-login').classList.toggle('active',  tab === 'login');
+  document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+}
+
+async function doLogin() {
+  if (!SUPABASE_READY) return;
+  const email = document.getElementById('login-email').value.trim();
+  const pwd   = document.getElementById('login-pwd').value;
+  const errEl = document.getElementById('login-err');
+  const okEl  = document.getElementById('login-ok');
+  const btn   = document.getElementById('btn-login');
+  errEl.className = 'auth-err'; okEl.className = 'auth-success';
+
+  if (!email || !pwd) { errEl.textContent = 'Email et mot de passe requis.'; errEl.className += ' show'; return; }
+  btn.disabled = true; btn.textContent = 'Connexion…';
+
+  const { error } = await db.auth.signInWithPassword({ email, password: pwd });
+  btn.disabled = false; btn.textContent = 'Se connecter';
+
+  if (error) { errEl.textContent = error.message; errEl.className += ' show'; }
+  else { okEl.textContent = '✓ Connecté !'; okEl.className += ' show'; }
+}
+
+async function doSignup() {
+  if (!SUPABASE_READY) return;
+  const username = document.getElementById('signup-username').value.trim().replace('@','');
+  const email    = document.getElementById('signup-email').value.trim();
+  const pwd      = document.getElementById('signup-pwd').value;
+  const errEl    = document.getElementById('signup-err');
+  const okEl     = document.getElementById('signup-ok');
+  const btn      = document.getElementById('btn-signup');
+  errEl.className = 'auth-err'; okEl.className = 'auth-success';
+
+  if (!username || !email || !pwd) { errEl.textContent = 'Tous les champs sont requis.'; errEl.className += ' show'; return; }
+  if (pwd.length < 8) { errEl.textContent = 'Mot de passe trop court (min. 8 caractères).'; errEl.className += ' show'; return; }
+  btn.disabled = true; btn.textContent = 'Création…';
+
+  const { error } = await db.auth.signUp({
+    email, password: pwd,
+    options: { data: { username, display_name: username } }
+  });
+  btn.disabled = false; btn.textContent = 'Créer mon compte';
+
+  if (error) { errEl.textContent = error.message; errEl.className += ' show'; }
+  else { okEl.textContent = '✓ Compte créé ! Vérifie ton email pour confirmer.'; okEl.className += ' show'; }
+}
+
+async function doLoginGoogle() {
+  // PKCE manuel — bypass total du SDK (navigator.locks cassé)
+  // 1. Génère code_verifier (random 64 bytes → base64url)
+  const array = new Uint8Array(64);
+  crypto.getRandomValues(array);
+  const codeVerifier = btoa(String.fromCharCode(...array))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+  // 2. code_challenge = SHA-256(code_verifier) → base64url
+  const msgBuffer = new TextEncoder().encode(codeVerifier);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const codeChallenge = btoa(String.fromCharCode(...new Uint8Array(hashBuffer)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+  // 3. Stocke le verifier pour l'échange au retour
+  localStorage.setItem('supabase_pkce_verifier', codeVerifier);
+
+  // 4. Redirige vers Supabase OAuth
+  const redirectTo = encodeURIComponent('https://mayanabeat.fr/beatstore.html');
+  const url = `${SUPABASE_URL}/auth/v1/authorize?provider=google` +
+    `&redirect_to=${redirectTo}` +
+    `&code_challenge=${codeChallenge}` +
+    `&code_challenge_method=s256`;
+  window.location.href = url;
+}
+
+async function doLogout() {
+  if (!SUPABASE_READY) return;
+  await db.auth.signOut();
+}
+
+// ── Vendre : vérifie auth d'abord
+function onSellClick() {
+  if (!SUPABASE_READY || !currentUser) { openAuth(); return; }
+  openUpload();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  UPLOAD BEAT → SUPABASE  (3 fichiers)
+// ══════════════════════════════════════════════════════════════
+
+const uploadFiles = { tagged: null, untagged: null, stems: null };
+
+// ── Sélecteur de fichier (click ou drag)
+function pickFile(type, files) {
+  if (!files || files.length === 0) return;
+  const file = files[0];
+  uploadFiles[type] = file;
+
+  // Met à jour l'affichage du nom + taille
+  const mb = (file.size / 1048576).toFixed(1);
+  const nameEl = document.getElementById(`name-${type}`);
+  if (nameEl) nameEl.textContent = `✓ ${file.name} (${mb} MB)`;
+
+  // Marque la zone comme remplie
+  const zone = document.getElementById(`drop-${type}`);
+  if (zone) zone.classList.add('has-file');
+
+  // Marque l'étape comme done
+  markStepDone(type);
+}
+
+function handleDropFile(e, type) {
+  e.preventDefault();
+  const zone = document.getElementById(`drop-${type}`);
+  if (zone) zone.classList.remove('drag');
+  pickFile(type, e.dataTransfer.files);
+}
+
+function markStepDone(type) {
+  const step   = document.getElementById(`step-${type}`);
+  const num    = document.getElementById(`stepnum-${type}`);
+  const badge  = document.getElementById(`stepbadge-${type}`);
+  if (!step) return;
+  step.classList.remove('required','optional');
+  step.classList.add('done');
+  if (num)   num.textContent = '✓';
+  if (badge) { badge.textContent = 'OK'; badge.className = 'step-badge badge-done'; }
+}
+
+// ── Validation et barre de progression upload
+function setUploadProgress(current, total) {
+  const btn = document.querySelector('.btn-submit');
+  if (!btn) return;
+  const pct = Math.round((current / total) * 100);
+  btn.textContent = `⏳ Upload ${pct}% (${current}/${total} fichiers)…`;
+}
+
+async function uploadToStorage(bucket, path, file, isPublic = false) {
+  const { error } = await db.storage
+    .from(bucket)
+    .upload(path, file, { contentType: file.type, upsert: true });
+  if (error) throw new Error(`[${bucket}] ${error.message}`);
+
+  if (isPublic) {
+    const { data } = db.storage.from(bucket).getPublicUrl(path);
+    return data.publicUrl;
+  }
+  // Bucket privé : on stocke juste le chemin (signed URL générée à la livraison)
+  return null;
+}
+
+async function submitBeat() {
+  if (!SUPABASE_READY) { alert('Supabase non configuré.'); return; }
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { openAuth(); return; }
+  const uid = session.user.id;
+
+  // ── Lecture des champs
+  const title    = document.getElementById('up-title').value.trim();
+  const genre    = document.getElementById('up-genre').value;
+  const bpm      = parseInt(document.getElementById('up-bpm').value) || 120;
+  const key      = document.getElementById('up-key').value;
+  const mood     = document.getElementById('up-mood')?.value || '';
+  const lease    = Math.round(parseFloat(document.getElementById('up-price-lease').value) * 100) || 2900;
+  const trackout = Math.round(parseFloat(document.getElementById('up-price-track')?.value) * 100) || 5900;
+  const exclu    = Math.round(parseFloat(document.getElementById('up-price-exclu').value) * 100) || 19900;
+
+  // ── Validations
+  if (!title) {
+    document.getElementById('up-title').focus();
+    showToast('⚠️ Le titre du beat est requis.', 'var(--yellow)'); return;
+  }
+  if (!uploadFiles.tagged) {
+    document.getElementById('drop-tagged').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('drop-tagged').style.borderColor = '', 2500);
+    showToast('⚠️ Le fichier de démo taggué est requis.', 'var(--yellow)'); return;
+  }
+  if (!uploadFiles.untagged) {
+    document.getElementById('drop-untagged').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('drop-untagged').style.borderColor = '', 2500);
+    showToast('⚠️ Le fichier propre (sans tag) est requis.', 'var(--yellow)'); return;
+  }
+  const certifiedCb = document.getElementById('certified-owner-cb');
+  if (!certifiedCb?.checked) {
+    certifiedCb?.focus();
+    showToast('⚠️ Tu dois certifier être l\'auteur original.', 'var(--yellow)'); return;
+  }
+
+  // ── Avertissement si pas de stems mais prix trackout actif
+  if (!uploadFiles.stems && trackout > 0) {
+    const ok = confirm(
+      'Tu n\'as pas ajouté de stems/trackouts.\n\n' +
+      'Les acheteurs Trackout recevront le fichier propre (MP3/WAV) à la place.\n\n' +
+      'Continuer quand même ?'
+    );
+    if (!ok) return;
+  }
+
+  const btn = document.querySelector('.btn-submit');
+  if (btn) { btn.disabled = true; }
+
+  try {
+    const slug = `${uid}/${Date.now()}_${title.replace(/[^a-zA-Z0-9]/g,'_').toLowerCase()}`;
+    let uploadCount = 0;
+    const totalFiles = uploadFiles.stems ? 3 : 2;
+
+    // ── 1. Upload DÉMO TAGGUÉ → bucket public (streaming)
+    setUploadProgress(++uploadCount, totalFiles);
+    const taggedExt  = uploadFiles.tagged.name.split('.').pop().toLowerCase();
+    const taggedPath = `${slug}_demo.${taggedExt}`;
+    const audioUrl = await uploadToStorage('beats-audio', taggedPath, uploadFiles.tagged, true);
+
+    // ── 2. Upload FICHIER PROPRE → bucket privé
+    setUploadProgress(++uploadCount, totalFiles);
+    const untaggedExt  = uploadFiles.untagged.name.split('.').pop().toLowerCase();
+    const untaggedPath = `${slug}_clean.${untaggedExt}`;
+    await uploadToStorage('beats-untagged', untaggedPath, uploadFiles.untagged, false);
+
+    // ── 3. Upload STEMS (optionnel) → bucket privé
+    let stemsPath = null;
+    if (uploadFiles.stems) {
+      setUploadProgress(++uploadCount, totalFiles);
+      stemsPath = `${slug}_stems.zip`;
+      await uploadToStorage('beats-stems', stemsPath, uploadFiles.stems, false);
+    }
+
+    // ── 4. Durée audio depuis le fichier taggué
+    const duration = await getAudioDuration(uploadFiles.tagged).catch(() => 180);
+
+    // ── 5. Insert en base
+    const { error: dbErr } = await db.from('beats').insert({
+      producer_id:    uid,
+      title, genre, bpm, key, mood,
+      price_lease:    lease,
+      price_trackout: trackout,
+      price_exclu:    exclu,
+      audio_url:      audioUrl,        // public → streaming
+      audio_path:     taggedPath,
+      untagged_path:  untaggedPath,    // privé → livraison lease/exclu
+      stems_path:     stemsPath,       // privé → livraison trackout/exclu
+      has_stems:      !!stemsPath,
+      duration,
+      certified_owner: true,
+      status:         'pending',
+    });
+    if (dbErr) throw dbErr;
+
+    // ── Succès
+    closeUpload();
+    resetUploadForm();
+    await loadBeats();
+    showToast(`✅ "${title}" soumis — validation sous 24-48h.`, 'var(--cyan)');
+
+  } catch(e) {
+    console.error('[submitBeat]', e);
+    showToast('❌ Erreur upload : ' + (e.message || JSON.stringify(e)), 'var(--pink)');
+  } finally {
+    if (btn) { btn.textContent = 'Soumettre pour validation — Commission 15%'; btn.disabled = false; }
+  }
+}
+
+function resetUploadForm() {
+  // Remet les 3 fichiers à null
+  uploadFiles.tagged = uploadFiles.untagged = uploadFiles.stems = null;
+
+  // Réinitialise les noms affichés
+  ['tagged','untagged','stems'].forEach(type => {
+    const name = document.getElementById(`name-${type}`);
+    const zone = document.getElementById(`drop-${type}`);
+    const step = document.getElementById(`step-${type}`);
+    const num  = document.getElementById(`stepnum-${type}`);
+    const badge = document.getElementById(`stepbadge-${type}`);
+    if (name) name.textContent = '';
+    if (zone) { zone.classList.remove('has-file','drag'); zone.style.borderColor = ''; }
+    if (step) {
+      step.classList.remove('done');
+      step.classList.add(type === 'stems' ? 'optional' : 'required');
+    }
+    if (num) num.textContent = type === 'tagged' ? '1' : type === 'untagged' ? '2' : '3';
+    if (badge) {
+      badge.textContent = type === 'stems' ? 'Optionnel' : 'Requis';
+      badge.className = `step-badge ${type === 'stems' ? 'badge-optional' : 'badge-required'}`;
+    }
+  });
+
+  // Remet les champs texte
+  ['up-title','up-bpm'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const cb = document.getElementById('certified-owner-cb');
+  if (cb) cb.checked = false;
+}
+
+function getAudioDuration(file) {
+  return new Promise(resolve => {
+    const audio = new Audio();
+    audio.src = URL.createObjectURL(file);
+    audio.onloadedmetadata = () => { URL.revokeObjectURL(audio.src); resolve(Math.round(audio.duration)); };
+    audio.onerror = () => resolve(180);
+  });
+}
+
+// ── Récupère un JWT valide (refresh auto si expiré)
+async function getValidJWT() {
+  const storageKey = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
+  const raw = localStorage.getItem(storageKey);
+  if (!raw) return null;
+  const parsed = JSON.parse(raw);
+  const now = Math.floor(Date.now() / 1000);
+
+  // Token encore valide
+  if (parsed.expires_at > now + 10) return parsed.access_token;
+
+  // Token expiré — refresh via fetch direct (bypass SDK lock)
+  if (!parsed.refresh_token) return null;
+  try {
+    const resp = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON },
+      body: JSON.stringify({ refresh_token: parsed.refresh_token })
+    });
+    if (!resp.ok) return null;
+    const fresh = await resp.json();
+    // Sauvegarde le nouveau token
+    localStorage.setItem(storageKey, JSON.stringify({
+      ...parsed,
+      access_token: fresh.access_token,
+      refresh_token: fresh.refresh_token,
+      expires_at: Math.floor(Date.now() / 1000) + fresh.expires_in
+    }));
+    // Met à jour currentUser si besoin
+    if (fresh.user) { currentUser = fresh.user; }
+    return fresh.access_token;
+  } catch(e) {
+    console.warn('[getValidJWT] refresh échoué:', e.message);
+    return null;
+  }
+}
+
+// ── Connexion Stripe Connect
+async function connectStripe() {
+  if (!SUPABASE_READY || !currentUser) { openAuth(); return; }
+  try {
+    showToast('⏳ Connexion à Stripe en cours…', 'var(--cyan)');
+
+    const jwt = await getValidJWT();
+    if (!jwt) {
+      showToast('⚠️ Session expirée — reconnecte-toi', 'var(--yellow)');
+      setTimeout(() => openAuth(), 1000);
+      return;
+    }
+
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/create-connect-account`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt}`,
+        'apikey': SUPABASE_ANON
+      },
+      body: JSON.stringify({ origin: window.location.origin })
+    });
+    const data = await resp.json();
+    console.log('[connectStripe]', data);
+    if (data?.error) throw new Error(data.error);
+    if (!data?.url) throw new Error('URL Stripe manquante');
+    showToast('✅ Redirection vers Stripe…', 'var(--green)');
+    setTimeout(() => { window.location.href = data.url; }, 500);
+  } catch (err) {
+    console.error('[connectStripe]', err);
+    showToast('❌ ' + err.message, 'var(--pink)');
+  }
+}
+
+// ── Retour Stripe (success / cancel / stripe connect)
+(function handleStripeReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const payment = params.get('payment');
+  const stripe  = params.get('stripe');
+  // Ne pas nettoyer l'URL si c'est un retour OAuth (code=) — checkAuth en a besoin
+  if (params.get('code')) return;
+
+  // Nettoie l'URL
+  const clean = window.location.pathname;
+  window.history.replaceState({}, '', clean);
+
+  if (payment === 'success') {
+    setTimeout(() => showToast('🎉 Paiement confirmé ! Tu vas recevoir ton beat par email.', '#00FF88'), 500);
+  } else if (payment === 'cancel') {
+    setTimeout(() => showToast('❌ Paiement annulé — reviens quand tu veux !', 'var(--pink)'), 500);
+  } else if (stripe === 'connected') {
+    setTimeout(async () => {
+      showToast('🎉 Stripe Connect activé ! Tu vas recevoir 85% de chaque vente.', '#00FF88');
+      // Recharge le profil producteur pour afficher le bon statut
+      if (currentUser) {
+        const { data: prod } = await db.from('producers').select('*').eq('id', currentUser.id).single();
+        currentProducer = prod;
+        renderAuthArea();
+      }
+    }, 500);
+  } else if (stripe === 'refresh') {
+    setTimeout(() => showToast('⚠️ Session Stripe expirée. Clique à nouveau sur "Connecter Stripe".', 'var(--yellow)'), 500);
+  }
+})();
+
+// ── Init
+loadBeats();
+loadStats();
+checkAuth();
+renderCartBadge();
+
+// Resize player waveform on window resize
+window.addEventListener('resize', () => {
+  if (currentBeat) drawPlayerWave(currentBeat.accent, currentBeat.id * 7 + 3, fakeProgress);
+});
+</script>
+</body>
+</html>

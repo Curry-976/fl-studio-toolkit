@@ -1,0 +1,130 @@
+// ══════════════════════════════════════════════════════════════
+//  Edge Function: stripe-webhook
+//  Traite les événements Stripe après paiement
+//
+//  Secrets requis :
+//    STRIPE_SECRET_KEY=sk_live_xxx
+//    STRIPE_WEBHOOK_SECRET=whsec_xxx  (depuis Stripe Dashboard > Webhooks)
+//    SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+//
+//  URL du webhook à configurer dans Stripe :
+//    https://fjwftrucqerwshhpmezl.supabase.co/functions/v1/stripe-webhook
+//  Événements à écouter : checkout.session.completed
+// ══════════════════════════════════════════════════════════════
+
+import { createClient } from "npm:@supabase/supabase-js@2";
+import Stripe from "npm:stripe";
+
+Deno.serve(async (req) => {
+  const sig = req.headers.get("stripe-signature");
+  const body = await req.text();
+
+  if (!sig) {
+    return new Response("Signature manquante", { status: 400 });
+  }
+
+  const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, {
+    apiVersion: "2023-10-16",
+  });
+
+  // ── Vérifie la signature Stripe
+  let event: Stripe.Event;
+  try {
+    event = await stripe.webhooks.constructEventAsync(
+      body,
+      sig,
+      Deno.env.get("STRIPE_WEBHOOK_SECRET")!
+    );
+  } catch (err) {
+    console.error("[stripe-webhook] Signature invalide:", err.message);
+    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
+  }
+
+  const sb = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+  );
+
+  // ── checkout.session.completed → paiement confirmé
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    const { purchase_id } = session.metadata ?? {};
+
+    if (purchase_id) {
+      // 1. Marque l'achat comme complété
+      const { error } = await sb
+        .from("purchases")
+        .update({ status: "completed", stripe_session_id: session.id })
+        .eq("id", purchase_id);
+
+      if (error) {
+        console.error("[stripe-webhook] Update purchase failed:", error.message);
+        return new Response("DB error", { status: 500 });
+      }
+
+      console.log(`[stripe-webhook] ✅ Achat ${purchase_id} → completed`);
+
+      // 2. Déclenche l'envoi de l'email + lien de téléchargement
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const serviceKey  = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const emailFnUrl  = `${supabaseUrl}/functions/v1/send-license-email`;
+
+      const emailResp = await fetch(emailFnUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${serviceKey}`,
+          "apikey": serviceKey,
+        },
+        body: JSON.stringify({ purchase_id }),
+      });
+
+      if (!emailResp.ok) {
+        const errText = await emailResp.text().catch(() => "unknown");
+        console.error("[stripe-webhook] send-license-email failed:", errText);
+        // On ne bloque pas — Stripe a déjà reçu le 200, l'achat est complété.
+        // L'admin peut relancer manuellement via le Dashboard.
+      } else {
+        console.log(`[stripe-webhook] 📧 Email envoyé pour achat ${purchase_id}`);
+      }
+    }
+  }
+
+  // ── checkout.session.expired → annulé
+  if (event.type === "checkout.session.expired") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    if (session.id) {
+      await sb
+        .from("purchases")
+        .update({ status: "refunded" })
+        .eq("stripe_session_id", session.id)
+        .eq("status", "pending");
+    }
+  }
+
+  // ── account.updated → onboarding Stripe Connect terminé
+  if (event.type === "account.updated") {
+    const account = event.data.object as Stripe.Account;
+    const isVerified =
+      account.charges_enabled &&
+      account.payouts_enabled &&
+      account.details_submitted;
+
+    if (isVerified) {
+      const { error } = await sb
+        .from("producers")
+        .update({ stripe_verified: true })
+        .eq("stripe_account", account.id);
+
+      if (error) {
+        console.error("[stripe-webhook] Update stripe_verified failed:", error.message);
+      } else {
+        console.log(`[stripe-webhook] ✅ Compte Connect ${account.id} vérifié`);
+      }
+    }
+  }
+
+  return new Response(JSON.stringify({ received: true }), {
+    headers: { "Content-Type": "application/json" },
+  });
+});

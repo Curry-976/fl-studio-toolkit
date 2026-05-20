@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mes Achats | MayanaBeat</title>
+  <meta name="description" content="Retrouve tes beats achetés, re-télécharge tes fichiers et consulte tes factures.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="theme-color" content="#03050D">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script defer src="navbar.js"></script>
+  <style>
+    :root {
+      --bg:#03050D; --bg2:#080C1A; --surface:#0D1228; --card:#0F1530;
+      --cyan:#00F0FF; --cyan2:#00C8FF; --purple:#BF5FFF; --purple2:#9B7FFF;
+      --green:#00FF88; --yellow:#FFD700; --pink:#FF6B9D; --orange:#FF6B35;
+      --text:#E8F0FF; --muted:rgba(180,210,255,.35);
+      --border:rgba(0,240,255,.08); --border2:rgba(0,240,255,.15);
+      --mono:'Space Mono',monospace; --sidebar-w:72px;
+    }
+    body { min-height:100vh; cursor:none; }
+    body::after {
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:1000;
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
+    }
+    #bg-grid {
+      position:fixed; inset:0; z-index:0; pointer-events:none;
+      background-image:linear-gradient(rgba(0,240,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.025) 1px,transparent 1px);
+      background-size:40px 40px; animation:grid-drift 20s linear infinite;
+    }
+    @keyframes grid-drift { 0%{background-position:0 0} 100%{background-position:40px 40px} }
+
+    .layout { display:flex; min-height:100vh; position:relative; z-index:2; }
+    main {
+      margin-left:var(--sidebar-w); flex:1;
+      padding:40px 32px 100px; min-height:100vh;
+      position:relative; z-index:2;
+    }
+
+    /* ── Auth screens ── */
+    .auth-wrap {
+      display:flex; align-items:center; justify-content:center;
+      min-height:calc(100vh - 140px);
+    }
+    .auth-card {
+      width:100%; max-width:420px;
+      background:var(--bg2); border:1px solid var(--border2);
+      padding:40px 36px;
+      clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%);
+    }
+    .auth-logo {
+      font-family:var(--mono); font-size:14px; font-weight:700;
+      color:var(--cyan); letter-spacing:.2em; text-transform:uppercase;
+      margin-bottom:24px;
+    }
+    .auth-logo span { color:var(--muted); }
+    .auth-title {
+      font-family:var(--mono); font-size:22px; font-weight:700;
+      color:var(--text); text-transform:uppercase; letter-spacing:.04em;
+      margin-bottom:8px;
+    }
+    .auth-sub { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:28px; }
+    .auth-sub strong { color:var(--cyan); }
+
+    .form-field { margin-bottom:16px; }
+    .form-label {
+      display:block; font-family:var(--mono); font-size:9px; font-weight:700;
+      text-transform:uppercase; letter-spacing:.1em; color:var(--muted);
+      margin-bottom:8px;
+    }
+    .form-input {
+      width:100%; padding:12px 14px; background:rgba(0,240,255,.04);
+      border:1px solid var(--border2); border-radius:4px;
+      color:var(--text); font-family:var(--mono); font-size:13px;
+      outline:none; transition:border-color .2s; box-sizing:border-box;
+    }
+    .form-input:focus { border-color:var(--cyan); }
+    .form-input::placeholder { color:rgba(180,210,255,.2); }
+    .form-input.error { border-color:var(--pink); }
+
+    .btn-primary {
+      width:100%; padding:13px; border:none; border-radius:4px; cursor:none;
+      font-family:var(--mono); font-size:11px; font-weight:700;
+      text-transform:uppercase; letter-spacing:.1em;
+      background:linear-gradient(135deg,var(--cyan2),var(--purple2));
+      color:#000; transition:all .2s; margin-top:4px;
+      clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
+    }
+    .btn-primary:hover { box-shadow:0 0 24px rgba(0,240,255,.35); transform:translateY(-1px); }
+    .btn-primary:disabled { opacity:.5; transform:none; box-shadow:none; cursor:not-allowed; }
+
+    .auth-note {
+      font-size:11px; color:rgba(180,210,255,.3); text-align:center;
+      margin-top:16px; line-height:1.6;
+    }
+    .auth-note a { color:var(--cyan); text-decoration:none; }
+    .auth-note a:hover { text-decoration:underline; }
+
+    .back-btn {
+      display:flex; align-items:center; gap:6px; background:none; border:none;
+      color:var(--muted); font-family:var(--mono); font-size:10px; font-weight:700;
+      text-transform:uppercase; letter-spacing:.08em; cursor:none; margin-bottom:24px;
+      transition:color .15s; padding:0;
+    }
+    .back-btn:hover { color:var(--cyan); }
+    .back-btn svg { width:14px; height:14px; }
+
+    .otp-hint {
+      font-size:12px; color:rgba(180,210,255,.4); margin-bottom:20px; line-height:1.5;
+    }
+    .otp-hint strong { color:var(--text); }
+
+    .otp-input {
+      width:100%; padding:16px 14px; text-align:center;
+      background:rgba(0,240,255,.04); border:1px solid var(--border2);
+      border-radius:4px; color:var(--cyan); font-family:var(--mono);
+      font-size:22px; font-weight:700; letter-spacing:.4em;
+      outline:none; transition:border-color .2s; box-sizing:border-box;
+    }
+    .otp-input:focus { border-color:var(--cyan); box-shadow:0 0 20px rgba(0,240,255,.1); }
+
+    .resend-row {
+      text-align:center; margin-top:14px;
+      font-size:12px; color:rgba(180,210,255,.3);
+    }
+    .resend-btn {
+      background:none; border:none; color:var(--cyan); font-size:12px;
+      cursor:none; text-decoration:underline; padding:0; transition:opacity .15s;
+    }
+    .resend-btn:disabled { opacity:.4; text-decoration:none; cursor:not-allowed; }
+
+    .err-msg {
+      font-family:var(--mono); font-size:10px; color:var(--pink);
+      margin-top:10px; text-align:center; min-height:16px;
+    }
+
+    /* ── Purchases view ── */
+    .page-hd {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:16px; flex-wrap:wrap; margin-bottom:28px;
+    }
+    .page-title {
+      font-family:var(--mono); font-size:22px; font-weight:700;
+      color:var(--text); text-transform:uppercase; letter-spacing:.05em;
+    }
+    .page-title span { color:var(--cyan); }
+    .page-sub { font-size:12px; color:var(--muted); margin-top:4px; }
+
+    .btn-logout {
+      display:flex; align-items:center; gap:8px; padding:8px 16px;
+      background:rgba(255,51,102,.06); border:1px solid rgba(255,51,102,.2);
+      border-radius:4px; color:rgba(255,80,110,.6);
+      font-family:var(--mono); font-size:9px; font-weight:700;
+      text-transform:uppercase; letter-spacing:.08em; cursor:none; transition:all .2s;
+    }
+    .btn-logout:hover { background:rgba(255,51,102,.12); color:#FF3366; }
+    .btn-logout svg { width:14px; height:14px; }
+
+    .stats-row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:28px; }
+    .stat-chip {
+      display:flex; flex-direction:column; gap:4px;
+      padding:10px 18px; background:rgba(0,240,255,.04);
+      border:1px solid var(--border2); border-radius:4px;
+      clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+    }
+    .stat-val { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--cyan); }
+    .stat-lbl { font-family:var(--mono); font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+
+    /* ── Purchase cards ── */
+    .purchases-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+      gap:16px;
+    }
+    .purchase-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:4px; overflow:hidden; transition:all .2s;
+      clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
+    }
+    .purchase-card:hover { border-color:var(--border2); box-shadow:0 0 24px rgba(0,240,255,.07); }
+
+    .purchase-head {
+      padding:14px 16px; border-bottom:1px solid var(--border);
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+    }
+    .purchase-ref {
+      font-family:var(--mono); font-size:9px; color:rgba(180,210,255,.3);
+      letter-spacing:.08em; text-transform:uppercase;
+    }
+    .tier-badge {
+      padding:3px 8px; border-radius:2px; font-family:var(--mono);
+      font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      flex-shrink:0;
+    }
+    .tier-lease    { background:rgba(0,240,255,.1); color:var(--cyan); border:1px solid rgba(0,240,255,.2); }
+    .tier-trackout { background:rgba(191,95,255,.1); color:var(--purple2); border:1px solid rgba(191,95,255,.2); }
+    .tier-exclu    { background:rgba(255,215,0,.1); color:var(--yellow); border:1px solid rgba(255,215,0,.2); }
+
+    .purchase-body { padding:16px; }
+    .beat-title-big {
+      font-family:var(--mono); font-size:15px; font-weight:700;
+      color:var(--text); text-transform:uppercase; letter-spacing:.03em;
+      margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .beat-producer { font-size:12px; color:var(--cyan); margin-bottom:10px; }
+    .beat-meta {
+      font-family:var(--mono); font-size:9px; color:var(--muted);
+      letter-spacing:.06em; text-transform:uppercase; margin-bottom:12px;
+    }
+    .beat-meta span { color:rgba(180,210,255,.5); }
+    .beat-meta span + span::before { content:' · '; }
+
+    .purchase-footer {
+      border-top:1px solid var(--border); padding:12px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+    }
+    .purchase-date-amount { display:flex; flex-direction:column; gap:2px; }
+    .purchase-date { font-size:11px; color:var(--muted); }
+    .purchase-amount { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--yellow); }
+
+    .purchase-actions { display:flex; gap:6px; }
+    .btn-action {
+      display:flex; align-items:center; gap:5px; padding:7px 12px;
+      border-radius:4px; font-family:var(--mono); font-size:8px; font-weight:700;
+      text-transform:uppercase; letter-spacing:.08em; cursor:none;
+      transition:all .18s; border:none;
+    }
+    .btn-action svg { width:12px; height:12px; }
+    .btn-dl {
+      background:rgba(0,240,255,.1); color:var(--cyan); border:1px solid rgba(0,240,255,.25);
+      clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,0 100%);
+    }
+    .btn-dl:hover { background:rgba(0,240,255,.2); border-color:var(--cyan); box-shadow:0 0 12px rgba(0,240,255,.2); }
+    .btn-dl:disabled { opacity:.4; cursor:not-allowed; }
+    .btn-invoice {
+      background:rgba(191,95,255,.08); color:var(--purple2); border:1px solid rgba(191,95,255,.2);
+    }
+    .btn-invoice:hover { background:rgba(191,95,255,.15); border-color:var(--purple2); }
+
+    /* ── Empty state ── */
+    .empty-state {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:16px; padding:80px 20px; text-align:center;
+    }
+    .empty-icon { color:var(--muted); }
+    .empty-title { font-family:var(--mono); font-size:16px; font-weight:700; color:var(--text); text-transform:uppercase; }
+    .empty-sub { font-size:13px; color:var(--muted); max-width:320px; line-height:1.6; }
+    .empty-sub a { color:var(--cyan); text-decoration:none; }
+
+    /* ── Loading ── */
+    .loading-wrap {
+      display:flex; align-items:center; justify-content:center;
+      gap:8px; padding:60px; font-family:var(--mono); font-size:11px; color:var(--muted);
+    }
+    .ld { width:6px; height:6px; border-radius:50%; background:var(--cyan);
+          animation:blink 1.2s infinite; }
+    .ld:nth-child(2) { animation-delay:.2s; }
+    .ld:nth-child(3) { animation-delay:.4s; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
+
+    /* ── Invoice modal ── */
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,.7);
+      z-index:800; display:none; align-items:center; justify-content:center;
+      backdrop-filter:blur(4px);
+    }
+    .modal-overlay.open { display:flex; }
+    .modal-box {
+      background:var(--bg2); border:1px solid var(--border2);
+      max-width:560px; width:90%; max-height:88vh; overflow-y:auto;
+      clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%);
+    }
+    .modal-hd {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px 24px; border-bottom:1px solid var(--border);
+    }
+    .modal-hd-title { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.08em; }
+    .modal-close {
+      background:none; border:none; color:var(--muted); cursor:none;
+      font-size:18px; line-height:1; transition:color .15s; padding:0;
+    }
+    .modal-close:hover { color:var(--text); }
+
+    /* ── Invoice layout ── */
+    .invoice-wrap { padding:28px 28px 20px; }
+    .invoice-top {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:16px; margin-bottom:24px; flex-wrap:wrap;
+    }
+    .invoice-brand { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--cyan); letter-spacing:.2em; }
+    .invoice-brand-sub { font-size:11px; color:rgba(180,210,255,.3); margin-top:2px; }
+    .invoice-num { text-align:right; }
+    .invoice-num-label { font-family:var(--mono); font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
+    .invoice-num-val { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--text); margin-top:2px; }
+
+    .invoice-parties {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:16px; margin-bottom:24px;
+      padding:16px; background:rgba(0,240,255,.02); border:1px solid var(--border);
+      border-radius:4px;
+    }
+    .party-label { font-family:var(--mono); font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }
+    .party-name { font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px; }
+    .party-info { font-size:11px; color:rgba(180,210,255,.4); line-height:1.5; }
+
+    .invoice-table { width:100%; border-collapse:collapse; margin-bottom:16px; }
+    .invoice-table th {
+      font-family:var(--mono); font-size:9px; color:var(--muted);
+      text-transform:uppercase; letter-spacing:.1em; text-align:left;
+      padding:8px 0; border-bottom:1px solid var(--border);
+    }
+    .invoice-table th:last-child { text-align:right; }
+    .invoice-table td {
+      padding:12px 0; font-size:12px; color:var(--text);
+      border-bottom:1px solid rgba(0,240,255,.04);
+      vertical-align:top;
+    }
+    .invoice-table td:last-child { text-align:right; font-weight:700; color:var(--yellow); white-space:nowrap; }
+    .invoice-table .desc-main { font-weight:600; margin-bottom:3px; }
+    .invoice-table .desc-sub { font-size:10px; color:var(--muted); }
+
+    .invoice-total-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:12px 0; border-top:1px solid var(--border2);
+    }
+    .invoice-total-label { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:.06em; }
+    .invoice-total-val { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--yellow); }
+
+    .invoice-tva {
+      font-size:10px; color:rgba(180,210,255,.3); font-style:italic;
+      padding-bottom:16px; border-bottom:1px solid var(--border);
+      margin-bottom:16px;
+    }
+
+    .invoice-footer-note { font-size:10px; color:rgba(180,210,255,.25); line-height:1.6; text-align:center; }
+
+    .invoice-actions {
+      display:flex; gap:8px; justify-content:flex-end;
+      padding:16px 28px; border-top:1px solid var(--border);
+    }
+    .btn-print {
+      display:flex; align-items:center; gap:6px; padding:8px 18px;
+      background:rgba(0,240,255,.08); border:1px solid rgba(0,240,255,.2);
+      border-radius:4px; color:var(--cyan); font-family:var(--mono);
+      font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+      cursor:none; transition:all .2s;
+    }
+    .btn-print:hover { background:rgba(0,240,255,.15); border-color:var(--cyan); }
+    .btn-print svg { width:13px; height:13px; }
+
+    /* ── Toast ── */
+    .toast {
+      position:fixed; bottom:76px; left:50%; transform:translateX(-50%) translateY(20px);
+      background:var(--surface); border:1px solid var(--border2); border-radius:4px;
+      padding:10px 20px; font-family:var(--mono); font-size:11px; font-weight:700;
+      color:var(--cyan); z-index:2000; pointer-events:none;
+      opacity:0; transition:opacity .25s, transform .25s;
+      white-space:nowrap;
+    }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    /* ── Responsive ── */
+    @media (max-width:768px) {
+      body { cursor:auto; }
+      #c-dot, #c-ring { display:none; }
+      main { margin-left:0; padding:20px 16px 80px; }
+      .auth-card { padding:28px 20px; }
+      .purchases-grid { grid-template-columns:1fr; }
+      .invoice-parties { grid-template-columns:1fr; }
+      .invoice-wrap { padding:20px 16px 14px; }
+      .invoice-actions { padding:12px 16px; }
+    }
+    @media print {
+      body { background:#fff !important; color:#000 !important; cursor:auto; }
+      .modal-hd, .invoice-actions, .modal-close, #shared-sidebar, #bg-grid, .toast { display:none !important; }
+      .modal-overlay { position:static !important; display:block !important; background:none !important; }
+      .modal-box { max-height:none !important; border:none !important; clip-path:none !important; box-shadow:none !important; }
+      :root { --text:#111; --muted:#555; --cyan:#0077aa; --yellow:#aa6600; --border:rgba(0,0,0,.15); --border2:rgba(0,0,0,.2); --bg2:#fff; --surface:#f5f5f5; --card:#fff; }
+    }
+  </style>
+</head>
+<body>
+<div id="bg-grid"></div>
+
+<div class="layout">
+  <main>
+
+    <!-- ── STEP 1 : Email ── -->
+    <div id="step-email" class="auth-wrap">
+      <div class="auth-card">
+        <div class="auth-logo">MAYANA<span>BEAT</span></div>
+        <h1 class="auth-title">Mes <span style="color:var(--cyan)">Achats</span></h1>
+        <p class="auth-sub">
+          Entre ton adresse email pour accéder à tes beats achetés et tes factures.
+        </p>
+        <div class="form-field">
+          <label class="form-label" for="auth-email">Email</label>
+          <input class="form-input" type="email" id="auth-email"
+                 placeholder="ton@email.com" autocomplete="email"
+                 onkeydown="if(event.key==='Enter')sendOtp()" />
+        </div>
+        <button class="btn-primary" id="btn-send-otp" onclick="sendOtp()">
+          Continuer →
+        </button>
+        <div class="err-msg" id="err-email"></div>
+        <p class="auth-note">
+          Un code de vérification à 6 chiffres te sera envoyé.<br>
+          Pas de compte nécessaire.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── STEP 2 : OTP ── -->
+    <div id="step-otp" class="auth-wrap" style="display:none">
+      <div class="auth-card">
+        <button class="back-btn" onclick="backToEmail()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+          </svg>
+          Retour
+        </button>
+        <div class="auth-logo">MAYANA<span>BEAT</span></div>
+        <h1 class="auth-title">Vérification</h1>
+        <p class="otp-hint">
+          Code envoyé à <strong id="otp-email-display"></strong>.<br>
+          Vérifie aussi tes spams.
+        </p>
+        <div class="form-field">
+          <label class="form-label" for="auth-code">Code à 6 chiffres</label>
+          <input class="otp-input" type="text" id="auth-code"
+                 placeholder="000000" maxlength="6" inputmode="numeric"
+                 onkeydown="if(event.key==='Enter')verifyOtp()"
+                 oninput="this.value=this.value.replace(/\D/g,'')" />
+        </div>
+        <button class="btn-primary" id="btn-verify" onclick="verifyOtp()">
+          Accéder à mes achats →
+        </button>
+        <div class="err-msg" id="err-otp"></div>
+        <div class="resend-row">
+          <button class="resend-btn" id="btn-resend" onclick="resendOtp()">Renvoyer le code</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STEP 3 : Purchases ── -->
+    <div id="step-purchases" style="display:none">
+
+      <div class="page-hd">
+        <div>
+          <h1 class="page-title">Mes <span>Achats</span></h1>
+          <div class="page-sub" id="user-email-display"></div>
+        </div>
+        <button class="btn-logout" onclick="signOut()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
+          </svg>
+          Déconnexion
+        </button>
+      </div>
+
+      <div class="stats-row" id="stats-row" style="display:none">
+        <div class="stat-chip">
+          <div class="stat-val" id="stat-count">—</div>
+          <div class="stat-lbl">Beats achetés</div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-val" id="stat-total">—</div>
+          <div class="stat-lbl">Total dépensé</div>
+        </div>
+      </div>
+
+      <div class="loading-wrap" id="purchases-loading">
+        <div class="ld"></div><div class="ld"></div><div class="ld"></div>
+        <span>Chargement de tes achats…</span>
+      </div>
+
+      <div class="empty-state" id="purchases-empty" style="display:none">
+        <svg class="empty-icon" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+        </svg>
+        <div class="empty-title">Aucun achat trouvé</div>
+        <p class="empty-sub">
+          Pas encore d'achats associés à cet email.<br>
+          <a href="beatstore.html">Découvre les beats disponibles →</a>
+        </p>
+      </div>
+
+      <div class="purchases-grid" id="purchases-grid"></div>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- ── Invoice Modal ── -->
+<div class="modal-overlay" id="invoice-modal" onclick="closeInvoiceOnOverlay(event)">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <span class="modal-hd-title">Reçu de paiement</span>
+      <button class="modal-close" onclick="closeInvoice()">✕</button>
+    </div>
+    <div class="invoice-wrap" id="invoice-content"></div>
+    <div class="invoice-actions">
+      <button class="btn-print" onclick="window.print()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+        </svg>
+        Imprimer / Sauvegarder PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ──────────────────────────────────────────────
+//  State
+// ──────────────────────────────────────────────
+let currentEmail = '';
+let purchasesData = [];
+
+// ──────────────────────────────────────────────
+//  Init
+// ──────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!SUPABASE_READY) {
+    showError('err-email', 'Supabase non configuré — mode démo');
+    return;
+  }
+  const { data: { session } } = await db.auth.getSession();
+  if (session?.user?.email) {
+    currentEmail = session.user.email;
+    showStep('purchases');
+    await loadPurchases();
+  }
+});
+
+// ──────────────────────────────────────────────
+//  Auth
+// ──────────────────────────────────────────────
+function showStep(step) {
+  ['email','otp','purchases'].forEach(s => {
+    const el = document.getElementById('step-' + s);
+    if (el) el.style.display = s === step ? (s === 'purchases' ? 'block' : 'flex') : 'none';
+  });
+}
+
+async function sendOtp() {
+  const email = document.getElementById('auth-email').value.trim();
+  clearErr('err-email');
+
+  if (!email || !email.includes('@')) {
+    showError('err-email', 'Email invalide');
+    document.getElementById('auth-email').classList.add('error');
+    return;
+  }
+  document.getElementById('auth-email').classList.remove('error');
+
+  const btn = document.getElementById('btn-send-otp');
+  btn.disabled = true; btn.textContent = 'Envoi…';
+
+  try {
+    const { error } = await db.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+    if (error) throw error;
+    currentEmail = email;
+    document.getElementById('otp-email-display').textContent = email;
+    showStep('otp');
+    startResendCooldown();
+  } catch (err) {
+    showError('err-email', err.message || 'Erreur lors de l\'envoi');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Continuer →';
+  }
+}
+
+async function verifyOtp() {
+  const code = document.getElementById('auth-code').value.trim();
+  clearErr('err-otp');
+
+  if (code.length !== 6) {
+    showError('err-otp', 'Le code doit contenir 6 chiffres');
+    return;
+  }
+
+  const btn = document.getElementById('btn-verify');
+  btn.disabled = true; btn.textContent = 'Vérification…';
+
+  try {
+    const { data, error } = await db.auth.verifyOtp({ email: currentEmail, token: code, type: 'email' });
+    if (error) throw error;
+    currentEmail = data.user.email;
+    showStep('purchases');
+    await loadPurchases();
+  } catch (err) {
+    showError('err-otp', 'Code incorrect ou expiré');
+    document.getElementById('auth-code').value = '';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Accéder à mes achats →';
+  }
+}
+
+async function resendOtp() {
+  try {
+    await db.auth.signInWithOtp({ email: currentEmail, options: { shouldCreateUser: true } });
+    showToast('Code renvoyé ✓');
+    startResendCooldown();
+  } catch (err) {
+    showError('err-otp', 'Erreur lors du renvoi');
+  }
+}
+
+let resendTimer = null;
+function startResendCooldown() {
+  const btn = document.getElementById('btn-resend');
+  let sec = 60;
+  btn.disabled = true;
+  btn.textContent = `Renvoyer (${sec}s)`;
+  clearInterval(resendTimer);
+  resendTimer = setInterval(() => {
+    sec--;
+    btn.textContent = sec > 0 ? `Renvoyer (${sec}s)` : 'Renvoyer le code';
+    if (sec <= 0) { clearInterval(resendTimer); btn.disabled = false; }
+  }, 1000);
+}
+
+function backToEmail() {
+  clearErr('err-email');
+  clearErr('err-otp');
+  document.getElementById('auth-code').value = '';
+  showStep('email');
+}
+
+async function signOut() {
+  await db.auth.signOut();
+  currentEmail = '';
+  purchasesData = [];
+  document.getElementById('auth-email').value = '';
+  document.getElementById('purchases-grid').innerHTML = '';
+  showStep('email');
+}
+
+// ──────────────────────────────────────────────
+//  Load purchases
+// ──────────────────────────────────────────────
+async function loadPurchases() {
+  document.getElementById('user-email-display').textContent = currentEmail;
+  document.getElementById('purchases-loading').style.display = 'flex';
+  document.getElementById('purchases-empty').style.display = 'none';
+  document.getElementById('purchases-grid').innerHTML = '';
+  document.getElementById('stats-row').style.display = 'none';
+
+  try {
+    const { data, error } = await db
+      .from('purchases')
+      .select('*, beats(title, genre, bpm, key, producers(username, display_name))')
+      .eq('buyer_email', currentEmail)
+      .eq('status', 'completed')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    purchasesData = data || [];
+    renderPurchases(purchasesData);
+  } catch (err) {
+    console.error('[loadPurchases]', err);
+    showToast('Erreur chargement : ' + (err.message || err), 'var(--pink)');
+  } finally {
+    document.getElementById('purchases-loading').style.display = 'none';
+  }
+}
+
+function renderPurchases(purchases) {
+  const grid = document.getElementById('purchases-grid');
+
+  if (!purchases.length) {
+    document.getElementById('purchases-empty').style.display = 'flex';
+    return;
+  }
+
+  document.getElementById('stats-row').style.display = 'flex';
+  document.getElementById('stat-count').textContent = purchases.length;
+  const total = purchases.reduce((s, p) => s + (p.amount_cents || 0), 0);
+  document.getElementById('stat-total').textContent = (total / 100).toFixed(2) + ' €';
+
+  grid.innerHTML = purchases.map(p => renderCard(p)).join('');
+}
+
+function renderCard(p) {
+  const beat = p.beats || {};
+  const producer = beat.producers || {};
+  const tierLabels = { lease: 'Lease', trackout: 'Trackout', exclu: 'Exclusif' };
+  const tierLabel = tierLabels[p.license_tier] || p.license_tier;
+  const tierClass = 'tier-' + (p.license_tier || 'lease');
+  const date = new Date(p.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
+  const amount = ((p.amount_cents || 0) / 100).toFixed(2) + ' €';
+  const invoiceNum = makeInvoiceNum(p);
+  const producerName = producer.display_name || producer.username || 'Producteur';
+  const genre = beat.genre || '—';
+  const bpm = beat.bpm ? beat.bpm + ' BPM' : '';
+  const key = beat.key || '';
+
+  return `
+    <div class="purchase-card" id="card-${p.id}">
+      <div class="purchase-head">
+        <div class="purchase-ref">${invoiceNum}</div>
+        <div class="tier-badge ${tierClass}">${tierLabel}</div>
+      </div>
+      <div class="purchase-body">
+        <div class="beat-title-big">${escHtml(beat.title || '—')}</div>
+        <div class="beat-producer">Par ${escHtml(producerName)}</div>
+        <div class="beat-meta">
+          <span>${escHtml(genre)}</span>${bpm ? `<span>${bpm}</span>` : ''}${key ? `<span>${escHtml(key)}</span>` : ''}
+        </div>
+      </div>
+      <div class="purchase-footer">
+        <div class="purchase-date-amount">
+          <div class="purchase-date">${date}</div>
+          <div class="purchase-amount">${amount}</div>
+        </div>
+        <div class="purchase-actions">
+          <button class="btn-action btn-dl" id="btn-dl-${p.id}" onclick="downloadBeat('${p.id}')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Télécharger
+          </button>
+          <button class="btn-action btn-invoice" onclick="openInvoice('${p.id}')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4M7 21H4a1 1 0 01-1-1V4a1 1 0 011-1h10l5 5v13a1 1 0 01-1 1h-3"/>
+            </svg>
+            Facture
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ──────────────────────────────────────────────
+//  Download
+// ──────────────────────────────────────────────
+async function downloadBeat(purchaseId) {
+  const btn = document.getElementById('btn-dl-' + purchaseId);
+  if (!btn || btn.disabled) return;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="ld" style="width:8px;height:8px;display:inline-block"></span> …`;
+
+  try {
+    const url = await getFreshDownloadLink(purchaseId);
+    if (!url) throw new Error('Lien introuvable');
+    window.open(url, '_blank');
+    showToast('Téléchargement lancé ✓');
+  } catch (err) {
+    showToast('Erreur : ' + (err.message || err), 'var(--pink)');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="width:12px;height:12px">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+      </svg>
+      Télécharger`;
+  }
+}
+
+async function getFreshDownloadLink(purchaseId) {
+  const purchase = purchasesData.find(p => p.id === purchaseId);
+
+  // URL sauvegardée encore valide (< 7 jours)
+  if (purchase?.license_pdf_url) {
+    const created = new Date(purchase.created_at);
+    const expires = new Date(created.getTime() + 7 * 24 * 60 * 60 * 1000);
+    if (new Date() < expires) return purchase.license_pdf_url;
+  }
+
+  // Appel Edge Function pour régénérer
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) throw new Error('Session expirée, reconnecte-toi');
+
+  const resp = await fetch(`${SUPABASE_URL}/functions/v1/get-download-link`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.access_token}`,
+      'apikey': SUPABASE_ANON,
+    },
+    body: JSON.stringify({ purchase_id: purchaseId }),
+  });
+
+  if (!resp.ok) {
+    const txt = await resp.text();
+    throw new Error(txt || 'Erreur serveur');
+  }
+  const { url, error } = await resp.json();
+  if (error) throw new Error(error);
+  return url;
+}
+
+// ──────────────────────────────────────────────
+//  Invoice modal
+// ──────────────────────────────────────────────
+function openInvoice(purchaseId) {
+  const p = purchasesData.find(x => x.id === purchaseId);
+  if (!p) return;
+  document.getElementById('invoice-content').innerHTML = buildInvoiceHtml(p);
+  document.getElementById('invoice-modal').classList.add('open');
+}
+
+function closeInvoice() {
+  document.getElementById('invoice-modal').classList.remove('open');
+}
+
+function closeInvoiceOnOverlay(e) {
+  if (e.target === document.getElementById('invoice-modal')) closeInvoice();
+}
+
+function buildInvoiceHtml(p) {
+  const beat = p.beats || {};
+  const producer = beat.producers || {};
+  const tierLabels = { lease: 'Lease Non-Exclusif', trackout: 'Trackout Premium', exclu: 'Exclusivité Totale' };
+  const tierLabel = tierLabels[p.license_tier] || p.license_tier;
+  const date = new Date(p.created_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
+  const amount = ((p.amount_cents || 0) / 100).toFixed(2);
+  const invoiceNum = makeInvoiceNum(p);
+  const buyerName = p.buyer_name || p.buyer_email.split('@')[0];
+  const producerName = producer.display_name || producer.username || 'MayanaBeat';
+
+  const rights = {
+    lease:    ['MP3 + WAV non taggué', '100 000 streams max', '2 vidéos YouTube monétisées', 'Usage commercial'],
+    trackout: ['MP3 + WAV + Stems', '500 000 streams max', 'Distribution digitale', 'Usage commercial & radio'],
+    exclu:    ['MP3 + WAV + Stems', 'Streams illimités', 'Tous droits transférés', 'Sync TV / Film / Pub'],
+  }[p.license_tier] || [];
+
+  return `
+    <div class="invoice-top">
+      <div>
+        <div class="invoice-brand">MAYANABEAT</div>
+        <div class="invoice-brand-sub">mayanabeat.fr</div>
+      </div>
+      <div class="invoice-num">
+        <div class="invoice-num-label">N° Facture</div>
+        <div class="invoice-num-val">${invoiceNum}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">${date}</div>
+      </div>
+    </div>
+
+    <div class="invoice-parties">
+      <div>
+        <div class="party-label">Vendeur</div>
+        <div class="party-name">MayanaBeat</div>
+        <div class="party-info">mayanabeat.fr<br>noreply@mayanabeat.fr</div>
+      </div>
+      <div>
+        <div class="party-label">Acheteur</div>
+        <div class="party-name">${escHtml(buyerName)}</div>
+        <div class="party-info">${escHtml(p.buyer_email)}</div>
+      </div>
+    </div>
+
+    <table class="invoice-table">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Montant</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="desc-main">Beat "${escHtml(beat.title || '—')}" — ${escHtml(tierLabel)}</div>
+            <div class="desc-sub">Par ${escHtml(producerName)} · ${beat.genre || ''} · ${beat.bpm ? beat.bpm + ' BPM' : ''}</div>
+            ${rights.length ? `<div class="desc-sub" style="margin-top:4px;">${rights.join(' · ')}</div>` : ''}
+          </td>
+          <td>${amount} €</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="invoice-total-row">
+      <span class="invoice-total-label">Total TTC</span>
+      <span class="invoice-total-val">${amount} €</span>
+    </div>
+    <div class="invoice-tva">TVA non applicable — Article 293B du CGI</div>
+
+    <div style="text-align:center;padding-bottom:4px;">
+      <div style="font-size:11px;color:var(--muted);">Référence paiement : <code style="color:var(--cyan)">${p.stripe_session_id ? p.stripe_session_id.slice(0,24) + '…' : p.id.slice(0,16).toUpperCase()}</code></div>
+    </div>
+    <div class="invoice-footer-note" style="margin-top:12px;">
+      Merci pour ton achat 🎧 — Ce document vaut reçu de paiement.
+    </div>`;
+}
+
+// ──────────────────────────────────────────────
+//  Helpers
+// ──────────────────────────────────────────────
+function makeInvoiceNum(p) {
+  const d = new Date(p.created_at);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  return `MB-${y}${m}-${p.id.slice(0, 8).toUpperCase()}`;
+}
+
+function escHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = msg;
+}
+
+function clearErr(id) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = '';
+}
+
+let toastTimer = null;
+function showToast(msg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.color = color || 'var(--cyan)';
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
